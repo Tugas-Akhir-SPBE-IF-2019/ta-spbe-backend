@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -11,7 +12,8 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Tugas Akhir Capstone Pembangunan Aplikasi Otomatisasi Penilaian Tingkat Kematangan SPBE"))
+		w.Write([]byte("Tugas Akhir Otomatisasi Penilaian Tingkat Kematangan Kebijakan SPBE IF 2019"))
 	})
-	http.ListenAndServe(":3000", r)
+	fmt.Println("Server started!")
+	http.ListenAndServe(":80", r)
 }
