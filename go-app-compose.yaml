@@ -5,6 +5,17 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
+    depends_on:
+      - db
     environment:
-      - VIRTUAL_HOST=ec2-52-221-192-157.ap-southeast-1.compute.amazonaws.com
-      - LETSENCRYPT_HOST=ec2-52-221-192-157.ap-southeast-1.compute.amazonaws.com
+      - VIRTUAL_HOST=localhost
+      - LETSENCRYPT_HOST=localhost
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ta-spbe
+      POSTGRES_USER: ta-spbe
+      POSTGRES_PASSWORD: ta-spbe
+    ports:
+      - "5433:5432"
