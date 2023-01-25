@@ -1,0 +1,10 @@
+[api]
+port = 80
+
+[postgres]
+host = "db"
+port = 5432
+database = "ta-spbe"
+username = "ta-spbe"
+password = "ta-spbe"
+migration = true
