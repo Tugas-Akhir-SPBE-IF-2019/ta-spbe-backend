@@ -8,7 +8,8 @@ import (
 )
 
 type API struct {
-	Port int `toml:"port"`
+	Host string `toml:"host"`
+	Port int    `toml:"port"`
 }
 
 type Postgres struct {

@@ -82,8 +82,12 @@ func main() {
 	r.Route("/assessments", func(r chi.Router) {
 		r.Get("/", assessmenthandler.GetSPBEAssessmentList(assessmentRepo))
 		r.Get("/index", indicatorassessmenthandler.GetIndicatorAssessmentIndexList(indicatorAssessmentRepo))
-		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo))
+		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, cfg.API))
 	})
+
+	//static file serve (for testing purpose only)
+	fs := http.FileServer(http.Dir("static/supporting-documents"))
+	r.Handle("/static/*", http.StripPrefix("/static/", fs))
 
 	log.Printf("Server is listening on port %d", cfg.API.Port)
 	http.ListenAndServe(fmt.Sprintf(":%d", cfg.API.Port), r)

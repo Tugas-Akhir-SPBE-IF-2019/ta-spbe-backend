@@ -29,6 +29,7 @@ type IndicatorAssessmentInfo struct {
 type SupportDataDocumentInfo struct {
 	Id           string
 	DocumentName string
+	DocumentUrl  string
 }
 
 type AssessmentUploadDetail struct {

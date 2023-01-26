@@ -11,6 +11,7 @@ import (
 	"strings"
 	apierror "ta-spbe-backend/api/error"
 	"ta-spbe-backend/api/response"
+	"ta-spbe-backend/config"
 	"ta-spbe-backend/repository"
 
 	"github.com/google/uuid"
@@ -66,9 +67,10 @@ func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldE
 type UploadSpbeDocumentResponse struct {
 	Message      string `json:"string"`
 	AssessmentId string `json:"assessment_id"`
+	DocumentUrl  string `json:"document_url"`
 }
 
-func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository) http.HandlerFunc {
+func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, apiCfg config.API) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
@@ -90,13 +92,13 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository) http.Han
 		filename := strings.Replace(uniqueId.String(), "-", "", -1)
 		fileExt := filepath.Ext(req.supportingDocumentFileHeader.Filename)
 		supportingDocument := fmt.Sprintf("%s%s", filename, fileExt)
+		supportingDocumentUrl := fmt.Sprintf("http://%s/static/%s", apiCfg.Host, supportingDocument)
 
 		dst, err := os.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
 		if err != nil {
 			response.Error(w, apierror.InternalServerError())
 			return
 		}
-
 		defer dst.Close()
 
 		_, err = io.Copy(dst, req.supportingDocumentFile)
@@ -114,6 +116,7 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository) http.Han
 			},
 			SupportDataDocumentInfo: repository.SupportDataDocumentInfo{
 				DocumentName: supportingDocument,
+				DocumentUrl:  supportingDocumentUrl,
 			},
 			UserId: "ccd52961-fa4e-43ba-a6df-a4c97849d899",
 		}
@@ -122,6 +125,7 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository) http.Han
 		resp := UploadSpbeDocumentResponse{
 			Message:      "Document has been successfully uploaded",
 			AssessmentId: assessmentUploadDetail.AssessmentDetail.Id,
+			DocumentUrl:  supportingDocumentUrl,
 		}
 
 		response.Respond(w, http.StatusCreated, resp)

@@ -166,7 +166,7 @@ func (r *assessmentRepo) InsertUploadDocument(ctx context.Context, assessmentUpl
 
 	supportDataDocumentId := uuid.NewString()
 	_, err = tx.StmtContext(ctx, r.ps[supportDataDocumentUploadInsert]).ExecContext(ctx,
-		supportDataDocumentId, indicatorAssessmentId, assessmentUploadDetail.SupportDataDocumentInfo.DocumentName, assessmentUploadDetail.SupportDataDocumentInfo.DocumentName, assessmentCreatedAt)
+		supportDataDocumentId, indicatorAssessmentId, assessmentUploadDetail.SupportDataDocumentInfo.DocumentName, assessmentUploadDetail.SupportDataDocumentInfo.DocumentUrl, assessmentCreatedAt)
 	if err != nil {
 		return fmt.Errorf("failed to insert support data document: %w", err)
 	}
