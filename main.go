@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	assessmenthandler "ta-spbe-backend/api/handler/assessment"
+	indicatorassessmenthandler "ta-spbe-backend/api/handler/indicator_assessment"
 	"ta-spbe-backend/api/handlers"
 	"ta-spbe-backend/api/routers"
 	"ta-spbe-backend/config"
@@ -63,6 +64,11 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	indicatorAssessmentRepo, err := pgsql.NewIndicatorAssessmentRepo(db)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Route("/mock/assessment", func(r chi.Router) {
@@ -71,9 +77,10 @@ func main() {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Tugas Akhir Otomatisasi Penilaian Tingkat Kematangan Kebijakan SPBE IF 2019"))
 	})
-	
+
 	r.Route("/assessment", func(r chi.Router) {
 		r.Get("/", assessmenthandler.GetSPBEAssessmentList(assessmentRepo))
+		r.Get("/index", indicatorassessmenthandler.GetIndicatorAssessmentIndexList(indicatorAssessmentRepo))
 	})
 
 	log.Printf("Server is listening on port %d", cfg.API.Port)
