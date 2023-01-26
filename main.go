@@ -34,10 +34,11 @@ func main() {
 	assessmentHandler := handlers.NewAssessmentHandler(assessmentService)
 
 	dsn := fmt.Sprintf(
-		"postgres://%s:%s@%s/%s?sslmode=disable",
+		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
 		url.QueryEscape(cfg.DB.Username),
 		url.QueryEscape(cfg.DB.Password),
 		cfg.DB.Host,
+		cfg.DB.Port,
 		cfg.DB.Database,
 	)
 
@@ -78,10 +79,15 @@ func main() {
 		w.Write([]byte("Tugas Akhir Otomatisasi Penilaian Tingkat Kematangan Kebijakan SPBE IF 2019"))
 	})
 
-	r.Route("/assessment", func(r chi.Router) {
+	r.Route("/assessments", func(r chi.Router) {
 		r.Get("/", assessmenthandler.GetSPBEAssessmentList(assessmentRepo))
 		r.Get("/index", indicatorassessmenthandler.GetIndicatorAssessmentIndexList(indicatorAssessmentRepo))
+		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, cfg.API))
 	})
+
+	//static file serve (for testing purpose only)
+	fs := http.FileServer(http.Dir("static/supporting-documents"))
+	r.Handle("/static/*", http.StripPrefix("/static/", fs))
 
 	log.Printf("Server is listening on port %d", cfg.API.Port)
 	http.ListenAndServe(fmt.Sprintf(":%d", cfg.API.Port), r)

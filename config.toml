@@ -1,4 +1,5 @@
 [api]
+host = "localhost"
 port = 80
 
 [postgres]
