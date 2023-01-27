@@ -81,6 +81,7 @@ func main() {
 
 	r.Route("/assessments", func(r chi.Router) {
 		r.Get("/", assessmenthandler.GetSPBEAssessmentList(assessmentRepo))
+		r.Get("/{id}", indicatorassessmenthandler.GetIndicatorAssessmentResult(indicatorAssessmentRepo))
 		r.Get("/index", indicatorassessmenthandler.GetIndicatorAssessmentIndexList(indicatorAssessmentRepo))
 		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, cfg.API))
 	})
