@@ -3,6 +3,7 @@ package pgsql
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log"
 	"ta-spbe-backend/repository"
 )
@@ -28,6 +29,7 @@ func NewIndicatorAssessmentRepo(db *sql.DB) (repository.IndicatorAssessmentRepos
 var indicatorAssessmentQueries = map[string]string{
 	indicatorAssessmentFindAll:           indicatorAssessmentFindAllQuery,
 	indicatorAssessmentFindAllPagination: indicatorAssessmentFindAllPaginationQuery,
+	indicatorAssessmentResultFindById:    indicatorAssessmentResultFindByIdQuery,
 }
 
 const indicatorAssessmentFindAll = "findAll"
@@ -97,4 +99,33 @@ func (r *indicatorAssessmentRepo) FindAllPagination(ctx context.Context, offset 
 	}
 
 	return indicatorAssessmentList, nil
+}
+
+const indicatorAssessmentResultFindById = "indicatorAssessmentResultFindById"
+const indicatorAssessmentResultFindByIdQuery = `SELECT a.institution_name, ia.created_at, ia.status, i.domain, i.aspect, i.indicator_number, 
+		ia.level, sdd.document_url, COALESCE(ia.explanation, ''),  COALESCE(sddp.proof, ''), ia.validated
+		FROM indicator_assessments ia
+		LEFT JOIN assessments a
+		ON ia.assessment_id = a.id
+		LEFT JOIN indicators i
+		ON ia.indicator_id = i.id
+		LEFT JOIN support_data_documents sdd
+		ON ia.id = sdd.indicator_assessment_id
+		LEFT JOIN support_data_document_proofs sddp
+		ON ia.id = sddp.indicator_assessment_id
+		WHERE ia.id = $1`
+
+func (r *indicatorAssessmentRepo) FindIndicatorAssessmentResultById(ctx context.Context, id string) (repository.IndicatorAssessmentResultDetail, error) {
+	assessmentResult := repository.IndicatorAssessmentResultDetail{}
+
+	row := r.ps[indicatorAssessmentResultFindById].QueryRowContext(ctx, id)
+	err := row.Scan(&assessmentResult.InstitutionName, &assessmentResult.SubmittedDate, &assessmentResult.AssessmentStatus,
+		&assessmentResult.Result.Domain, &assessmentResult.Result.Aspect, &assessmentResult.Result.IndicatorNumber,
+		&assessmentResult.Result.Level, &assessmentResult.Result.SupportDocument, &assessmentResult.Result.Explanation,
+		&assessmentResult.Result.Proof, &assessmentResult.Validated)
+	if err != nil {
+		return assessmentResult, fmt.Errorf("failed to get indicator assessment result: %w", err)
+	}
+
+	return assessmentResult, nil
 }
