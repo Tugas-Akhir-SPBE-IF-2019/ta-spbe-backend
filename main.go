@@ -9,12 +9,9 @@ import (
 	"net/url"
 	assessmenthandler "ta-spbe-backend/api/handler/assessment"
 	indicatorassessmenthandler "ta-spbe-backend/api/handler/indicator_assessment"
-	"ta-spbe-backend/api/handlers"
-	"ta-spbe-backend/api/routers"
 	"ta-spbe-backend/config"
 	"ta-spbe-backend/database"
 	"ta-spbe-backend/repository/pgsql"
-	"ta-spbe-backend/services"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -29,9 +26,6 @@ func main() {
 	}
 
 	migrate := flag.Bool("migrate", cfg.DB.Migration, "do migration")
-
-	assessmentService := services.NewAssessmentService()
-	assessmentHandler := handlers.NewAssessmentHandler(assessmentService)
 
 	dsn := fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
@@ -72,9 +66,7 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	r.Route("/mock/assessment", func(r chi.Router) {
-		r.Mount("/", routers.AssessmentRouter(assessmentHandler))
-	})
+
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Tugas Akhir Otomatisasi Penilaian Tingkat Kematangan Kebijakan SPBE IF 2019"))
 	})
@@ -84,6 +76,7 @@ func main() {
 		r.Get("/{id}", indicatorassessmenthandler.GetIndicatorAssessmentResult(indicatorAssessmentRepo))
 		r.Get("/index", indicatorassessmenthandler.GetIndicatorAssessmentIndexList(indicatorAssessmentRepo))
 		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, cfg.API))
+		r.Patch("/{id}/validate", indicatorassessmenthandler.ValidateIndicatorAssessmentResult(indicatorAssessmentRepo))
 	})
 
 	//static file serve (for testing purpose only)

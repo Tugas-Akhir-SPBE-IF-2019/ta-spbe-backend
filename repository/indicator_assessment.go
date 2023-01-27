@@ -23,15 +23,22 @@ type IndicatorAssessmentResultInfo struct {
 }
 
 type IndicatorAssessmentResultDetail struct {
-	InstitutionName  string
-	SubmittedDate    time.Time
-	AssessmentStatus int
-	Result           IndicatorAssessmentResultInfo
-	Validated        bool
+	IndicatorAssessmentId string
+	InstitutionName       string
+	SubmittedDate         time.Time
+	AssessmentStatus      int
+	Result                IndicatorAssessmentResultInfo
+	ResultFeedback              IndicatorAssessmentResultFeedback
+}
+
+type IndicatorAssessmentResultFeedback struct {
+	Level    int
+	Feedback string
 }
 
 type IndicatorAssessmentRepository interface {
 	FindAll(ctx context.Context) ([]*IndicatorAssessmentDetail, error)
 	FindAllPagination(ctx context.Context, offset int, limit int) ([]*IndicatorAssessmentDetail, error)
 	FindIndicatorAssessmentResultById(ctx context.Context, id string) (IndicatorAssessmentResultDetail, error)
+	ValidateAssessmentResult(ctx context.Context, resultCorrect bool, indicatorAssessmentResult *IndicatorAssessmentResultDetail) error
 }

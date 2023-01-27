@@ -81,7 +81,6 @@ func GetIndicatorAssessmentIndexList(indicatorAssessmentRepo repository.Indicato
 		indicatorAssessmentIndexListAll, err := indicatorAssessmentRepo.FindAll(ctx)
 		if err != nil {
 			log.Println(err)
-
 			response.Error(w, apierror.InternalServerError())
 			return
 		}
@@ -91,7 +90,6 @@ func GetIndicatorAssessmentIndexList(indicatorAssessmentRepo repository.Indicato
 		indicatorAssessmentIndexList, err := indicatorAssessmentRepo.FindAllPagination(ctx, offset, req.limit)
 		if err != nil {
 			log.Println(err)
-
 			response.Error(w, apierror.InternalServerError())
 			return
 		}
