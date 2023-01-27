@@ -3,7 +3,6 @@ package pgsql
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"log"
 	"ta-spbe-backend/repository"
 )
@@ -124,7 +123,8 @@ func (r *indicatorAssessmentRepo) FindIndicatorAssessmentResultById(ctx context.
 		&assessmentResult.Result.Level, &assessmentResult.Result.SupportDocument, &assessmentResult.Result.Explanation,
 		&assessmentResult.Result.Proof, &assessmentResult.Validated)
 	if err != nil {
-		return assessmentResult, fmt.Errorf("failed to get indicator assessment result: %w", err)
+		log.Println("indicator assessment sql repo scan error: %w", err)
+		return assessmentResult, err
 	}
 
 	return assessmentResult, nil
