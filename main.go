@@ -83,7 +83,7 @@ func main() {
 	jwt := token.NewJWT(cfg.JWT)
 	r.Route("/auth", func(r chi.Router) {
 		r.Get("/", token.HandleMain)
-		r.Get("/google", authhandler.Google(cfg.OAuth))
+		r.Post("/google", authhandler.Google(cfg.OAuth))
 		r.Get("/google/callback", authhandler.GoogleCallback(userRepo, cfg.OAuth, jwt))
 	})
 

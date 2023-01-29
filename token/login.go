@@ -16,7 +16,9 @@ const IndexPage = `
 			Login with the following,
 		</p>
 		<ul>
-			<li><a href="/auth/google">Google</a></li>
+			<form action="/auth/google" method="post">
+   				<button type="submit" name="" value="" class="btn-link">Login</button>
+			</form>
 		</ul>
 	</body>
 </html>
