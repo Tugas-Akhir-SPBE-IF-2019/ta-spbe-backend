@@ -1,6 +1,7 @@
 package assessment
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -15,8 +16,10 @@ import (
 	"ta-spbe-backend/api/response"
 	"ta-spbe-backend/config"
 	"ta-spbe-backend/repository"
+	"time"
 
 	"github.com/google/uuid"
+	"github.com/nsqio/go-nsq"
 )
 
 const MAX_UPLOAD_SIZE = 10240 * 10240 // 10MB
@@ -29,6 +32,12 @@ type UploadSpbeDocumentRequest struct {
 	supportingDocumentFileHeader *multipart.FileHeader
 	oldDocumentFile              multipart.File
 	oldDocumentFileHeader        *multipart.FileHeader
+}
+
+type UploadProducerMessage struct {
+	Name      string
+	Content   string
+	Timestamp string
 }
 
 func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldError {
@@ -72,7 +81,7 @@ type UploadSpbeDocumentResponse struct {
 	DocumentUrl  string `json:"document_url"`
 }
 
-func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, apiCfg config.API) http.HandlerFunc {
+func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, producer *nsq.Producer, apiCfg config.API) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
@@ -131,6 +140,27 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, apiCfg c
 			UserId: userCred.ID,
 		}
 		err = assessmentRepo.InsertUploadDocument(ctx, &assessmentUploadDetail)
+
+		topic := "SPBE_Assessment"
+		msg := UploadProducerMessage{
+			Name:      assessmentUploadDetail.AssessmentDetail.InstitutionName,
+			Content:   assessmentUploadDetail.AssessmentDetail.Id,
+			Timestamp: time.Now().UTC().String(),
+		}
+
+		producerPayload, err := json.Marshal(msg)
+		if err != nil {
+			log.Println(err)
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+
+		err = producer.Publish(topic, producerPayload)
+		if err != nil {
+			log.Println(err)
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
 
 		resp := UploadSpbeDocumentResponse{
 			Message:      "Document has been successfully uploaded",

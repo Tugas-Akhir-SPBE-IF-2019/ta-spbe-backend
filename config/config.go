@@ -31,11 +31,17 @@ type JWT struct {
 	Secret string `toml:"secret"`
 }
 
+type MessageBroker struct {
+	Host string `toml:"host"`
+	Port int `toml:"port"`
+}
+
 type Config struct {
 	API   API      `toml:"api"`
 	DB    Postgres `toml:"postgres"`
 	OAuth OAuth    `toml:"oauth"`
 	JWT   JWT      `toml:"jwt"`
+	MessageBroker MessageBroker `toml:"messagebroker"`
 }
 
 func LoadEnvFromFile(path string) (Config, error) {

@@ -20,6 +20,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/lib/pq"
+	"github.com/nsqio/go-nsq"
 )
 
 func main() {
@@ -73,6 +74,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	nsqConfig := nsq.NewConfig()
+	nsqdAddress := fmt.Sprintf("%s:%d", cfg.MessageBroker.Host, cfg.MessageBroker.Port)
+	producer, err := nsq.NewProducer(nsqdAddress, nsqConfig)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
@@ -93,7 +101,7 @@ func main() {
 		r.Use(authMW)
 		r.Get("/", assessmenthandler.GetSPBEAssessmentList(assessmentRepo))
 		r.Get("/{id}", indicatorassessmenthandler.GetIndicatorAssessmentResult(indicatorAssessmentRepo))
-		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, cfg.API))
+		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, producer, cfg.API))
 		r.Patch("/{id}/validate", indicatorassessmenthandler.ValidateIndicatorAssessmentResult(indicatorAssessmentRepo))
 	})
 

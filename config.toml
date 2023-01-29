@@ -17,3 +17,7 @@ redirect_uri = "http://localhost/auth/google/callback"
 
 [jwt]
 secret = "secret"
+
+[messagebroker]
+host = "nsqd"
+port = 4150
