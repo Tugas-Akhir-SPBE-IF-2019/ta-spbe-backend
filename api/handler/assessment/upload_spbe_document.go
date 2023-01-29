@@ -3,6 +3,7 @@ package assessment
 import (
 	"fmt"
 	"io"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -96,6 +97,7 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, apiCfg c
 
 		dst, err := os.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
 		if err != nil {
+			log.Println(err.Error())
 			response.Error(w, apierror.InternalServerError())
 			return
 		}
@@ -103,6 +105,7 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, apiCfg c
 
 		_, err = io.Copy(dst, req.supportingDocumentFile)
 		if err != nil {
+			log.Println(err.Error())
 			response.Error(w, apierror.InternalServerError())
 			return
 		}

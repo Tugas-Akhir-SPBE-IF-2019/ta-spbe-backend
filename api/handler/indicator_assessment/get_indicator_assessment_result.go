@@ -26,7 +26,6 @@ type IndicatorAssessmentResultResponse struct {
 	SubmittedDate    time.Time                     `json:"submitted_date"`
 	AssessmentStatus int                           `json:"assessment_status"`
 	Result           IndicatorAssessmentResultItem `json:"result"`
-	Validated        bool                          `json:"validated"`
 }
 
 func GetIndicatorAssessmentResult(indicatorAssessmentRepo repository.IndicatorAssessmentRepository) http.HandlerFunc {
@@ -51,7 +50,6 @@ func GetIndicatorAssessmentResult(indicatorAssessmentRepo repository.IndicatorAs
 				SupportDocument: indicatorAssessment.Result.SupportDocument,
 				Proof:           indicatorAssessment.Result.Proof,
 			},
-			Validated: indicatorAssessment.Validated,
 		}
 
 		response.Respond(w, http.StatusOK, resp)
