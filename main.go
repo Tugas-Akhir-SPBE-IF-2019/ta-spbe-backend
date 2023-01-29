@@ -8,17 +8,19 @@ import (
 	"net/http"
 	"net/url"
 	assessmenthandler "ta-spbe-backend/api/handler/assessment"
+	authhandler "ta-spbe-backend/api/handler/auth"
 	indicatorassessmenthandler "ta-spbe-backend/api/handler/indicator_assessment"
-	"ta-spbe-backend/api/handlers"
-	"ta-spbe-backend/api/routers"
+	apimiddleware "ta-spbe-backend/api/middleware"
+
 	"ta-spbe-backend/config"
 	"ta-spbe-backend/database"
 	"ta-spbe-backend/repository/pgsql"
-	"ta-spbe-backend/services"
+	"ta-spbe-backend/token"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/lib/pq"
+	"github.com/nsqio/go-nsq"
 )
 
 func main() {
@@ -29,9 +31,6 @@ func main() {
 	}
 
 	migrate := flag.Bool("migrate", cfg.DB.Migration, "do migration")
-
-	assessmentService := services.NewAssessmentService()
-	assessmentHandler := handlers.NewAssessmentHandler(assessmentService)
 
 	dsn := fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
@@ -70,20 +69,40 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	userRepo, err := pgsql.NewUserRepo(db)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	nsqConfig := nsq.NewConfig()
+	nsqdAddress := fmt.Sprintf("%s:%d", cfg.MessageBroker.Host, cfg.MessageBroker.Port)
+	producer, err := nsq.NewProducer(nsqdAddress, nsqConfig)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	r.Route("/mock/assessment", func(r chi.Router) {
-		r.Mount("/", routers.AssessmentRouter(assessmentHandler))
-	})
+
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Tugas Akhir Otomatisasi Penilaian Tingkat Kematangan Kebijakan SPBE IF 2019"))
 	})
 
+	jwt := token.NewJWT(cfg.JWT)
+	r.Route("/auth", func(r chi.Router) {
+		r.Get("/", token.HandleMain)
+		r.Post("/google", authhandler.Google(cfg.OAuth))
+		r.Get("/google/callback", authhandler.GoogleCallback(userRepo, cfg.OAuth, jwt))
+	})
+
+	authMW := apimiddleware.Auth(jwt)
+	r.Get("/assessments/index", indicatorassessmenthandler.GetIndicatorAssessmentIndexList(indicatorAssessmentRepo))
 	r.Route("/assessments", func(r chi.Router) {
+		r.Use(authMW)
 		r.Get("/", assessmenthandler.GetSPBEAssessmentList(assessmentRepo))
 		r.Get("/{id}", indicatorassessmenthandler.GetIndicatorAssessmentResult(indicatorAssessmentRepo))
-		r.Get("/index", indicatorassessmenthandler.GetIndicatorAssessmentIndexList(indicatorAssessmentRepo))
-		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, cfg.API))
+		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, producer, cfg.API))
+		r.Patch("/{id}/validate", indicatorassessmenthandler.ValidateIndicatorAssessmentResult(indicatorAssessmentRepo))
 	})
 
 	//static file serve (for testing purpose only)

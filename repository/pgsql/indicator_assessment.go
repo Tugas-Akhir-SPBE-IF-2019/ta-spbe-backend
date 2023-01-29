@@ -3,8 +3,12 @@ package pgsql
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log"
 	"ta-spbe-backend/repository"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 type indicatorAssessmentRepo struct {
@@ -26,9 +30,12 @@ func NewIndicatorAssessmentRepo(db *sql.DB) (repository.IndicatorAssessmentRepos
 }
 
 var indicatorAssessmentQueries = map[string]string{
-	indicatorAssessmentFindAll:           indicatorAssessmentFindAllQuery,
-	indicatorAssessmentFindAllPagination: indicatorAssessmentFindAllPaginationQuery,
-	indicatorAssessmentResultFindById:    indicatorAssessmentResultFindByIdQuery,
+	indicatorAssessmentFindAll:              indicatorAssessmentFindAllQuery,
+	indicatorAssessmentFindAllPagination:    indicatorAssessmentFindAllPaginationQuery,
+	indicatorAssessmentResultFindById:       indicatorAssessmentResultFindByIdQuery,
+	insertAssessmentFeedback:                insertAssessmentFeedbackQuery,
+	updateAssessmentFeedback:                updateAssessmentFeedbackQuery,
+	updateValidatedAssessmentFeedbackStatus: updateValidatedAssessmentFeedbackStatusQuery,
 }
 
 const indicatorAssessmentFindAll = "findAll"
@@ -101,8 +108,8 @@ func (r *indicatorAssessmentRepo) FindAllPagination(ctx context.Context, offset 
 }
 
 const indicatorAssessmentResultFindById = "indicatorAssessmentResultFindById"
-const indicatorAssessmentResultFindByIdQuery = `SELECT a.institution_name, ia.created_at, ia.status, i.domain, i.aspect, i.indicator_number, 
-		ia.level, sdd.document_url, COALESCE(ia.explanation, ''),  COALESCE(sddp.proof, ''), ia.validated
+const indicatorAssessmentResultFindByIdQuery = `SELECT ia.id, a.institution_name, ia.created_at, ia.status, i.domain, i.aspect, i.indicator_number, 
+		ia.level, sdd.document_url, COALESCE(ia.explanation, ''),  COALESCE(sddp.proof, '')
 		FROM indicator_assessments ia
 		LEFT JOIN assessments a
 		ON ia.assessment_id = a.id
@@ -118,14 +125,74 @@ func (r *indicatorAssessmentRepo) FindIndicatorAssessmentResultById(ctx context.
 	assessmentResult := repository.IndicatorAssessmentResultDetail{}
 
 	row := r.ps[indicatorAssessmentResultFindById].QueryRowContext(ctx, id)
-	err := row.Scan(&assessmentResult.InstitutionName, &assessmentResult.SubmittedDate, &assessmentResult.AssessmentStatus,
-		&assessmentResult.Result.Domain, &assessmentResult.Result.Aspect, &assessmentResult.Result.IndicatorNumber,
-		&assessmentResult.Result.Level, &assessmentResult.Result.SupportDocument, &assessmentResult.Result.Explanation,
-		&assessmentResult.Result.Proof, &assessmentResult.Validated)
+	err := row.Scan(&assessmentResult.IndicatorAssessmentId, &assessmentResult.InstitutionName, &assessmentResult.SubmittedDate,
+		&assessmentResult.AssessmentStatus, &assessmentResult.Result.Domain, &assessmentResult.Result.Aspect,
+		&assessmentResult.Result.IndicatorNumber, &assessmentResult.Result.Level, &assessmentResult.Result.SupportDocument,
+		&assessmentResult.Result.Explanation, &assessmentResult.Result.Proof,
+	)
 	if err != nil {
 		log.Println("indicator assessment sql repo scan error: %w", err)
 		return assessmentResult, err
 	}
 
 	return assessmentResult, nil
+}
+
+const insertAssessmentFeedback = "insertAssessmentFeedback"
+const insertAssessmentFeedbackQuery = `INSERT INTO 
+	indicator_assessment_feedbacks(
+		id, indicator_assessment_id, level,
+		feedback, created_at
+	) values (
+		$1, $2, $3, $4, $5
+	)
+`
+const updateAssessmentFeedback = "updateAssessmentFeedback"
+const updateAssessmentFeedbackQuery = `UPDATE indicator_assessment_feedbacks	
+	SET level = $2, feedback = $3
+	WHERE indicator_assessment_id = $1
+`
+const updateValidatedAssessmentFeedbackStatus = "updateValidatedAssessmentFeedbackStatus"
+const updateValidatedAssessmentFeedbackStatusQuery = `UPDATE indicator_assessments
+	SET status = $2
+	WHERE id = $1
+`
+
+func (r *indicatorAssessmentRepo) ValidateAssessmentResult(ctx context.Context, resultCorrect bool, indicatorAssessmentResult *repository.IndicatorAssessmentResultDetail) error {
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin validate assessment result tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	if repository.AssessmentStatus(indicatorAssessmentResult.AssessmentStatus) != repository.AssessmentStatus(repository.VALIDATED) {
+		feedbackId := uuid.NewString()
+		createdAt := time.Now().UTC()
+		_, err = tx.StmtContext(ctx, r.ps[insertAssessmentFeedback]).ExecContext(ctx, feedbackId, indicatorAssessmentResult.IndicatorAssessmentId,
+			indicatorAssessmentResult.ResultFeedback.Level, indicatorAssessmentResult.ResultFeedback.Feedback, createdAt)
+		if err != nil {
+			return fmt.Errorf("failed to insert indicator assessment feedback: %w", err)
+		}
+
+		if !resultCorrect {
+			_, err = tx.StmtContext(ctx, r.ps[updateValidatedAssessmentFeedbackStatus]).ExecContext(ctx, indicatorAssessmentResult.IndicatorAssessmentId, repository.AssessmentStatus(repository.VALIDATED))
+			if err != nil {
+				return fmt.Errorf("failed to update indicator assessment validated status: %w", err)
+			}
+		}
+	} else {
+		if !resultCorrect {
+			_, err = tx.StmtContext(ctx, r.ps[updateAssessmentFeedback]).ExecContext(ctx, indicatorAssessmentResult.IndicatorAssessmentId,
+				indicatorAssessmentResult.ResultFeedback.Level, indicatorAssessmentResult.ResultFeedback.Feedback)
+			if err != nil {
+				return fmt.Errorf("failed to update indicator assessment feedback: %w", err)
+			}
+		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit validate assessment result tx: %w", err)
+	}
+
+	return nil
 }
