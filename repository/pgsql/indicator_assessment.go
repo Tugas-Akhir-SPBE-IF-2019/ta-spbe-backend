@@ -36,6 +36,9 @@ var indicatorAssessmentQueries = map[string]string{
 	insertAssessmentFeedback:                insertAssessmentFeedbackQuery,
 	updateAssessmentFeedback:                updateAssessmentFeedbackQuery,
 	updateValidatedAssessmentFeedbackStatus: updateValidatedAssessmentFeedbackStatusQuery,
+	updateAssessmentStatus:                  updateAssessmentStatusQuery,
+	updateIndicatorAssessmentResult:         updateIndicatorAssessmentResultQuery,
+	insertSupportDataDocumentProof:          insertSupportDataDocumentProofQuery,
 }
 
 const indicatorAssessmentFindAll = "findAll"
@@ -192,6 +195,61 @@ func (r *indicatorAssessmentRepo) ValidateAssessmentResult(ctx context.Context, 
 
 	if err = tx.Commit(); err != nil {
 		return fmt.Errorf("failed to commit validate assessment result tx: %w", err)
+	}
+
+	return nil
+}
+
+const updateAssessmentStatus = "updateAssessmentStatus"
+const updateAssessmentStatusQuery = `UPDATE assessments
+	SET status = $2, updated_at = $3
+	WHERE id = $1
+`
+const updateIndicatorAssessmentResult = "updateIndicatorAssessmentResult"
+const updateIndicatorAssessmentResultQuery = `UPDATE indicator_assessments
+	SET status = $2, level = $3, explanation = $4, updated_at = $5
+	WHERE id = $1
+`
+const insertSupportDataDocumentProof = "insertSupportDataDocumentProof"
+const insertSupportDataDocumentProofQuery = `INSERT into
+	support_data_document_proofs(
+		id, indicator_assessment_id, support_data_document_id, proof, created_at
+	) values(
+		$1, $2, $3, $4, $5
+	)
+`
+
+func (r *indicatorAssessmentRepo) UpdateAssessmentResult(ctx context.Context, resultDetail *repository.IndicatorAssessmentResultDetail) error {
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to commit update assessment result tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	updatedAt := time.Now().UTC()
+	_, err = tx.StmtContext(ctx, r.ps[updateAssessmentStatus]).ExecContext(ctx, resultDetail.AssessmentId,
+		repository.AssessmentStatus(repository.COMPLETED), updatedAt)
+	if err != nil {
+		return fmt.Errorf("failed to update assessment: %w", err)
+	}
+
+	_, err = tx.StmtContext(ctx, r.ps[updateIndicatorAssessmentResult]).ExecContext(ctx,
+		resultDetail.IndicatorAssessmentId, repository.AssessmentStatus(repository.COMPLETED),
+		resultDetail.Result.Level, resultDetail.Result.Explanation, updatedAt)
+	if err != nil {
+		return fmt.Errorf("failed to update indicator assessment: %w", err)
+	}
+
+	supportDataDocumentProofId := uuid.NewString()
+	_, err = tx.StmtContext(ctx, r.ps[insertSupportDataDocumentProof]).ExecContext(ctx,
+		supportDataDocumentProofId, resultDetail.IndicatorAssessmentId, resultDetail.Result.SupportDocument,
+		resultDetail.Result.Proof, updatedAt)
+	if err != nil {
+		return fmt.Errorf("failed to insert support data document proof: %w", err)
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit update assessment result tx: %w", err)
 	}
 
 	return nil

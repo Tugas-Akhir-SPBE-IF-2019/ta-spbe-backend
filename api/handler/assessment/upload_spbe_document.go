@@ -35,9 +35,12 @@ type UploadSpbeDocumentRequest struct {
 }
 
 type UploadProducerMessage struct {
-	Name      string
-	Content   string
-	Timestamp string
+	Name                  string
+	Content               string
+	UserId                string
+	AssessmentId          string
+	IndicatorAssessmentId string
+	Timestamp             string
 }
 
 func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldError {
@@ -143,9 +146,12 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, producer
 
 		topic := "SPBE_Assessment"
 		msg := UploadProducerMessage{
-			Name:      assessmentUploadDetail.AssessmentDetail.InstitutionName,
-			Content:   assessmentUploadDetail.AssessmentDetail.Id,
-			Timestamp: time.Now().UTC().String(),
+			Name:                  assessmentUploadDetail.AssessmentDetail.InstitutionName,
+			Content:               assessmentUploadDetail.SupportDataDocumentInfo.Id,
+			UserId:                userCred.ID,
+			AssessmentId:          assessmentUploadDetail.AssessmentDetail.Id,
+			IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
+			Timestamp:             time.Now().UTC().String(),
 		}
 
 		producerPayload, err := json.Marshal(msg)

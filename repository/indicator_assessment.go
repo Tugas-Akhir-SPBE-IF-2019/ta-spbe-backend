@@ -24,11 +24,12 @@ type IndicatorAssessmentResultInfo struct {
 
 type IndicatorAssessmentResultDetail struct {
 	IndicatorAssessmentId string
+	AssessmentId          string
 	InstitutionName       string
 	SubmittedDate         time.Time
 	AssessmentStatus      int
 	Result                IndicatorAssessmentResultInfo
-	ResultFeedback              IndicatorAssessmentResultFeedback
+	ResultFeedback        IndicatorAssessmentResultFeedback
 }
 
 type IndicatorAssessmentResultFeedback struct {
@@ -41,4 +42,5 @@ type IndicatorAssessmentRepository interface {
 	FindAllPagination(ctx context.Context, offset int, limit int) ([]*IndicatorAssessmentDetail, error)
 	FindIndicatorAssessmentResultById(ctx context.Context, id string) (IndicatorAssessmentResultDetail, error)
 	ValidateAssessmentResult(ctx context.Context, resultCorrect bool, indicatorAssessmentResult *IndicatorAssessmentResultDetail) error
+	UpdateAssessmentResult(ctx context.Context, resultDetail *IndicatorAssessmentResultDetail) error
 }

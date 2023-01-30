@@ -105,6 +105,8 @@ func main() {
 		r.Patch("/{id}/validate", indicatorassessmenthandler.ValidateIndicatorAssessmentResult(indicatorAssessmentRepo))
 	})
 
+	r.Post("/assessments/result/callback", indicatorassessmenthandler.ResultCallback(indicatorAssessmentRepo))
+
 	//static file serve (for testing purpose only)
 	fs := http.FileServer(http.Dir("static/supporting-documents"))
 	r.Handle("/static/*", http.StripPrefix("/static/", fs))
