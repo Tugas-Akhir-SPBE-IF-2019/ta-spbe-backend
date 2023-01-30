@@ -1,0 +1,8 @@
+[server]
+host = "go-web-app"
+
+[nsq]
+host = "nsqd"
+port = 4150
+topic = "SPBE_Assessment"
+channel = "test_ch"

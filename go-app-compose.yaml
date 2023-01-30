@@ -44,3 +44,10 @@ services:
       - nsqlookupd  
     ports:
       - "4171:4171"
+  nlp-processing:
+    build: ./ext-service/nlp-processing
+    restart: always
+    ports:
+      - "8000:15400"
+    volumes:
+      - ./ext-service/nlp-processing/app/:/app/src
