@@ -7,7 +7,7 @@ def send_result(message_data, config):
         "assessment_id": message_data['AssessmentId'],
         "indicator_assessment_id": message_data['IndicatorAssessmentId'],
         "level": 4,
-        "explanation": "sudah selesai dinilai",
+        "explanation": "berdasarkan data dukung yang diberikan, level yang sesuai adalah level 4",
         "support_data_document_id": message_data['Content'],
         "proof": "<p>ini <b>buktinya</b></p>"
         

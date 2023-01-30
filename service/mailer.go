@@ -1,5 +1,5 @@
 package service
 
 type Mailer interface {
-	Send(subject, message []byte, receiver []string) error
+	Send(subject, message []byte, receiver []string, templateName string, items interface{}) error
 }

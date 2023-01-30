@@ -179,7 +179,7 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, userRepo
 		to := []string{user.Email}
 		subject, message := generateEmailContent()
 		go func() {
-			err := mailer.Send(subject, message, to)
+			err := mailer.Send(subject, message, to, "upload.html", map[string]string{"username": "Conor"})
 			if err != nil {
 				log.Println("error send email: %w", err)
 			}

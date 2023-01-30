@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
 	apierror "ta-spbe-backend/api/error"
 	"ta-spbe-backend/api/response"
 	"ta-spbe-backend/repository"
@@ -63,7 +65,8 @@ func ResultCallback(indicatorAssessmentRepo repository.IndicatorAssessmentReposi
 		to := []string{user.Email}
 		subject, message := generateEmailContent(req.Level, req.Explanation)
 		go func() {
-			err := mailer.Send(subject, message, to)
+			err := mailer.Send(subject, message, to, "result.html", map[string]string{"level": strconv.Itoa(req.Level),
+				"explanation": strings.ToUpper(req.Explanation)})
 			if err != nil {
 				log.Println("error send email: %w", err)
 			}
