@@ -6,3 +6,6 @@ host = "nsqd"
 port = 4150
 topic = "SPBE_Assessment"
 channel = "test_ch"
+
+[callback]
+mockcooldown = 30
