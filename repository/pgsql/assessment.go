@@ -39,8 +39,10 @@ var assessmentQueries = map[string]string{
 }
 
 const assessmentFindAll = "findAll"
-const assessmentFindAllQuery = `SELECT a.id, a.institution_name, a.status, a.created_at
-		FROM assessments a`
+const assessmentFindAllQuery = `SELECT ia.id, a.institution_name, ia.status, ia.created_at
+		FROM assessments a
+		RIGHT JOIN indicator_assessments ia
+		ON ia.assessment_id = a.id`
 
 func (r *assessmentRepo) FindAll(ctx context.Context) ([]*repository.AssessmentDetail, error) {
 	assessmentList := []*repository.AssessmentDetail{}
@@ -71,8 +73,11 @@ func (r *assessmentRepo) FindAll(ctx context.Context) ([]*repository.AssessmentD
 }
 
 const assessmentFindAllPagination = "findAllPagination"
-const assessmentFindAllPaginationQuery = `SELECT a.id, a.institution_name, a.status, a.created_at
-		FROM assessments a LIMIT $2 OFFSET $1`
+const assessmentFindAllPaginationQuery = `SELECT ia.id, a.institution_name, ia.status, ia.created_at
+		FROM assessments a 
+		RIGHT JOIN indicator_assessments ia
+		ON ia.assessment_id = a.id
+		LIMIT $2 OFFSET $1`
 
 func (r *assessmentRepo) FindAllPagination(ctx context.Context, offset int, limit int) ([]*repository.AssessmentDetail, error) {
 	assessmentList := []*repository.AssessmentDetail{}

@@ -127,7 +127,7 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, apiCfg c
 
 		resp := UploadSpbeDocumentResponse{
 			Message:      "Document has been successfully uploaded",
-			AssessmentId: assessmentUploadDetail.AssessmentDetail.Id,
+			AssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
 			DocumentUrl:  supportingDocumentUrl,
 		}
 
