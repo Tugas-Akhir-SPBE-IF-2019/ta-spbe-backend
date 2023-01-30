@@ -31,16 +31,26 @@ type JWT struct {
 	Secret string `toml:"secret"`
 }
 
+type SMTPClient struct {
+	Debug         bool   `toml:"debug"`
+	Host          string `toml:"host"`
+	Port          int    `toml:"port"`
+	AdminIdentity string `toml:"admin_identity"`
+	AdminEmail    string `toml:"admin_email"`
+	AdminPassword string `toml:"admin_password"`
+}
+
 type MessageBroker struct {
 	Host string `toml:"host"`
-	Port int `toml:"port"`
+	Port int    `toml:"port"`
 }
 
 type Config struct {
-	API   API      `toml:"api"`
-	DB    Postgres `toml:"postgres"`
-	OAuth OAuth    `toml:"oauth"`
-	JWT   JWT      `toml:"jwt"`
+	API           API           `toml:"api"`
+	DB            Postgres      `toml:"postgres"`
+	OAuth         OAuth         `toml:"oauth"`
+	JWT           JWT           `toml:"jwt"`
+	SMTPClient    SMTPClient    `toml:"smtp"`
 	MessageBroker MessageBroker `toml:"messagebroker"`
 }
 

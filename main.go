@@ -11,6 +11,7 @@ import (
 	authhandler "ta-spbe-backend/api/handler/auth"
 	indicatorassessmenthandler "ta-spbe-backend/api/handler/indicator_assessment"
 	apimiddleware "ta-spbe-backend/api/middleware"
+	mailerservice "ta-spbe-backend/service/mailer"
 
 	"ta-spbe-backend/config"
 	"ta-spbe-backend/database"
@@ -81,6 +82,11 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	mailerService, err := mailerservice.NewSimpleMailer(cfg.SMTPClient)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
@@ -101,16 +107,19 @@ func main() {
 		r.Use(authMW)
 		r.Get("/", assessmenthandler.GetSPBEAssessmentList(assessmentRepo))
 		r.Get("/{id}", indicatorassessmenthandler.GetIndicatorAssessmentResult(indicatorAssessmentRepo))
-		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, producer, cfg.API))
+		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, userRepo, producer, mailerService, cfg.API, cfg.SMTPClient))
 		r.Patch("/{id}/validate", indicatorassessmenthandler.ValidateIndicatorAssessmentResult(indicatorAssessmentRepo))
 	})
 
-	r.Post("/assessments/result/callback", indicatorassessmenthandler.ResultCallback(indicatorAssessmentRepo))
+	r.Post("/assessments/result/callback", indicatorassessmenthandler.ResultCallback(indicatorAssessmentRepo, userRepo, mailerService))
 
 	//static file serve (for testing purpose only)
 	fs := http.FileServer(http.Dir("static/supporting-documents"))
 	r.Handle("/static/*", http.StripPrefix("/static/", fs))
 
 	log.Printf("Server is listening on port %d", cfg.API.Port)
-	http.ListenAndServe(fmt.Sprintf(":%d", cfg.API.Port), r)
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", cfg.API.Port), r); err != nil {
+		log.Println(err)
+
+	}
 }

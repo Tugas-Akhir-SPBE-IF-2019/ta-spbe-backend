@@ -2,11 +2,13 @@ package indicatorassessment
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	apierror "ta-spbe-backend/api/error"
 	"ta-spbe-backend/api/response"
 	"ta-spbe-backend/repository"
+	"ta-spbe-backend/service"
 )
 
 type IndicatorAssessmentResultCallbackRequest struct {
@@ -23,7 +25,7 @@ type ValidateIndicatorAssessmentResultResponseS struct {
 	Message string `json:"message"`
 }
 
-func ResultCallback(indicatorAssessmentRepo repository.IndicatorAssessmentRepository) http.HandlerFunc {
+func ResultCallback(indicatorAssessmentRepo repository.IndicatorAssessmentRepository, userRepo repository.UserRepository, mailer service.Mailer) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		req := IndicatorAssessmentResultCallbackRequest{}
@@ -51,6 +53,31 @@ func ResultCallback(indicatorAssessmentRepo repository.IndicatorAssessmentReposi
 			return
 		}
 
+		user, err := userRepo.FindOneByID(ctx, req.UserId)
+		if err != nil {
+			log.Println(err)
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+
+		to := []string{user.Email}
+		subject, message := generateEmailContent(req.Level, req.Explanation)
+		go func() {
+			err := mailer.Send(subject, message, to)
+			if err != nil {
+				log.Println("error send email: %w", err)
+			}
+		}()
+
 		response.Respond(w, http.StatusNoContent, nil)
 	}
+}
+
+func generateEmailContent(level int, explanation string) (subject, message []byte) {
+	subject = []byte("Hasil Otomatisasi Penilaian SPBE")
+	message = []byte(fmt.Sprintf(`Terima kasih telah menggunakan Aplikasi Otomatisasi Penilaian SPBE. Berikut ini hasil penilaian anda
+	Level: %d
+	Penjelasan: %s`, level, explanation))
+
+	return
 }

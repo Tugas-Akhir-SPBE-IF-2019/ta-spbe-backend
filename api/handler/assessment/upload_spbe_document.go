@@ -16,6 +16,7 @@ import (
 	"ta-spbe-backend/api/response"
 	"ta-spbe-backend/config"
 	"ta-spbe-backend/repository"
+	"ta-spbe-backend/service"
 	"time"
 
 	"github.com/google/uuid"
@@ -84,7 +85,7 @@ type UploadSpbeDocumentResponse struct {
 	DocumentUrl  string `json:"document_url"`
 }
 
-func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, producer *nsq.Producer, apiCfg config.API) http.HandlerFunc {
+func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, userRepo repository.UserRepository, producer *nsq.Producer, mailer service.Mailer, apiCfg config.API, smtpCfg config.SMTPClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
@@ -168,6 +169,22 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, producer
 			return
 		}
 
+		user, err := userRepo.FindOneByID(ctx, userCred.ID)
+		if err != nil {
+			log.Println(err)
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+
+		to := []string{user.Email}
+		subject, message := generateEmailContent()
+		go func() {
+			err := mailer.Send(subject, message, to)
+			if err != nil {
+				log.Println("error send email: %w", err)
+			}
+		}()
+
 		resp := UploadSpbeDocumentResponse{
 			Message:      "Document has been successfully uploaded",
 			AssessmentId: assessmentUploadDetail.AssessmentDetail.Id,
@@ -176,4 +193,11 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, producer
 
 		response.Respond(w, http.StatusCreated, resp)
 	}
+}
+
+func generateEmailContent() (subject, message []byte) {
+	subject = []byte("Otomatisasi Penilaian SPBE")
+	message = []byte(fmt.Sprintf("Terima kasih telah menggunakan Aplikasi Otomatisasi Penilaian SPBE. Hasil penilaian anda akan keluar dalam beberapa saat lagi."))
+
+	return
 }

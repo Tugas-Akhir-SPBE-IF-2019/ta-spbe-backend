@@ -18,6 +18,13 @@ redirect_uri = "http://localhost/auth/google/callback"
 [jwt]
 secret = "secret"
 
+[smtp]
+host = "smtp.gmail.com"
+port = 587
+admin_identity = ""
+admin_email = "info.otomatisasi.spbe@gmail.com"
+admin_password = "ovdpxcvozeydibfk"
+
 [messagebroker]
 host = "nsqd"
 port = 4150
