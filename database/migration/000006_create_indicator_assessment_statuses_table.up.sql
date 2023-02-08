@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS indicator_assessment_statuses(
+  id INT PRIMARY KEY,
+  status TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE
+);
+
+INSERT INTO indicator_assessment_statuses (id, status, created_at)
+VALUES
+  (1, 'IN PROGRESS', '2019-01-23T12:54:18.610Z'),
+  (2, 'FINISHED', '2019-01-23T12:54:18.610Z'),
+  (3, 'VALIDATED', '2019-01-23T12:54:18.610Z');

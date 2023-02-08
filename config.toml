@@ -1,0 +1,30 @@
+[api]
+host = "localhost"
+port = 80
+
+[postgres]
+host = "db"
+port = 5432
+database = "ta-spbe"
+username = "ta-spbe"
+password = "ta-spbe"
+migration = true
+
+[oauth]
+client_id = "1086765098012-hd47p3sfjpqq73oecvsvv52fqijs1o6p.apps.googleusercontent.com"
+client_secret = "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"
+redirect_uri = "http://localhost/auth/google/callback"
+
+[jwt]
+secret = "secret"
+
+[smtp]
+host = "smtp.gmail.com"
+port = 587
+admin_identity = ""
+admin_email = "info.otomatisasi.spbe@gmail.com"
+admin_password = "ovdpxcvozeydibfk"
+
+[messagebroker]
+host = "nsqd"
+port = 4150
