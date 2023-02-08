@@ -11,7 +11,10 @@ import (
 	authhandler "ta-spbe-backend/api/handler/auth"
 	indicatorassessmenthandler "ta-spbe-backend/api/handler/indicator_assessment"
 	apimiddleware "ta-spbe-backend/api/middleware"
+	filesystem "ta-spbe-backend/service/file-system"
+	jsonmanipulator "ta-spbe-backend/service/json-manipulator"
 	mailerservice "ta-spbe-backend/service/mailer"
+	messagequeue "ta-spbe-backend/service/message-queue"
 
 	"ta-spbe-backend/config"
 	"ta-spbe-backend/database"
@@ -77,15 +80,21 @@ func main() {
 
 	nsqConfig := nsq.NewConfig()
 	nsqdAddress := fmt.Sprintf("%s:%d", cfg.MessageBroker.Host, cfg.MessageBroker.Port)
-	producer, err := nsq.NewProducer(nsqdAddress, nsqConfig)
+	nsqProducer, err := nsq.NewProducer(nsqdAddress, nsqConfig)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+	messageQueue := &messagequeue.NSQ{
+		Producer: nsqProducer,
+	}
 	mailerService, err := mailerservice.NewSimpleMailer(cfg.SMTPClient)
 	if err != nil {
 		log.Fatalln(err)
 	}
+	jsonEC := jsonmanipulator.EncoderDecoder{}
+
+	fileSystemIO := filesystem.IO{}
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -107,7 +116,7 @@ func main() {
 		r.Use(authMW)
 		r.Get("/", assessmenthandler.GetSPBEAssessmentList(assessmentRepo))
 		r.Get("/{id}", indicatorassessmenthandler.GetIndicatorAssessmentResult(indicatorAssessmentRepo))
-		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, userRepo, producer, mailerService, cfg.API, cfg.SMTPClient))
+		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, userRepo, messageQueue, mailerService, fileSystemIO, jsonEC, cfg.API, cfg.SMTPClient))
 		r.Patch("/{id}/validate", indicatorassessmenthandler.ValidateIndicatorAssessmentResult(indicatorAssessmentRepo))
 	})
 

@@ -1,13 +1,10 @@
 package assessment
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -20,7 +17,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/nsqio/go-nsq"
 )
 
 const MAX_UPLOAD_SIZE = 10240 * 10240 // 10MB
@@ -85,7 +81,7 @@ type UploadSpbeDocumentResponse struct {
 	DocumentUrl  string `json:"document_url"`
 }
 
-func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, userRepo repository.UserRepository, producer *nsq.Producer, mailer service.Mailer, apiCfg config.API, smtpCfg config.SMTPClient) http.HandlerFunc {
+func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, userRepo repository.UserRepository, mq service.MessageQueue, mailer service.Mailer, fsIO service.FileSystem, jsonEC service.JsonManipulator, apiCfg config.API, smtpCfg config.SMTPClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
@@ -115,7 +111,7 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, userRepo
 		supportingDocument := fmt.Sprintf("%s%s", filename, fileExt)
 		supportingDocumentUrl := fmt.Sprintf("http://%s/static/%s", apiCfg.Host, supportingDocument)
 
-		dst, err := os.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
+		dst, err := fsIO.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
 		if err != nil {
 			log.Println(err.Error())
 			response.Error(w, apierror.InternalServerError())
@@ -123,7 +119,7 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, userRepo
 		}
 		defer dst.Close()
 
-		_, err = io.Copy(dst, req.supportingDocumentFile)
+		_, err = fsIO.Copy(dst, req.supportingDocumentFile)
 		if err != nil {
 			log.Println(err.Error())
 			response.Error(w, apierror.InternalServerError())
@@ -155,14 +151,14 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, userRepo
 			Timestamp:             time.Now().UTC().String(),
 		}
 
-		producerPayload, err := json.Marshal(msg)
+		producerPayload, err := jsonEC.Marshal(msg)
 		if err != nil {
 			log.Println(err)
 			response.Error(w, apierror.InternalServerError())
 			return
 		}
 
-		err = producer.Publish(topic, producerPayload)
+		err = mq.Produce(topic, producerPayload)
 		if err != nil {
 			log.Println(err)
 			response.Error(w, apierror.InternalServerError())
