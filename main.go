@@ -8,10 +8,14 @@ import (
 	"net/http"
 	"net/url"
 	assessmenthandler "ta-spbe-backend/api/handler/assessment"
+	authhandler "ta-spbe-backend/api/handler/auth"
 	indicatorassessmenthandler "ta-spbe-backend/api/handler/indicator_assessment"
+	apimiddleware "ta-spbe-backend/api/middleware"
+
 	"ta-spbe-backend/config"
 	"ta-spbe-backend/database"
 	"ta-spbe-backend/repository/pgsql"
+	"ta-spbe-backend/token"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -64,6 +68,11 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	userRepo, err := pgsql.NewUserRepo(db)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
@@ -71,10 +80,19 @@ func main() {
 		w.Write([]byte("Tugas Akhir Otomatisasi Penilaian Tingkat Kematangan Kebijakan SPBE IF 2019"))
 	})
 
+	jwt := token.NewJWT(cfg.JWT)
+	r.Route("/auth", func(r chi.Router) {
+		r.Get("/", token.HandleMain)
+		r.Post("/google", authhandler.Google(cfg.OAuth))
+		r.Get("/google/callback", authhandler.GoogleCallback(userRepo, cfg.OAuth, jwt))
+	})
+
+	authMW := apimiddleware.Auth(jwt)
+	r.Get("/assessments/index", indicatorassessmenthandler.GetIndicatorAssessmentIndexList(indicatorAssessmentRepo))
 	r.Route("/assessments", func(r chi.Router) {
+		r.Use(authMW)
 		r.Get("/", assessmenthandler.GetSPBEAssessmentList(assessmentRepo))
 		r.Get("/{id}", indicatorassessmenthandler.GetIndicatorAssessmentResult(indicatorAssessmentRepo))
-		r.Get("/index", indicatorassessmenthandler.GetIndicatorAssessmentIndexList(indicatorAssessmentRepo))
 		r.Post("/documents/upload", assessmenthandler.UploadSPBEDocument(assessmentRepo, cfg.API))
 		r.Patch("/{id}/validate", indicatorassessmenthandler.ValidateIndicatorAssessmentResult(indicatorAssessmentRepo))
 	})

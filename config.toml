@@ -9,3 +9,11 @@ database = "ta-spbe"
 username = "ta-spbe"
 password = "ta-spbe"
 migration = true
+
+[oauth]
+client_id = "1086765098012-hd47p3sfjpqq73oecvsvv52fqijs1o6p.apps.googleusercontent.com"
+client_secret = "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"
+redirect_uri = "http://localhost/auth/google/callback"
+
+[jwt]
+secret = "secret"

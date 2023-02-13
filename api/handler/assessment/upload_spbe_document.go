@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	apierror "ta-spbe-backend/api/error"
+	userCtx "ta-spbe-backend/api/handler/context"
 	"ta-spbe-backend/api/response"
 	"ta-spbe-backend/config"
 	"ta-spbe-backend/repository"
@@ -87,6 +88,12 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, apiCfg c
 			return
 		}
 
+		userCred, ok := r.Context().Value(userCtx.UserCtxKey).(userCtx.UserCtx)
+		if !ok {
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+
 		defer req.supportingDocumentFile.Close()
 
 		uniqueId := uuid.New()
@@ -121,7 +128,7 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, apiCfg c
 				DocumentName: supportingDocument,
 				DocumentUrl:  supportingDocumentUrl,
 			},
-			UserId: "ccd52961-fa4e-43ba-a6df-a4c97849d899",
+			UserId: userCred.ID,
 		}
 		err = assessmentRepo.InsertUploadDocument(ctx, &assessmentUploadDetail)
 
