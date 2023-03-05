@@ -3,6 +3,7 @@ package pgsql
 import (
 	"context"
 	"database/sql"
+	"embed"
 	"fmt"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/logger"
 	"github.com/jackc/pgx/v5"
@@ -13,6 +14,12 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/uptrace/opentelemetry-go-extra/otelsql"
 	semconv "go.opentelemetry.io/otel/semconv/v1.17.0"
+
+	"github.com/golang-migrate/migrate/v4/source/iofs"
+
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 type Config struct {
@@ -123,4 +130,34 @@ func (pl *lg) Log(ctx context.Context, level tracelog.LogLevel, msg string, data
 		}
 	}
 	event.Fields(data).Msg(msg)
+}
+
+//go:embed migrations/*.sql
+var MigrationFiles embed.FS
+
+const MigrationFilesPath = "migrations"
+
+func Migrate(db *sql.DB, databaseName string) error {
+	d, err := iofs.New(MigrationFiles, MigrationFilesPath)
+	if err != nil {
+		return fmt.Errorf("failed to prepare migration files: %w", err)
+	}
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	if err != nil {
+		return fmt.Errorf("Migrate failed: %w", err)
+	}
+
+	m, err := migrate.NewWithInstance("iofs", d, databaseName, driver)
+	if err != nil {
+		return fmt.Errorf("Migrate failed: %w", err)
+	}
+
+	if err = m.Up(); err != nil {
+		if err == migrate.ErrNoChange {
+			return nil
+		}
+		return fmt.Errorf("Migrate failed: %w", err)
+	}
+
+	return nil
 }

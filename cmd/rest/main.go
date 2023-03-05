@@ -49,6 +49,11 @@ func main() {
 		return
 	}
 
+	if migrateErr := pgsql.Migrate(sqlDB, "ta-spbe"); err != nil {
+		zlogger.Error().Err(migrateErr).Msgf("migration: migration failed to construct pgsql: %s", migrateErr)
+		return
+	}
+
 	// // Tracer
 	// tp, err := tracerProvider("http://jaeger:14268/api/traces")
 	// if err != nil {
