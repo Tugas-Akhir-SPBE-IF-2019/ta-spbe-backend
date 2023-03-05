@@ -4,7 +4,7 @@ vendor:
 
 # copy config.toml.example so we can adjust without affecting git file change
 .PHONY: config
-env:
+config:
 	cp config.toml.example config.toml
 
 .PHONY: server/start

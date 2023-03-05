@@ -3,6 +3,7 @@ module github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend
 go 1.20
 
 require (
+	github.com/go-chi/chi/v5 v5.0.8
 	github.com/jackc/pgx/v5 v5.3.1
 	github.com/pelletier/go-toml v1.9.5
 	github.com/prometheus/client_golang v1.14.0
@@ -24,7 +25,6 @@ require (
 	github.com/cenkalti/backoff/v4 v4.2.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
-	github.com/go-chi/chi/v5 v5.0.8 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
