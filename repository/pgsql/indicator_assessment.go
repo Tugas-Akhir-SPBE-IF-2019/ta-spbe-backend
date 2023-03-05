@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 type indicatorAssessmentRepo struct {
@@ -51,7 +53,13 @@ const indicatorAssessmentFindAllQuery = `SELECT a.institution_name, ia.level, ia
 func (r *indicatorAssessmentRepo) FindAll(ctx context.Context) ([]*repository.IndicatorAssessmentDetail, error) {
 	indicatorAssessmentList := []*repository.IndicatorAssessmentDetail{}
 
+	tr := otel.Tracer("")
+	_, span := tr.Start(ctx, "repository-indicator-asssessment-find-all")
+	span.SetAttributes(attribute.Key("query").String(indicatorAssessmentFindAllQuery))
+	defer span.End()
+
 	rows, err := r.ps[indicatorAssessmentFindAll].QueryContext(ctx)
+	err = fmt.Errorf("wow")
 	if err != nil {
 		log.Println("indicator assessment sql repo query context error: %w", err)
 		return nil, err
@@ -85,6 +93,11 @@ const indicatorAssessmentFindAllPaginationQuery = `SELECT a.institution_name, ia
 
 func (r *indicatorAssessmentRepo) FindAllPagination(ctx context.Context, offset int, limit int) ([]*repository.IndicatorAssessmentDetail, error) {
 	indicatorAssessmentList := []*repository.IndicatorAssessmentDetail{}
+
+	tr := otel.Tracer("")
+	_, span := tr.Start(ctx, "repository-indicator-asssessment-find-all-pagination")
+	span.SetAttributes(attribute.Key("query").String(indicatorAssessmentFindAllPaginationQuery))
+	defer span.End()
 
 	rows, err := r.ps[indicatorAssessmentFindAllPagination].QueryContext(ctx, offset, limit)
 	if err != nil {

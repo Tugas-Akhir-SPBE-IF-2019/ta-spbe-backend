@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"ta-spbe-backend/api/response"
+	prometheusinst "ta-spbe-backend/instrumentation/prometheus"
 	"ta-spbe-backend/repository"
 	"time"
 
@@ -64,7 +65,7 @@ type AssessmentItem struct {
 	SubmittedDate   time.Time `json:"submitted_date"`
 }
 
-func GetSPBEAssessmentList(assessmentRepo repository.AssessmentRepository) http.HandlerFunc {
+func GetSPBEAssessmentList(assessmentRepo repository.AssessmentRepository, metrics *prometheusinst.Metrics) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 

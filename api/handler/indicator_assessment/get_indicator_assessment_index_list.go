@@ -7,10 +7,14 @@ import (
 	"strconv"
 	"strings"
 	"ta-spbe-backend/api/response"
+	prometheusinst "ta-spbe-backend/instrumentation/prometheus"
 	"ta-spbe-backend/repository"
 	"time"
 
 	apierror "ta-spbe-backend/api/error"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"go.opentelemetry.io/otel"
 )
 
 type GetIndicatorAssessmentIndexListRequest struct {
@@ -63,9 +67,13 @@ type IndicatorAssessmentItem struct {
 	SubmittedDate   time.Time `json:"submitted_date"`
 }
 
-func GetIndicatorAssessmentIndexList(indicatorAssessmentRepo repository.IndicatorAssessmentRepository) http.HandlerFunc {
+func GetIndicatorAssessmentIndexList(indicatorAssessmentRepo repository.IndicatorAssessmentRepository, metrics *prometheusinst.Metrics) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ctx := r.Context()
+		now := time.Now()
+
+		tr := otel.Tracer("")
+		ctx, span := tr.Start(r.Context(), "handler-get-indicator-assessment-index-list")
+		defer span.End()
 
 		req := GetIndicatorAssessmentIndexListRequest{
 			pageStr:  r.URL.Query().Get("page"),
@@ -108,6 +116,8 @@ func GetIndicatorAssessmentIndexList(indicatorAssessmentRepo repository.Indicato
 		resp.TotalPages = int(math.Ceil(float64(totalItems) / float64(req.limit)))
 		resp.Items = items
 
+		metrics.Duration.With(prometheus.Labels{"method": "GET", "status": "200"}).Observe(time.Since(now).Seconds())
+		metrics.Upgrades.With(prometheus.Labels{"type": "get_spbe_index_list"}).Inc()
 		response.Respond(w, http.StatusOK, resp)
 	}
 }

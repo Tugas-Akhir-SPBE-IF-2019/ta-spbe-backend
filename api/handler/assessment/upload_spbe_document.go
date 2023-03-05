@@ -17,6 +17,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	waProto "go.mau.fi/whatsmeow/binary/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 const MAX_UPLOAD_SIZE = 10240 * 10240 // 10MB
@@ -25,6 +27,7 @@ type UploadSpbeDocumentRequest struct {
 	institutionName              string
 	indicatorNumberStr           string
 	indicatorNumber              int
+	phoneNumberStr               string
 	supportingDocumentFile       multipart.File
 	supportingDocumentFileHeader *multipart.FileHeader
 	oldDocumentFile              multipart.File
@@ -35,6 +38,7 @@ type UploadProducerMessage struct {
 	Name                  string
 	Content               string
 	UserId                string
+	RecipientNumber       string
 	AssessmentId          string
 	IndicatorAssessmentId string
 	Timestamp             string
@@ -81,7 +85,17 @@ type UploadSpbeDocumentResponse struct {
 	DocumentUrl  string `json:"document_url"`
 }
 
-func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, userRepo repository.UserRepository, mq service.MessageQueue, mailer service.Mailer, fsIO service.FileSystem, jsonEC service.JsonManipulator, apiCfg config.API, smtpCfg config.SMTPClient) http.HandlerFunc {
+func UploadSPBEDocument(
+	assessmentRepo repository.AssessmentRepository,
+	userRepo repository.UserRepository,
+	mq service.MessageQueue,
+	mailer service.Mailer,
+	fsIO service.FileSystem,
+	jsonEC service.JsonManipulator,
+	waClient service.WhatsApp,
+	apiCfg config.API,
+	smtpCfg config.SMTPClient,
+) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
@@ -89,6 +103,7 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, userRepo
 		req := UploadSpbeDocumentRequest{
 			institutionName:    r.FormValue("institution_name"),
 			indicatorNumberStr: r.FormValue("indicator_number"),
+			phoneNumberStr:     r.FormValue("phone_number"),
 		}
 
 		fieldErr := req.validate(r)
@@ -146,6 +161,7 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, userRepo
 			Name:                  assessmentUploadDetail.AssessmentDetail.InstitutionName,
 			Content:               assessmentUploadDetail.SupportDataDocumentInfo.Id,
 			UserId:                userCred.ID,
+			RecipientNumber:       req.phoneNumberStr,
 			AssessmentId:          assessmentUploadDetail.AssessmentDetail.Id,
 			IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
 			Timestamp:             time.Now().UTC().String(),
@@ -185,6 +201,66 @@ func UploadSPBEDocument(assessmentRepo repository.AssessmentRepository, userRepo
 			Message:      "Document has been successfully uploaded",
 			AssessmentId: assessmentUploadDetail.AssessmentDetail.Id,
 			DocumentUrl:  supportingDocumentUrl,
+		}
+
+		// 		const initialMessage = `*[OTOMATISASI PENILAIAN SPBE]*
+
+		// ` + "```" + `Terima kasih telah menggunakan Aplikasi Otomatisasi Penilaian SPBE. Hasil penilaian anda akan keluar dalam beberapa saat lagi.` + "```"
+		// protoMessage := &waProto.Message{
+		// 	Conversation: proto.String(initialMessage),
+		// }
+		protoMessage := &waProto.Message{
+			TemplateMessage: &waProto.TemplateMessage{
+				HydratedTemplate: &waProto.TemplateMessage_HydratedFourRowTemplate{
+					Title: &waProto.TemplateMessage_HydratedFourRowTemplate_HydratedTitleText{
+						HydratedTitleText: "[OTOMATISASI PENILAIAN SPBE]",
+					},
+					TemplateId:          proto.String("template-id"),
+					HydratedContentText: proto.String("Terima kasih telah menggunakan Aplikasi Otomatisasi Penilaian SPBE. Hasil penilaian anda akan keluar dalam beberapa saat lagi."),
+					HydratedFooterText:  proto.String("APLIKASI OTOMATISASI PENILAIAN TINGKAT KEMATANGAN SPBE"),
+					HydratedButtons: []*waProto.HydratedTemplateButton{
+
+						// This for URL button
+						{
+							Index: proto.Uint32(1),
+							HydratedButton: &waProto.HydratedTemplateButton_UrlButton{
+								UrlButton: &waProto.HydratedTemplateButton_HydratedURLButton{
+									DisplayText: proto.String("Otomatisasi Penilaian SPBE"),
+									Url:         proto.String("https://fb.me/this"),
+								},
+							},
+						},
+
+						// This for call button
+						{
+							Index: proto.Uint32(2),
+							HydratedButton: &waProto.HydratedTemplateButton_CallButton{
+								CallButton: &waProto.HydratedTemplateButton_HydratedCallButton{
+									DisplayText: proto.String("Hubungi Kami"),
+									PhoneNumber: proto.String("1234567890"),
+								},
+							},
+						},
+
+						// This is just a quick reply
+						{
+							Index: proto.Uint32(3),
+							HydratedButton: &waProto.HydratedTemplateButton_QuickReplyButton{
+								QuickReplyButton: &waProto.HydratedTemplateButton_HydratedQuickReplyButton{
+									DisplayText: proto.String("Quick reply"),
+									Id:          proto.String("quick-id"),
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+
+		err = waClient.SendMessage(ctx, req.phoneNumberStr, protoMessage)
+		if err != nil {
+			response.Error(w, apierror.InternalServerError())
+			return
 		}
 
 		response.Respond(w, http.StatusCreated, resp)

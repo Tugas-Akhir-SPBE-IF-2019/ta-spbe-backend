@@ -5,6 +5,7 @@ def send_result(message_data, config):
     payload = {
         "user_id": message_data['UserId'],
         "assessment_id": message_data['AssessmentId'],
+        "recipient_number": message_data['RecipientNumber'],
         "indicator_assessment_id": message_data['IndicatorAssessmentId'],
         "level": 4,
         "explanation": "berdasarkan data dukung yang diberikan, level yang sesuai adalah level 4",
