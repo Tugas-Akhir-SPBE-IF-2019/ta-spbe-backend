@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"flag"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/config"
+	indicatorassessmenthandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/indicator_assessment"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/middleware"
+	storepgsql "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store/pgsql"
+
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/logger"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/metric"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/pgsql"
@@ -87,6 +90,9 @@ func main() {
 		middleware.HTTPMetric(m),
 	)
 
+	indicatorAssessmentStore := storepgsql.NewIndicatorAssessment(sqlDB)
+	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, indicatorAssessmentStore)
+
 	r.Get("/metrics", promHandler.ServeHTTP)
 
 	r.Get("/",
@@ -97,6 +103,8 @@ func main() {
 
 	r.Get("/handler",
 		helloHandler)
+
+	r.Get("/index", indicatorAssessmentHandler.GetIndicatorAssessmentIndexList)
 
 	http.ListenAndServe(":3001", r)
 }
