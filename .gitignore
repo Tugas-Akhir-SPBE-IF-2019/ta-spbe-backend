@@ -1,0 +1,9 @@
+build/
+vendor/
+tmp/
+.vscode/
+.idea/
+.scannerwork/
+coverage.*
+.DS_Store
+/main.go
