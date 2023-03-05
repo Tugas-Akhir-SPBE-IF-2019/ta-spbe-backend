@@ -1,0 +1,53 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+
+exporters:
+  # prometheus:
+  #   endpoint: "0.0.0.0:8889"
+  #   const_labels: { }
+  jaeger:
+    endpoint: jaeger:14250
+    tls:
+      insecure: true
+  # otlp:
+  #   endpoint: ${OTEL_NEW_RELIC_EXPORTER_OTLP_ENDPOINT}
+  #   headers:
+  #     api-key: ${OTEL_NEW_RELIC_EXPORTER_API_KEY}
+
+processors:
+  batch:
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 65
+    spike_limit_percentage: 50
+  resourcedetection:
+    detectors: [gcp]
+    timeout: 10s
+
+extensions:
+  health_check:
+  pprof:
+    endpoint: :1888
+  zpages:
+    endpoint: :55679
+
+service:
+  extensions: [ pprof, zpages, health_check ]
+  pipelines:
+    traces:
+      receivers: [ otlp ]
+      processors:
+        - batch
+      exporters:
+        - jaeger
+        # - otlp
+    # metrics:
+    #   receivers: [ otlp ]
+    #   processors:
+    #     - memory_limiter
+    #     - batch
+    #   exporters:
+    #     - prometheus
+    #     - otlp
