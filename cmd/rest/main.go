@@ -12,6 +12,7 @@ import (
 
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/logger"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/pgsql"
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/smtpmailer"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/tracer"
 )
 
@@ -35,7 +36,7 @@ func main() {
 	// SET OPEN TELEMETRY GLOBAL TRACER
 	// -----------------------------------------------------------------------------------------------------------------
 	if err = tracer.SetTracer(cfg.Tracer, cfg.AppInfo); err != nil {
-		zlogger.Error().Err(err).Msgf("grpc: main failed to setup open telemetry tracer: %s", err)
+		zlogger.Error().Err(err).Msgf("rest: main failed to setup open telemetry tracer: %s", err)
 		return
 	}
 
@@ -45,7 +46,7 @@ func main() {
 	// PGSQL
 	sqlDB, sqlDBErr := pgsql.NewDB(cfg.PostgreSQL, zlogger)
 	if sqlDBErr != nil {
-		zlogger.Error().Err(sqlDBErr).Msgf("grpc: main failed to construct pgsql: %s", sqlDBErr)
+		zlogger.Error().Err(sqlDBErr).Msgf("rest: main failed to construct pgsql: %s", sqlDBErr)
 		return
 	}
 
@@ -57,10 +58,17 @@ func main() {
 		}
 	}
 
+	// SMTPMailer
+	smtpMailer, smtpMailerErr := smtpmailer.NewSimpleMailer(cfg.SMTPMailer)
+	if sqlDBErr != nil {
+		zlogger.Error().Err(sqlDBErr).Msgf("rest: main failed to construct pgsql: %s", smtpMailerErr)
+		return
+	}
+
 	// -----------------------------------------------------------------------------------------------------------------
 	// SERVER SETUP AND EXECUTE
 	// -----------------------------------------------------------------------------------------------------------------
-	restServerHandler := rest.New(cfg, zlogger, sqlDB)
+	restServerHandler := rest.New(cfg, zlogger, sqlDB, smtpMailer)
 
 	zlogger.Info().Msgf("REST Server started on port %d", cfg.API.RESTPort)
 	http.ListenAndServe(fmt.Sprintf(":%d", cfg.API.RESTPort), restServerHandler)

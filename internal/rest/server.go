@@ -11,6 +11,7 @@ import (
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/middleware"
 	storepgsql "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store/pgsql"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/metric"
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/smtpmailer"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/token"
 	"github.com/rs/zerolog"
 
@@ -23,6 +24,7 @@ func New(
 	cfg *config.Config,
 	zlogger zerolog.Logger,
 	sqlDB *sql.DB,
+	smtpMailer smtpmailer.Client,
 ) http.Handler {
 	r := chi.NewRouter()
 
@@ -39,9 +41,9 @@ func New(
 	)
 
 	indicatorAssessmentStore := storepgsql.NewIndicatorAssessment(sqlDB)
-	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, indicatorAssessmentStore)
-
 	userStore := storepgsql.NewUser(sqlDB)
+
+	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, indicatorAssessmentStore, userStore, smtpMailer)
 	authHandler := authhandler.NewAuthHandler(sqlDB, userStore, cfg.OAuth, jwt)
 	r.Route("/auth", func(r chi.Router) {
 		r.Get("/", token.HandleMain)
@@ -54,8 +56,11 @@ func New(
 	r.Route("/assessments", func(r chi.Router) {
 		r.Use(middleware.JWTAuth(jwt))
 		r.Get("/{id}", indicatorAssessmentHandler.GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList)
+		r.Patch("/{id}/validate", indicatorAssessmentHandler.ValidateIndicatorAssessmentResult)
 
 	})
+
+	r.Post("/assessments/result/callback", indicatorAssessmentHandler.ResultCallback)
 
 	return r
 }
