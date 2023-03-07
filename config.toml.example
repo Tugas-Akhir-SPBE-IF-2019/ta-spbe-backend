@@ -1,6 +1,6 @@
 [api]
 host = "localhost"
-rest_port = 3001
+rest_port = 80
 
 [app_info]
 name = "go-template"
@@ -45,6 +45,7 @@ port = 587
 admin_identity = ""
 admin_email = "info.otomatisasi.spbe@gmail.com"
 admin_password = "ovdpxcvozeydibfk"
+template_dir = "./pkg/smtpmailer/template/"
 
 [messagequeue]
 host = "nsqd"

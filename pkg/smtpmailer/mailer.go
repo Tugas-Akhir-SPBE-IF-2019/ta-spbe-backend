@@ -15,6 +15,7 @@ type Config struct {
 	AdminIdentity string `toml:"admin_identity"`
 	AdminEmail    string `toml:"admin_email"`
 	AdminPassword string `toml:"admin_password"`
+	TemplateDir   string `toml:"template_dir"`
 }
 
 type Client interface {
@@ -22,12 +23,13 @@ type Client interface {
 }
 
 type SimpleMailer struct {
-	Auth  smtp.Auth
-	Debug bool
-	Host  string
-	Port  int
-	From  string
-	body  string
+	Auth        smtp.Auth
+	Debug       bool
+	Host        string
+	Port        int
+	From        string
+	body        string
+	templateDir string
 }
 
 const (
@@ -42,10 +44,11 @@ func NewSimpleMailer(smtpCfg Config) (Client, error) {
 			smtpCfg.AdminPassword,
 			smtpCfg.Host,
 		),
-		Debug: smtpCfg.Debug,
-		Host:  smtpCfg.Host,
-		Port:  smtpCfg.Port,
-		From:  smtpCfg.AdminEmail,
+		Debug:       smtpCfg.Debug,
+		Host:        smtpCfg.Host,
+		Port:        smtpCfg.Port,
+		From:        smtpCfg.AdminEmail,
+		templateDir: smtpCfg.TemplateDir,
 	}, nil
 }
 
@@ -66,7 +69,7 @@ func (m *SimpleMailer) Send(subject, message []byte, receiver []string, template
 }
 
 func (r *SimpleMailer) parseTemplate(fileName string, data interface{}) error {
-	t, err := template.ParseFiles(fileName)
+	t, err := template.ParseFiles(r.templateDir + fileName)
 	if err != nil {
 		return err
 	}

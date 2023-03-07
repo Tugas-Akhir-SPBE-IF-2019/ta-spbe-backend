@@ -25,6 +25,7 @@ type UploadSpbeDocumentRequest struct {
 	institutionName              string
 	indicatorNumberStr           string
 	indicatorNumber              int
+	phoneNumberStr               string
 	supportingDocumentFile       multipart.File
 	supportingDocumentFileHeader *multipart.FileHeader
 	oldDocumentFile              multipart.File
@@ -35,6 +36,7 @@ type UploadProducerMessage struct {
 	Name                  string
 	Content               string
 	UserId                string
+	RecipientNumber       string
 	AssessmentId          string
 	IndicatorAssessmentId string
 	Timestamp             string
@@ -68,6 +70,11 @@ func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldE
 		fieldErr = fieldErr.WithField("indicator_number", "indicator number must be a positive integer ranging between 1 and 10")
 	}
 
+	// FOR TESTING PURPOSE
+	if req.phoneNumberStr == "" {
+		req.phoneNumberStr = "6285157017311"
+	}
+
 	if len(fieldErr.Fields) != 0 {
 		return &fieldErr
 	}
@@ -88,6 +95,7 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 	req := UploadSpbeDocumentRequest{
 		institutionName:    r.FormValue("institution_name"),
 		indicatorNumberStr: r.FormValue("indicator_number"),
+		phoneNumberStr:     r.FormValue("phone_number"),
 	}
 
 	fieldErr := req.validate(r)
@@ -147,6 +155,7 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 		Name:                  assessmentUploadDetail.AssessmentDetail.InstitutionName,
 		Content:               assessmentUploadDetail.SupportDataDocumentInfo.Id,
 		UserId:                userCred.ID,
+		RecipientNumber:       req.phoneNumberStr,
 		AssessmentId:          assessmentUploadDetail.AssessmentDetail.Id,
 		IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
 		Timestamp:             time.Now().UTC().String(),
