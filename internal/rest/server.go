@@ -80,5 +80,9 @@ func New(
 
 	r.Post("/assessments/result/callback", indicatorAssessmentHandler.ResultCallback)
 
+	// STATIC FILE SERVE (FOR DEVELOPMENT PURPOSE ONLY)
+	fs := http.FileServer(http.Dir("static/supporting-documents"))
+	r.Handle("/static/*", http.StripPrefix("/static/", fs))
+
 	return r
 }
