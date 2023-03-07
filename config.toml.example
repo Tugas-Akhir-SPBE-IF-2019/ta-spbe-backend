@@ -49,3 +49,6 @@ admin_password = "ovdpxcvozeydibfk"
 [messagequeue]
 host = "nsqd"
 port = 4150
+
+[dev]
+auth = false

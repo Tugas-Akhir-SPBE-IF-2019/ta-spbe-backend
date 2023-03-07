@@ -25,6 +25,10 @@ type OAuth struct {
 	RedirectURL  string `toml:"redirect_uri"`
 }
 
+type DevSettings struct {
+	Auth bool `toml:"auth"`
+}
+
 type Config struct {
 	API          API                 `toml:"api"`
 	AppInfo      appinfo.Info        `toml:"app_info"`
@@ -35,6 +39,7 @@ type Config struct {
 	JWT          token.Config        `toml:"jwt"`
 	SMTPMailer   smtpmailer.Config   `toml:"smtp"`
 	MessageQueue messagequeue.Config `toml:"messagequeue"`
+	DevSettings  DevSettings         `toml:"dev"`
 }
 
 func LoadEnvFromFile(path string) (*Config, error) {

@@ -64,7 +64,7 @@ func New(
 	r.Get("/metrics", promHandler.ServeHTTP)
 	r.Get("/assessments/index", indicatorAssessmentHandler.GetIndicatorAssessmentIndexList)
 	r.Route("/assessments", func(r chi.Router) {
-		r.Use(middleware.JWTAuth(jwt))
+		r.Use(middleware.JWTAuth(jwt, cfg.DevSettings))
 		r.Get("/", assessmentHandler.GetSPBEAssessmentList)
 		r.Get("/{id}", indicatorAssessmentHandler.GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList)
 		r.Patch("/{id}/validate", indicatorAssessmentHandler.ValidateIndicatorAssessmentResult)
