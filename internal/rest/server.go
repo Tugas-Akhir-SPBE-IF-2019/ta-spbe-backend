@@ -5,7 +5,9 @@ import (
 	"net/http"
 
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/config"
+	authhandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/auth"
 	indicatorassessmenthandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/indicator_assessment"
+
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/middleware"
 	storepgsql "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store/pgsql"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/metric"
@@ -38,6 +40,14 @@ func New(
 
 	indicatorAssessmentStore := storepgsql.NewIndicatorAssessment(sqlDB)
 	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, indicatorAssessmentStore)
+
+	userStore := storepgsql.NewUser(sqlDB)
+	authHandler := authhandler.NewAuthHandler(sqlDB, userStore, cfg.OAuth, jwt)
+	r.Route("/auth", func(r chi.Router) {
+		r.Get("/", token.HandleMain)
+		r.Post("/google", authHandler.Google)
+		r.Get("/google/callback", authHandler.GoogleCallback)
+	})
 
 	r.Get("/metrics", promHandler.ServeHTTP)
 	r.Get("/assessments/index", indicatorAssessmentHandler.GetIndicatorAssessmentIndexList)

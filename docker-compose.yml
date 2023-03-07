@@ -3,7 +3,7 @@ services:
     image: cosmtrek/air
     working_dir: /src
     ports:
-      - "3001:3001"
+      - "80:80"
     volumes:
       - ./:/src/
       - ./cmd/rest/main.go:/src/main.go

@@ -13,7 +13,7 @@ const (
 	RoleUser  = UserRole("USER")
 )
 
-type User struct {
+type UserData struct {
 	ID        string
 	Name      string
 	Email     string
@@ -22,10 +22,10 @@ type User struct {
 	UpdatedAt sql.NullTime
 }
 
-type UserRepository interface {
-	FindOneByEmail(ctx context.Context, email string) (*User, error)
-	FindOneByID(ctx context.Context, id string) (*User, error)
-	FindEmailAndPassword(ctx context.Context, email string) (*User, error)
-	FindAdmin(ctx context.Context, email string) (*User, error)
-	Insert(ctx context.Context, user *User) error
+type User interface {
+	FindOneByEmail(ctx context.Context, email string) (*UserData, error)
+	FindOneByID(ctx context.Context, id string) (*UserData, error)
+	FindEmailAndPassword(ctx context.Context, email string) (*UserData, error)
+	FindAdmin(ctx context.Context, email string) (*UserData, error)
+	Insert(ctx context.Context, user *UserData) error
 }

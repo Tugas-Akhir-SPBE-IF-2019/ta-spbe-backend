@@ -10,4 +10,4 @@ rule_files:
 scrape_configs:
   - job_name: myapp
     static_configs:
-      - targets: ["go-web-app:3001"]
+      - targets: ["go-web-app"]
