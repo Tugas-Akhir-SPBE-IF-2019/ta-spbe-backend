@@ -3,9 +3,11 @@ package pgsql
 import (
 	"context"
 	"database/sql"
-	"log"
+	"fmt"
+	"time"
 
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store"
+	"github.com/google/uuid"
 )
 
 type IndicatorAssessment struct {
@@ -27,7 +29,6 @@ func (s *IndicatorAssessment) FindAll(ctx context.Context) ([]*store.IndicatorAs
 
 	rows, err := s.db.QueryContext(ctx, indicatorAssessmentFindAllQuery)
 	if err != nil {
-		log.Println("indicator assessment sql repo query context error: %w", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -40,7 +41,6 @@ func (s *IndicatorAssessment) FindAll(ctx context.Context) ([]*store.IndicatorAs
 			&indicatorAssessment.SubmittedDate,
 		)
 		if err != nil {
-			log.Println("indicator assessment sql repo scan error: %w", err)
 			return nil, err
 		}
 		indicatorAssessmentList = append(indicatorAssessmentList, indicatorAssessment)
@@ -61,7 +61,6 @@ func (s *IndicatorAssessment) FindAllPagination(ctx context.Context, offset int,
 
 	rows, err := s.db.QueryContext(ctx, indicatorAssessmentFindAllPaginationQuery, offset, limit)
 	if err != nil {
-		log.Println("indicator assessment sql repo query context error: %w", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -74,7 +73,6 @@ func (s *IndicatorAssessment) FindAllPagination(ctx context.Context, offset int,
 			&indicatorAssessment.SubmittedDate,
 		)
 		if err != nil {
-			log.Println("indicator assessment sql repo scan error: %w", err)
 			return nil, err
 		}
 		indicatorAssessmentList = append(indicatorAssessmentList, indicatorAssessment)
@@ -106,9 +104,123 @@ func (s *IndicatorAssessment) FindIndicatorAssessmentResultById(ctx context.Cont
 		&assessmentResult.Result.Explanation, &assessmentResult.Result.Proof,
 	)
 	if err != nil {
-		log.Println("indicator assessment sql repo scan error: %w", err)
 		return assessmentResult, err
 	}
 
 	return assessmentResult, nil
+}
+
+const insertAssessmentFeedbackQuery = `INSERT INTO 
+	indicator_assessment_feedbacks(
+		id, indicator_assessment_id, level,
+		feedback, created_at
+	) values (
+		$1, $2, $3, $4, $5
+	)
+`
+const updateAssessmentFeedbackQuery = `UPDATE indicator_assessment_feedbacks	
+	SET level = $2, feedback = $3
+	WHERE indicator_assessment_id = $1
+`
+const updateValidatedAssessmentFeedbackStatusQuery = `UPDATE indicator_assessments
+	SET status = $2
+	WHERE id = $1
+`
+
+func (s *IndicatorAssessment) ValidateAssessmentResult(ctx context.Context, resultCorrect bool, indicatorAssessmentResult *store.IndicatorAssessmentResultDetail) error {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin validate assessment result tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	if store.AssessmentStatus(indicatorAssessmentResult.AssessmentStatus) != store.AssessmentStatus(store.VALIDATED) {
+		feedbackId := uuid.NewString()
+		createdAt := time.Now().UTC()
+
+		insertAssessmentFeedbackStmt, err := s.db.PrepareContext(ctx, insertAssessmentFeedbackQuery)
+		_, err = tx.StmtContext(ctx, insertAssessmentFeedbackStmt).ExecContext(ctx, feedbackId, indicatorAssessmentResult.IndicatorAssessmentId,
+			indicatorAssessmentResult.ResultFeedback.Level, indicatorAssessmentResult.ResultFeedback.Feedback, createdAt)
+		if err != nil {
+			return fmt.Errorf("failed to insert indicator assessment feedback: %w", err)
+		}
+
+		if !resultCorrect {
+			updateValidatedAssessmentFeedbackStmt, err := s.db.PrepareContext(ctx, updateValidatedAssessmentFeedbackStatusQuery)
+			_, err = tx.StmtContext(ctx, updateValidatedAssessmentFeedbackStmt).ExecContext(ctx, indicatorAssessmentResult.IndicatorAssessmentId, store.AssessmentStatus(store.VALIDATED))
+			if err != nil {
+				return fmt.Errorf("failed to update indicator assessment validated status: %w", err)
+			}
+		}
+	} else {
+		if !resultCorrect {
+			updateAssessmentFeedbackStmt, err := s.db.PrepareContext(ctx, updateAssessmentFeedbackQuery)
+			_, err = tx.StmtContext(ctx, updateAssessmentFeedbackStmt).ExecContext(ctx, indicatorAssessmentResult.IndicatorAssessmentId,
+				indicatorAssessmentResult.ResultFeedback.Level, indicatorAssessmentResult.ResultFeedback.Feedback)
+			if err != nil {
+				return fmt.Errorf("failed to update indicator assessment feedback: %w", err)
+			}
+		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit validate assessment result tx: %w", err)
+	}
+
+	return nil
+}
+
+const updateAssessmentStatusQuery = `UPDATE assessments
+	SET status = $2, updated_at = $3
+	WHERE id = $1
+`
+const updateIndicatorAssessmentResultQuery = `UPDATE indicator_assessments
+	SET status = $2, level = $3, explanation = $4, updated_at = $5
+	WHERE id = $1
+`
+const insertSupportDataDocumentProofQuery = `INSERT into
+	support_data_document_proofs(
+		id, indicator_assessment_id, support_data_document_id, proof, created_at
+	) values(
+		$1, $2, $3, $4, $5
+	)
+`
+
+func (s *IndicatorAssessment) UpdateAssessmentResult(ctx context.Context, resultDetail *store.IndicatorAssessmentResultDetail) error {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to commit update assessment result tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	updatedAt := time.Now().UTC()
+	updateAssessmentStatusStmt, err := s.db.PrepareContext(ctx, updateAssessmentStatusQuery)
+	_, err = tx.StmtContext(ctx, updateAssessmentStatusStmt).ExecContext(ctx, resultDetail.AssessmentId,
+		store.AssessmentStatus(store.COMPLETED), updatedAt)
+	if err != nil {
+		return fmt.Errorf("failed to update assessment: %w", err)
+	}
+
+	updateIndicatorAssessmentResultStmt, err := s.db.PrepareContext(ctx, updateIndicatorAssessmentResultQuery)
+	_, err = tx.StmtContext(ctx, updateIndicatorAssessmentResultStmt).ExecContext(ctx,
+		resultDetail.IndicatorAssessmentId, store.AssessmentStatus(store.COMPLETED),
+		resultDetail.Result.Level, resultDetail.Result.Explanation, updatedAt)
+	if err != nil {
+		return fmt.Errorf("failed to update indicator assessment: %w", err)
+	}
+
+	supportDataDocumentProofId := uuid.NewString()
+	insertSupportDataDocumentProofStmt, err := s.db.PrepareContext(ctx, insertSupportDataDocumentProofQuery)
+	_, err = tx.StmtContext(ctx, insertSupportDataDocumentProofStmt).ExecContext(ctx,
+		supportDataDocumentProofId, resultDetail.IndicatorAssessmentId, resultDetail.Result.SupportDocument,
+		resultDetail.Result.Proof, updatedAt)
+	if err != nil {
+		return fmt.Errorf("failed to insert support data document proof: %w", err)
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit update assessment result tx: %w", err)
+	}
+
+	return nil
 }
