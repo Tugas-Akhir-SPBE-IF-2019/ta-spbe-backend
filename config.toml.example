@@ -45,3 +45,7 @@ port = 587
 admin_identity = ""
 admin_email = "info.otomatisasi.spbe@gmail.com"
 admin_password = "ovdpxcvozeydibfk"
+
+[messagequeue]
+host = "nsqd"
+port = 4150

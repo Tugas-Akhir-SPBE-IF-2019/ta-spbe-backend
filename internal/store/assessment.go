@@ -39,7 +39,7 @@ type AssessmentUploadDetail struct {
 	UserId                  string
 }
 
-type AssessmentRepository interface {
+type Assessment interface {
 	FindAll(ctx context.Context) ([]*AssessmentDetail, error)
 	FindAllPagination(ctx context.Context, offset int, limit int) ([]*AssessmentDetail, error)
 	InsertUploadDocument(ctx context.Context, assessmentUploadDetail *AssessmentUploadDetail) error

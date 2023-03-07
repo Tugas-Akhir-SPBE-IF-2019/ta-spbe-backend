@@ -6,6 +6,7 @@ import (
 
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/appinfo"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/logger"
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/messagequeue"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/pgsql"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/smtpmailer"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/token"
@@ -25,14 +26,15 @@ type OAuth struct {
 }
 
 type Config struct {
-	API        API               `toml:"api"`
-	AppInfo    appinfo.Info      `toml:"app_info"`
-	Logger     logger.Config     `toml:"logger"`
-	PostgreSQL pgsql.Config      `toml:"postgres"`
-	Tracer     tracer.Config     `toml:"tracer"`
-	OAuth      OAuth             `toml:"oauth"`
-	JWT        token.Config      `toml:"jwt"`
-	SMTPMailer smtpmailer.Config `toml:"smtp"`
+	API          API                 `toml:"api"`
+	AppInfo      appinfo.Info        `toml:"app_info"`
+	Logger       logger.Config       `toml:"logger"`
+	PostgreSQL   pgsql.Config        `toml:"postgres"`
+	Tracer       tracer.Config       `toml:"tracer"`
+	OAuth        OAuth               `toml:"oauth"`
+	JWT          token.Config        `toml:"jwt"`
+	SMTPMailer   smtpmailer.Config   `toml:"smtp"`
+	MessageQueue messagequeue.Config `toml:"messagequeue"`
 }
 
 func LoadEnvFromFile(path string) (*Config, error) {

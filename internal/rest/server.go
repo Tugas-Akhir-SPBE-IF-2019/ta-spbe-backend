@@ -5,11 +5,15 @@ import (
 	"net/http"
 
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/config"
+	assessmenthandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/assessment"
 	authhandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/auth"
 	indicatorassessmenthandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/indicator_assessment"
 
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/middleware"
 	storepgsql "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store/pgsql"
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/filesystem"
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/jsonmanipulator"
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/messagequeue"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/metric"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/smtpmailer"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/token"
@@ -25,6 +29,10 @@ func New(
 	zlogger zerolog.Logger,
 	sqlDB *sql.DB,
 	smtpMailer smtpmailer.Client,
+	fileSystemClient filesystem.Client,
+	jsonClient jsonmanipulator.Client,
+	messageQueue messagequeue.Client,
+
 ) http.Handler {
 	r := chi.NewRouter()
 
@@ -40,11 +48,13 @@ func New(
 		middleware.HTTPMetric(m),
 	)
 
+	assessmentStore := storepgsql.NewAssessment(sqlDB)
 	indicatorAssessmentStore := storepgsql.NewIndicatorAssessment(sqlDB)
 	userStore := storepgsql.NewUser(sqlDB)
 
 	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, indicatorAssessmentStore, userStore, smtpMailer)
 	authHandler := authhandler.NewAuthHandler(sqlDB, userStore, cfg.OAuth, jwt)
+	assessmentHandler := assessmenthandler.NewAssessmentHandler(sqlDB, assessmentStore, cfg.API, userStore, smtpMailer, fileSystemClient, jsonClient, messageQueue)
 	r.Route("/auth", func(r chi.Router) {
 		r.Get("/", token.HandleMain)
 		r.Post("/google", authHandler.Google)
@@ -55,8 +65,10 @@ func New(
 	r.Get("/assessments/index", indicatorAssessmentHandler.GetIndicatorAssessmentIndexList)
 	r.Route("/assessments", func(r chi.Router) {
 		r.Use(middleware.JWTAuth(jwt))
+		r.Get("/", assessmentHandler.GetSPBEAssessmentList)
 		r.Get("/{id}", indicatorAssessmentHandler.GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList)
 		r.Patch("/{id}/validate", indicatorAssessmentHandler.ValidateIndicatorAssessmentResult)
+		r.Post("/documents/upload", assessmentHandler.UploadSPBEDocument)
 
 	})
 
