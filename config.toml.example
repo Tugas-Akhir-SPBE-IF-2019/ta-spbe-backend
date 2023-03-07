@@ -1,3 +1,7 @@
+[api]
+host = "localhost"
+rest_port = 3001
+
 [app_info]
 name = "go-template"
 env = "local"
