@@ -2,3 +2,10 @@ toml
 requests
 tornado
 pynsq
+transformers
+gensim
+Sastrawi
+seaborn
+scikit-learn
+nltk
+pdfminer.six

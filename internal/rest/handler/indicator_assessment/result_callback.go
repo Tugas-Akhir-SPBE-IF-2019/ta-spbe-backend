@@ -36,9 +36,13 @@ func (handler *indicatorAssessmentHandler) ResultCallback(w http.ResponseWriter,
 	req := IndicatorAssessmentResultCallbackRequest{}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Println("kena ini sih")
+		log.Println(r.Body)
+		log.Println(err.Error())
 		response.Error(w, apierror.BadRequestError(err.Error()))
 		return
 	}
+	log.Println("lolos bos")
 
 	result := store.IndicatorAssessmentResultDetail{
 		AssessmentId:          req.AssessmentId,
