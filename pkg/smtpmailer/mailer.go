@@ -9,17 +9,24 @@ import (
 )
 
 type Config struct {
-	Debug         bool   `toml:"debug"`
-	Host          string `toml:"host"`
-	Port          int    `toml:"port"`
-	AdminIdentity string `toml:"admin_identity"`
-	AdminEmail    string `toml:"admin_email"`
-	AdminPassword string `toml:"admin_password"`
-	TemplateDir   string `toml:"template_dir"`
+	Debug              bool   `toml:"debug"`
+	Host               string `toml:"host"`
+	Port               int    `toml:"port"`
+	AdminIdentity      string `toml:"admin_identity"`
+	AdminEmail         string `toml:"admin_email"`
+	AdminPassword      string `toml:"admin_password"`
+	TemplateDir        string `toml:"template_dir"`
+	EnableNotification bool   `toml:"enable_notification"`
 }
 
 type Client interface {
 	Send(subject, message []byte, receiver []string, templateName string, items interface{}) error
+}
+
+type mockClient struct{}
+
+func (mc *mockClient) Send(subject, message []byte, receiver []string, templateName string, items interface{}) error {
+	return nil
 }
 
 type SimpleMailer struct {
@@ -37,19 +44,23 @@ const (
 )
 
 func NewSimpleMailer(smtpCfg Config) (Client, error) {
-	return &SimpleMailer{
-		Auth: smtp.PlainAuth(
-			smtpCfg.AdminIdentity,
-			smtpCfg.AdminEmail,
-			smtpCfg.AdminPassword,
-			smtpCfg.Host,
-		),
-		Debug:       smtpCfg.Debug,
-		Host:        smtpCfg.Host,
-		Port:        smtpCfg.Port,
-		From:        smtpCfg.AdminEmail,
-		templateDir: smtpCfg.TemplateDir,
-	}, nil
+	if smtpCfg.EnableNotification {
+		return &SimpleMailer{
+			Auth: smtp.PlainAuth(
+				smtpCfg.AdminIdentity,
+				smtpCfg.AdminEmail,
+				smtpCfg.AdminPassword,
+				smtpCfg.Host,
+			),
+			Debug:       smtpCfg.Debug,
+			Host:        smtpCfg.Host,
+			Port:        smtpCfg.Port,
+			From:        smtpCfg.AdminEmail,
+			templateDir: smtpCfg.TemplateDir,
+		}, nil
+	}
+
+	return &mockClient{}, nil
 }
 
 func (m *SimpleMailer) Send(subject, message []byte, receiver []string, templateName string, items interface{}) error {
