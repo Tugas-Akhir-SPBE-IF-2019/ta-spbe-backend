@@ -11,6 +11,7 @@ import (
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/smtpmailer"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/token"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/tracer"
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/whatsapp"
 	"github.com/pelletier/go-toml"
 )
 
@@ -39,6 +40,7 @@ type Config struct {
 	JWT          token.Config        `toml:"jwt"`
 	SMTPMailer   smtpmailer.Config   `toml:"smtp"`
 	MessageQueue messagequeue.Config `toml:"messagequeue"`
+	WhatsApp     whatsapp.Config     `toml:"whatsapp"`
 	DevSettings  DevSettings         `toml:"dev"`
 }
 

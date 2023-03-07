@@ -53,3 +53,6 @@ port = 4150
 
 [dev]
 auth = false
+
+[whatsapp]
+enable_notification = false

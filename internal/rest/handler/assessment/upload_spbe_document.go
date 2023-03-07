@@ -17,6 +17,8 @@ import (
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store"
 
 	"github.com/google/uuid"
+	waProto "go.mau.fi/whatsmeow/binary/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 const MAX_UPLOAD_SIZE = 10240 * 10240 // 10MB
@@ -197,6 +199,13 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 		DocumentUrl:  supportingDocumentUrl,
 	}
 
+	protoMessage := generateWhatsAppMessage()
+	err = handler.waClient.SendMessage(ctx, req.phoneNumberStr, protoMessage)
+	if err != nil {
+		response.Error(w, apierror.InternalServerError())
+		return
+	}
+
 	response.Respond(w, http.StatusCreated, resp)
 }
 
@@ -205,4 +214,54 @@ func generateEmailContent() (subject, message []byte) {
 	message = []byte(fmt.Sprintf("Terima kasih telah menggunakan Aplikasi Otomatisasi Penilaian SPBE. Hasil penilaian anda akan keluar dalam beberapa saat lagi."))
 
 	return
+}
+
+func generateWhatsAppMessage() *waProto.Message {
+	return &waProto.Message{
+		TemplateMessage: &waProto.TemplateMessage{
+			HydratedTemplate: &waProto.TemplateMessage_HydratedFourRowTemplate{
+				Title: &waProto.TemplateMessage_HydratedFourRowTemplate_HydratedTitleText{
+					HydratedTitleText: "[OTOMATISASI PENILAIAN SPBE]",
+				},
+				TemplateId:          proto.String("template-id"),
+				HydratedContentText: proto.String("Terima kasih telah menggunakan Aplikasi Otomatisasi Penilaian SPBE. Hasil penilaian anda akan keluar dalam beberapa saat lagi."),
+				HydratedFooterText:  proto.String("APLIKASI OTOMATISASI PENILAIAN TINGKAT KEMATANGAN SPBE"),
+				HydratedButtons: []*waProto.HydratedTemplateButton{
+
+					// This for URL button
+					{
+						Index: proto.Uint32(1),
+						HydratedButton: &waProto.HydratedTemplateButton_UrlButton{
+							UrlButton: &waProto.HydratedTemplateButton_HydratedURLButton{
+								DisplayText: proto.String("Otomatisasi Penilaian SPBE"),
+								Url:         proto.String("https://fb.me/this"),
+							},
+						},
+					},
+
+					// This for call button
+					{
+						Index: proto.Uint32(2),
+						HydratedButton: &waProto.HydratedTemplateButton_CallButton{
+							CallButton: &waProto.HydratedTemplateButton_HydratedCallButton{
+								DisplayText: proto.String("Hubungi Kami"),
+								PhoneNumber: proto.String("1234567890"),
+							},
+						},
+					},
+
+					// This is just a quick reply
+					{
+						Index: proto.Uint32(3),
+						HydratedButton: &waProto.HydratedTemplateButton_QuickReplyButton{
+							QuickReplyButton: &waProto.HydratedTemplateButton_HydratedQuickReplyButton{
+								DisplayText: proto.String("Quick reply"),
+								Id:          proto.String("quick-id"),
+							},
+						},
+					},
+				},
+			},
+		},
+	}
 }

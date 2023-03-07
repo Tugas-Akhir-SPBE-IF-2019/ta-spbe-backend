@@ -10,6 +10,7 @@ import (
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/jsonmanipulator"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/messagequeue"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/smtpmailer"
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/whatsapp"
 )
 
 type AssessmentHandler interface {
@@ -26,9 +27,10 @@ type assessmentHandler struct {
 	filesystemClient filesystem.Client
 	jsonClient       jsonmanipulator.Client
 	messageQueue     messagequeue.Client
+	waClient         whatsapp.Client
 }
 
-func NewAssessmentHandler(db *sql.DB, assessmentStore store.Assessment, apiCfg config.API, userStore store.User, smtpMailer smtpmailer.Client, filesystemClient filesystem.Client, jsonClient jsonmanipulator.Client, messageQueue messagequeue.Client) AssessmentHandler {
+func NewAssessmentHandler(db *sql.DB, assessmentStore store.Assessment, apiCfg config.API, userStore store.User, smtpMailer smtpmailer.Client, filesystemClient filesystem.Client, jsonClient jsonmanipulator.Client, messageQueue messagequeue.Client, waClient whatsapp.Client) AssessmentHandler {
 	return &assessmentHandler{
 		apiCfg:           apiCfg,
 		db:               db,
@@ -38,5 +40,6 @@ func NewAssessmentHandler(db *sql.DB, assessmentStore store.Assessment, apiCfg c
 		filesystemClient: filesystemClient,
 		jsonClient:       jsonClient,
 		messageQueue:     messageQueue,
+		waClient:         waClient,
 	}
 }

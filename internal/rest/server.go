@@ -17,6 +17,7 @@ import (
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/metric"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/smtpmailer"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/token"
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/whatsapp"
 	"github.com/rs/zerolog"
 
 	"github.com/go-chi/chi/v5"
@@ -32,6 +33,7 @@ func New(
 	fileSystemClient filesystem.Client,
 	jsonClient jsonmanipulator.Client,
 	messageQueue messagequeue.Client,
+	whatsAppClient whatsapp.Client,
 
 ) http.Handler {
 	r := chi.NewRouter()
@@ -54,7 +56,7 @@ func New(
 
 	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, indicatorAssessmentStore, userStore, smtpMailer)
 	authHandler := authhandler.NewAuthHandler(sqlDB, userStore, cfg.OAuth, jwt)
-	assessmentHandler := assessmenthandler.NewAssessmentHandler(sqlDB, assessmentStore, cfg.API, userStore, smtpMailer, fileSystemClient, jsonClient, messageQueue)
+	assessmentHandler := assessmenthandler.NewAssessmentHandler(sqlDB, assessmentStore, cfg.API, userStore, smtpMailer, fileSystemClient, jsonClient, messageQueue, whatsAppClient)
 	r.Route("/auth", func(r chi.Router) {
 		r.Get("/", token.HandleMain)
 		r.Post("/google", authHandler.Google)

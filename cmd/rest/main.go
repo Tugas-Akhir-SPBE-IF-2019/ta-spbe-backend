@@ -18,6 +18,7 @@ import (
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/pgsql"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/smtpmailer"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/tracer"
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/whatsapp"
 )
 
 func main() {
@@ -97,10 +98,17 @@ func main() {
 		return
 	}
 
+	// WhatsApp Client
+	whatsAppClient, whatsAppClientErr := whatsapp.NewWhatsMeowClient(cfg.WhatsApp)
+	if whatsAppClientErr != nil {
+		zlogger.Error().Err(whatsAppClientErr).Msgf("rest: main failed to construct WhatsApp client: %s", whatsAppClientErr)
+		return
+	}
+
 	// -----------------------------------------------------------------------------------------------------------------
 	// SERVER SETUP AND EXECUTE
 	// -----------------------------------------------------------------------------------------------------------------
-	restServerHandler := rest.New(cfg, zlogger, sqlDB, smtpMailer, fileSystemClient, jsonClient, messageQueue)
+	restServerHandler := rest.New(cfg, zlogger, sqlDB, smtpMailer, fileSystemClient, jsonClient, messageQueue, whatsAppClient)
 
 	zlogger.Info().Msgf("REST Server started on port %d", cfg.API.RESTPort)
 	http.ListenAndServe(fmt.Sprintf(":%d", cfg.API.RESTPort), restServerHandler)
