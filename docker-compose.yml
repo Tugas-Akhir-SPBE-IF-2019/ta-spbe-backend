@@ -102,6 +102,14 @@ services:
       - nsqlookupd  
     ports:
       - "4171:4171"
+  
+  nlp-processing:
+    build: ./pkg/nlp
+    restart: always
+    ports:
+      - "8000:15400"
+    volumes:
+      - ./pkg/nlp/app/:/app/src
 volumes:
   pgdata:
   grafanadata:
