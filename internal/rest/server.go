@@ -36,7 +36,11 @@ func New(
 	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, indicatorAssessmentStore)
 
 	r.Get("/metrics", promHandler.ServeHTTP)
-	r.Get("/index", indicatorAssessmentHandler.GetIndicatorAssessmentIndexList)
+	r.Get("/assessments/index", indicatorAssessmentHandler.GetIndicatorAssessmentIndexList)
+	r.Route("/assessments", func(r chi.Router) {
+		r.Get("/{id}", indicatorAssessmentHandler.GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList)
+
+	})
 
 	return r
 }

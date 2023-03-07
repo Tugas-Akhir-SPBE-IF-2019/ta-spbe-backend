@@ -40,4 +40,5 @@ type IndicatorAssessmentResultFeedback struct {
 type IndicatorAssessment interface {
 	FindAll(ctx context.Context) ([]*IndicatorAssessmentDetail, error)
 	FindAllPagination(ctx context.Context, offset int, limit int) ([]*IndicatorAssessmentDetail, error)
+	FindIndicatorAssessmentResultById(ctx context.Context, id string) (IndicatorAssessmentResultDetail, error)
 }

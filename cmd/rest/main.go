@@ -49,9 +49,12 @@ func main() {
 		return
 	}
 
-	if migrateErr := pgsql.Migrate(sqlDB, cfg.PostgreSQL.Database); err != nil {
-		zlogger.Error().Err(migrateErr).Msgf("migration: migration failed to construct pgsql: %s", migrateErr)
-		return
+	migrate := flag.Bool("migrate", cfg.PostgreSQL.Migration, "do migration")
+	if *migrate {
+		if migrateErr := pgsql.Migrate(sqlDB, cfg.PostgreSQL.Database); err != nil {
+			zlogger.Error().Err(migrateErr).Msgf("migration: migration failed to construct pgsql: %s", migrateErr)
+			return
+		}
 	}
 
 	// -----------------------------------------------------------------------------------------------------------------

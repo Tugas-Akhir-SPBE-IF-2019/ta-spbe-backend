@@ -2,12 +2,14 @@ package indicatorassessment
 
 import (
 	"database/sql"
-	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store"
 	"net/http"
+
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store"
 )
 
 type IndicatorAssessmentHandler interface {
 	GetIndicatorAssessmentIndexList(w http.ResponseWriter, r *http.Request)
+	GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList(w http.ResponseWriter, r *http.Request)
 }
 
 type indicatorAssessmentHandler struct {
