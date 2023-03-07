@@ -60,7 +60,7 @@ func main() {
 	// -----------------------------------------------------------------------------------------------------------------
 	// SERVER SETUP AND EXECUTE
 	// -----------------------------------------------------------------------------------------------------------------
-	restServerHandler := rest.New(zlogger, sqlDB)
+	restServerHandler := rest.New(cfg, zlogger, sqlDB)
 
 	zlogger.Info().Msgf("REST Server started on port %d", cfg.API.RESTPort)
 	http.ListenAndServe(fmt.Sprintf(":%d", cfg.API.RESTPort), restServerHandler)

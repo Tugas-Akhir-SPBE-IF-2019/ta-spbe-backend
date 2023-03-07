@@ -30,3 +30,6 @@ exporter = "otlp-grpc"
 exporter_endpoint = "otel-collector:4317"
 sampling = "always"
 sampling_ratio = 0.5
+
+[jwt]
+secret = "secret"
