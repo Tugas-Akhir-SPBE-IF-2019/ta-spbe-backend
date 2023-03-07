@@ -21,6 +21,7 @@ import (
 	"github.com/rs/zerolog"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -44,6 +45,9 @@ func New(
 
 	jwt := token.NewJWT(cfg.JWT)
 	r.Use(
+		cors.Handler(cors.Options{
+			AllowedOrigins: []string{"https://*", "http://*"},
+		}),
 		middleware.HTTPTracer,
 		middleware.RequestID(zlogger),
 		middleware.HTTPLogger,
