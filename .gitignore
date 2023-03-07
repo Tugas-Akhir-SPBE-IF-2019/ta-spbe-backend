@@ -1,6 +1,7 @@
 build/
 vendor/
 tmp/
+static/
 .vscode/
 .idea/
 .scannerwork/

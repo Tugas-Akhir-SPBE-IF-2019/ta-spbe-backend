@@ -5,6 +5,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -109,11 +110,13 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 	supportingDocument := fmt.Sprintf("%s%s", filename, fileExt)
 	supportingDocumentUrl := fmt.Sprintf("http://%s/static/%s", handler.apiCfg.Host, supportingDocument)
 
+	var dst *os.File
 	dst, err := handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
 	if err != nil {
 		log.Println(err.Error())
-		response.Error(w, apierror.InternalServerError())
-		return
+
+		os.MkdirAll("./static/supporting-documents", os.ModePerm)
+		dst, _ = handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
 	}
 	defer dst.Close()
 

@@ -18,7 +18,12 @@ func JWTAuth(jwt token.JWT, devCfg config.DevSettings) func(http.Handler) http.H
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			var ctx context.Context
-			if devCfg.Auth || r.Header.Get("Authorization") != "" {
+			if !devCfg.Auth {
+				ctx = context.WithValue(r.Context(), userCtx.UserCtxKey, userCtx.UserCtx{
+					ID:   "ccd52961-fa4e-43ba-a6df-a4c97849d899",
+					Role: store.RoleAdmin,
+				})
+			} else {
 				authHeader := r.Header.Get("Authorization")
 				if authHeader == "" {
 					response.Error(w, apierror.UnauthorizedError("Authorization is missing"))
@@ -41,11 +46,6 @@ func JWTAuth(jwt token.JWT, devCfg config.DevSettings) func(http.Handler) http.H
 				ctx = context.WithValue(r.Context(), userCtx.UserCtxKey, userCtx.UserCtx{
 					ID:   claim.UserID,
 					Role: store.UserRole(claim.Role),
-				})
-			} else {
-				ctx = context.WithValue(r.Context(), userCtx.UserCtxKey, userCtx.UserCtx{
-					ID:   "ccd52961-fa4e-43ba-a6df-a4c97849d899",
-					Role: store.RoleAdmin,
 				})
 			}
 
