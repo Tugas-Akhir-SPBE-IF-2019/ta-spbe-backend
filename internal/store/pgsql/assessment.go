@@ -19,8 +19,10 @@ func NewAssessment(db *sql.DB) *Assessment {
 	return &Assessment{db: db}
 }
 
-const assessmentFindAllQuery = `SELECT a.id, a.institution_name, a.status, a.created_at
-		FROM assessments a`
+const assessmentFindAllQuery = `SELECT ia.id, a.institution_name, ia.status, ia.created_at
+	FROM assessments a
+	RIGHT JOIN indicator_assessments ia
+	ON ia.assessment_id = a.id`
 
 func (s *Assessment) FindAll(ctx context.Context) ([]*store.AssessmentDetail, error) {
 	assessmentList := []*store.AssessmentDetail{}
@@ -48,8 +50,11 @@ func (s *Assessment) FindAll(ctx context.Context) ([]*store.AssessmentDetail, er
 	return assessmentList, nil
 }
 
-const assessmentFindAllPaginationQuery = `SELECT a.id, a.institution_name, a.status, a.created_at
-		FROM assessments a LIMIT $2 OFFSET $1`
+const assessmentFindAllPaginationQuery = `SELECT ia.id, a.institution_name, ia.status, ia.created_at
+	FROM assessments a 
+	RIGHT JOIN indicator_assessments ia
+	ON ia.assessment_id = a.id
+	LIMIT $2 OFFSET $1`
 
 func (r *Assessment) FindAllPagination(ctx context.Context, offset int, limit int) ([]*store.AssessmentDetail, error) {
 	assessmentList := []*store.AssessmentDetail{}

@@ -8,6 +8,9 @@ services:
       - ./:/src/
       - ./cmd/rest/main.go:/src/main.go
     restart: always
+    depends_on:
+      - db
+      - nsqd
   db:
     image: postgres:14.1-alpine
     restart: always
@@ -74,6 +77,31 @@ services:
     volumes:
       - ./configs/instrumentation/metric/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
       - grafanadata:/var/lib/grafana
+    
+  nsqlookupd:
+    image: nsqio/nsq
+    restart: always
+    command: /nsqlookupd
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+  nsqd:
+    image: nsqio/nsq
+    restart: always
+    command:  /nsqd --broadcast-address=nsqd --lookupd-tcp-address=nsqlookupd:4160
+    depends_on:
+      - nsqlookupd
+    ports:
+      - "4151:4151"
+      - "4150:4150"
+  nsqadmin:
+    image: nsqio/nsq
+    restart: always
+    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    depends_on:
+      - nsqlookupd  
+    ports:
+      - "4171:4171"
 volumes:
   pgdata:
   grafanadata:
