@@ -1,0 +1,110 @@
+// Message definition for user access web service.
+
+syntax = "proto3";
+
+package bfi.bravoservice.useriam;
+
+import "google/api/annotations.proto";
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/useriam;useriam";
+option java_multiple_files = true;
+option java_outer_classname = "UserIAMService";
+option java_package = "com.bfi.bravoservice.useriam";
+
+// Web application menu item object.
+message WebMenuItem {
+  // Label of the menu item.
+  string label = 1 [
+    json_name = "label",
+    (openapi.v3.property) = {
+      required: ["label"]
+      nullable: false
+      example: {yaml:"Payment"}
+    }
+  ];
+  // Path of the menu item from the base server perspective.
+  // If not empty/null, prepend it with `base_url` field from `application` object to get the full URL of the path.
+  string path = 2 [
+    json_name = "path",
+    (openapi.v3.property) = {
+      required: ["path"]
+      type: "string"
+      nullable: true
+      example: {yaml:"/payment"}
+    }
+  ];
+  // List of sub-menus (non-empty if a menu has sub-menus).
+  repeated WebMenuItem sub_menus = 3 [json_name = "sub_menus"];
+}
+
+// Web application basic info object.
+message WebAppInfo {
+  // Unique identifier of the web application.
+  string id = 1 [
+    json_name = "id",
+    (openapi.v3.property) = {
+      required: ["id"]
+      nullable: false
+      example: {yaml: "lms"}
+    }
+  ];
+  // Name of the web application.
+  string name = 2 [
+    json_name = "name",
+    (openapi.v3.property) = {
+      required: ["name"]
+      nullable: false
+      example: {yaml: "LMS"}
+    }
+  ];
+  // Base server URL of the web application.
+  // API consumer will need to prepend this value to get the full URL of the page.
+  string base_url = 3 [
+    json_name = "base_url",
+    (openapi.v3.property) = {
+      required: ["base_url"]
+      format: "uri"
+      example: {yaml: "https://lms.sit.bravo.bfi.co.id"}
+      nullable: false
+    }
+  ];
+}
+
+// Web application and its menu data.
+message WebMenuDataItem {
+  // Basic info of the web application.
+  WebAppInfo app = 1 [json_name = "app"];
+  // Available web menu of the application.
+  repeated WebMenuItem menus = 2 [json_name = "menus"];
+}
+
+// Placeholder for menu request filtering, e.g., filter by application id.
+message WebMenuOtherAppListRequest {}
+
+// Available web application menus for current user.
+message WebMenuOtherAppListResponse {
+  // List of available web application and its menu for current user.
+  repeated WebMenuDataItem data = 1 [json_name = "data"];
+}
+
+// Service for web application menu related functionality.
+service WebMenuService {
+  // Get list of other web application menus for current user. The menus will depends on current user authorization.
+  //
+  // It contains list of other web application that can be accessed by current user along with allowed page menu.
+  rpc GetOtherAppMenu(WebMenuOtherAppListRequest) returns(WebMenuOtherAppListResponse) {
+    option(google.api.http) = {
+      get: "/web/menu/other-apps"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "web.menu.other-apps"
+      security: [{
+        additional_properties: [
+          {name: "BearerToken"; value: {value: []}}
+        ]}
+      ]
+    };
+  }
+}

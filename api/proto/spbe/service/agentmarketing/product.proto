@@ -1,0 +1,104 @@
+// Message definition for agent-marketing's product service
+
+syntax = "proto3";
+
+package bfi.bravoservice.agentmarketing;
+
+import "spbe/service/agentmarketing/response.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/agentmarketing;agentmarketing";
+option java_multiple_files = true;
+option java_outer_classname = "AgentMarketingProduct";
+option java_package = "com.bfi.bravoservice.agentmarketing";
+
+// GetPackageRequest is the request message to find product packages by BPKB ownership and optional asset type
+message GetPackageRequest {
+  // BPKB ownership value can be one of 0 (Unknown), 1 (Self), 2 (Other).
+  uint32 bpkb_ownership = 1 [
+    json_name = "bpkb_ownership",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["bpkb_ownership"]
+      nullable: false
+      enum: [
+        {yaml: "0"},
+        {yaml: "1"},
+        {yaml: "2"}
+      ]
+    }
+  ];
+
+  // vehicle type can be one of CAR, MOTORCYCLE
+  string asset_type_id = 2 [
+    json_name = "asset_type_id",
+    (openapi.v3.property) = {
+      enum: [
+        {yaml: "CAR"},
+        {yaml: "MOTORCYCLE"}
+      ]
+    }
+  ];
+}
+
+// PackageDetail contains package details info
+message PackageDetail {
+  // period of installments
+  repeated uint32 tenures = 1 [json_name = "tenures"];
+  // contains product package type, eg. retail, cmp, partnership
+  repeated string tags = 2 [json_name = "tags"];
+  // package info
+  PackageInfo package = 3 [json_name = "package"];
+  // product info
+  ProductInfo product = 4 [json_name = "product"];
+  // list of bonus details for the package
+  repeated Bonus bonuses = 5 [json_name = "bonuses"];
+}
+
+// PackageInfo contains identifier and name of a package
+message PackageInfo {
+  // package identifier
+  uint32 id = 1 [json_name = "id"];
+  // package name
+  string name = 2 [json_name = "name"];
+}
+
+// ProductInfo contains identifier and name of a product
+message ProductInfo {
+  // product identifier
+  uint32 id = 1 [json_name = "id"];
+  // product name
+  string name = 2 [json_name = "name"];
+}
+
+// Bonus contains bonus details info for a package
+message Bonus {
+  // bonus rate
+  float rate = 1 [json_name = "rate"];
+  // maximum period of installments eligible for bonus
+  uint32 max_tenure = 2 [json_name = "max_tenure"];
+  // minimum period of installments eligible for bonus
+  uint32 min_tenure = 3 [json_name = "min_tenure"];
+}
+
+// GetPackageResponse is the response message for the client
+message GetPackageResponse {
+  // contain list of packages info
+  repeated PackageDetail data = 1 [json_name = "data"];
+}
+
+// ProductService exposes service methods related with product data
+service ProductService {
+  // GetPackages get a list of packages by BPKB ownership and optional asset type
+  rpc GetPackages(GetPackageRequest) returns (GetPackageResponse) {
+    option(google.api.http) = {
+      get: "/product/packages"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "products.get_packages"
+    };
+  }
+}

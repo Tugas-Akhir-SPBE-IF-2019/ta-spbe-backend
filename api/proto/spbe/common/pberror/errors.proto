@@ -1,0 +1,190 @@
+// Error message definition for gRPC based services.
+
+syntax = "proto3";
+
+package bfi.common.pberror;
+
+import "spbe/common/loginfo/trace.proto";
+import "google/protobuf/timestamp.proto";
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/common/pberror;pberror";
+option java_multiple_files = true;
+option java_outer_classname = "PbError";
+option java_package = "com.bfi.common.pberror";
+
+// Server is error message that is related to server unhandled error. It will return 500 for HTTP.
+message Server {
+  option(openapi.v3.schema) = {
+    nullable: false
+  };
+
+  // ErrorCode is a list of code that is returned on internal server related error.
+  enum ErrorCode {
+    // UNKNOWN is when server unknown/unhandled error.
+    UNKNOWN = 0;
+    // INTERNAL_FAILURE is when internal server error which is caused by unhandled exception or server panic.
+    INTERNAL_FAILURE = 1;
+  }
+
+  // trace is optional information for developers, it contains identifier on the request for error tracking.
+  bfi.common.loginfo.Trace trace = 1 [json_name = "trace"];
+  // code is error code given by the server which can be used for caller to decide what is the next action.
+  ErrorCode code = 2 [json_name = "code"];
+}
+
+// Authorization is error message that is related to request authorization.
+message Authorization {
+  option(openapi.v3.schema) = {
+    nullable: false
+  };
+
+  // ErrorCode is a list of code that is returned on unauthorized access error.
+  enum ErrorCode {
+    // UNKNOWN is default code for stopped access for invalid authorization.
+    // It will return 401 for HTTP.
+    UNKNOWN = 0;
+    // INVALID_KEY is when user set authorization key but server failed to validate in general.
+    // e.g., bad token parsing, invalid jwt token parse, invalid token, key not found, etc.
+    // It will return 401 for HTTP.
+    INVALID_KEY = 1;
+    // PERMISSION_DENIED is when user provide a valid authorization key,
+    // but is not allowed to do the requested operation.
+    // It will return 403 for HTTP.
+    PERMISSION_DENIED = 2;
+  }
+
+  // trace is optional information for developers, it contains identifier on the request for error tracking.
+  bfi.common.loginfo.Trace trace = 1 [json_name = "trace"];
+  // code is error code given by the server which can be used for caller to decide what is the next action.
+  ErrorCode code = 2 [json_name = "code"];
+  // sub_code is free enum string that is intended for specific action for API consumer.
+  // sub_code should be documented in each implementor service proto definition.
+  string sub_code = 3 [json_name = "sub_code"];
+}
+
+// ValidationError is common validation error that is usually reflecting invalid input from the user.
+// It will return 400 for HTTP.
+message Validation {
+  option(openapi.v3.schema) = {
+    nullable: false
+  };
+
+  // ErrorCode is available error code for Validation error.
+  enum ErrorCode {
+    // UNKNOWN default unknown validation error.
+    UNKNOWN = 0;
+    // REQUIRED field is required and cannot be empty.
+    REQUIRED = 1;
+    // INVALID_FORMAT can be string pattern, bad uuid, etc.
+    INVALID_FORMAT = 2;
+    // INVALID_TYPE is when field value type is unsupported, e.g., file upload mime type.
+    INVALID_TYPE = 3;
+    // INVALID_DIMENSION is when field value dimension set is not in min/max allowed dimension range. e.g., image.
+    INVALID_DIMENSION = 4;
+    // OUT_OF_RANGE is when (chars, list, numeric, size) field value is out of defined min/max allowed range.
+    OUT_OF_RANGE = 5;
+    // TOO_SHORT is when (chars, list) field value length is shorter that minimum allowed.
+    TOO_SHORT = 6;
+    // TOO_LONG is when (chars, list) field value length is longer that maximum allowed.
+    TOO_LONG = 7;
+    // TOO_SMALL is when (numeric, size) field value less than minimum allowed.
+    TOO_SMALL = 8;
+    // TOO_LARGE is when (numeric, size) larger than maximum allowed.
+    TOO_LARGE = 9;
+    // NOT_IN_LIST is when given value is not in the defined list.
+    NOT_IN_LIST = 10;
+    // DUPLICATED is when given value is not allowed to have duplication.
+    DUPLICATED = 11;
+  }
+
+  // Field is object to indicate which field has an error and optional info.
+  message Field {
+    option(openapi.v3.schema) = {
+      nullable: false
+    };
+
+    // code is error code given by the server which can be used for caller to decide what is the next action.
+    ErrorCode code = 1 [json_name = "code"];
+    // field is the field which was failed the validation.
+    string field = 2 [json_name = "field"];
+    // info is the optional debugging info to help developer (API consumer).
+    // The API consumer should identify the code to display appropriate message to the end user.
+    string info = 3 [json_name = "info"];
+  }
+
+  // trace is optional information for developers, it contains identifier on the request for error tracking.
+  bfi.common.loginfo.Trace trace = 1 [json_name = "trace"];
+  // fields is list of Field which was failed the validation.
+  repeated Field fields = 2 [json_name = "fields"];
+}
+
+// RateLimited is type of error to indicate that the request is stopped by the server. e.g., too many failed attempt.
+// It will return 429 for HTTP.
+message RateLimited {
+  option(openapi.v3.schema) = {
+    nullable: false
+  };
+
+  // trace is optional information for developers, it contains identifier on the request for error tracking.
+  bfi.common.loginfo.Trace trace = 1 [json_name = "trace"];
+  // retry_after caller can resend the request after this timestamp.
+  google.protobuf.Timestamp retry_after = 2 [json_name = "retry_after"];
+  // code is error code given by the server which can be used for caller to decide what is the next action.
+  // code should be an enum of possible business error that is documented in each service proto file.
+  string code = 3 [json_name = "code"];
+}
+
+// Business is type of error that can set custom `code` as specific to the service implementor.
+// The custom code itself should be documented in each service.
+// It will return 400 for HTTP.
+message Business {
+  option(openapi.v3.schema) = {
+    nullable: false
+  };
+
+  // trace is optional information for developers, it contains identifier on the request for error tracking.
+  bfi.common.loginfo.Trace trace = 1 [json_name = "trace"];
+  // code is error code given by the server which can be used for caller to decide what is the next action.
+  // code should be an enum of possible business error that is documented in each service proto file.
+  // the `code` itself should be prefixed with service id for better identification.
+  // e.g., `BRAVO_FOO_CREDIT_OVER_LIMIT`
+  // `BRAVO_FOO` is the service name
+  // `CREDIT_OVER_LIMIT` is business specific error.
+  string code = 2 [json_name = "code"];
+  // info is the optional debugging info to help developer (API consumer).
+  // The API consumer should identify the code to display appropriate message to the end user, not from this info as is.
+  string info = 3 [json_name = "info"];
+}
+
+// Client is generic error message for the client.
+message Client {
+  option(openapi.v3.schema) = {
+    nullable: false
+  };
+
+  // ErrorCode is a list of code that is returned on internal server related error.
+  enum ErrorCode {
+    // BAD_REQUEST is default error when server cannot parse given request from client.
+    // It will return 400 for HTTP.
+    BAD_REQUEST = 0;
+    // METHOD_NOT_ALLOWED is when path is match but HTTP method does not match.
+    // It will return 403 for HTTP.
+    METHOD_NOT_ALLOWED = 1;
+    // ROUTE_NOT_FOUND is when requested route not found. (grpc gateway routing)
+    // It will return 404 for HTTP.
+    ROUTE_NOT_FOUND = 2;
+    // DATA_NOT_FOUND is when requested data not found.
+    // It will return 404 for HTTP.
+    DATA_NOT_FOUND = 3;
+  }
+
+  // trace is optional information for developers, it contains identifier on the request for error tracking.
+  bfi.common.loginfo.Trace trace = 1 [json_name = "trace"];
+  // code is error code given by the server which can be used for caller to decide what is the next action.
+  ErrorCode code = 2 [json_name = "code"];
+  // info is the optional debugging info to help developer (API consumer).
+  // The API consumer should identify the code to display appropriate message to the end user, not from this info as is.
+  string info = 3 [json_name = "info"];
+}

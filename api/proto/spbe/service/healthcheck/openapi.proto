@@ -1,0 +1,20 @@
+// OpenAPI base definition of the service.
+
+syntax = "proto3";
+
+package bfi.bravoservice.healthcheck;
+
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/healthcheck;healthcheck";
+option java_multiple_files = true;
+option java_outer_classname = "OpenAPI";
+option java_package = "com.bfi.bravoservice.healthcheck";
+
+option (openapi.v3.document) = {
+  info: {
+    title: "Healthcheck documentation for Go based backend."
+    version: "1.0",
+  }
+};

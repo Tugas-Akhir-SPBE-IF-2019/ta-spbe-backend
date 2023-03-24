@@ -1,0 +1,25 @@
+// Header is common AMQP message which included in the message body.
+
+syntax = "proto3";
+
+package bfi.common.amqpmessage;
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/common/amqpmessage;amqpmessage";
+option java_multiple_files = true;
+option java_outer_classname = "AMQPMessage";
+option java_package = "com.bfi.common.amqpmessage";
+
+// Sender is a message to identify the AMQP sender.
+message Sender {
+  // id is unique identifier of the sender, e.g., bravo-example-grpc-23srgeirt23. Required.
+  string id = 1 [json_name = "id"];
+  // idempotency_key is unique identifier to avoid double process.
+  string idempotency_key = 2 [json_name = "idempotency_key"];
+}
+
+// Header for incoming message. This is to identify the sender and its request tracing info.
+message Header {
+  // sender info object. Required.
+  Sender sender = 1 [json_name = "sender"];
+}

@@ -1,0 +1,993 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Agent Marketing service documentation
+    version: "1.0"
+paths:
+    /address/search:
+        get:
+            tags:
+                - AddressService
+            description: SearchAddress get a list of addresses filterable by their name part
+            operationId: address.search
+            parameters:
+                - name: page
+                  in: query
+                  description: 'Requested page. Default: 1'
+                  schema:
+                    type: integer
+                    format: int32
+                - name: per_page
+                  in: query
+                  description: 'Requested item per page. Default: 20'
+                  schema:
+                    type: integer
+                    format: int32
+                - name: keyword
+                  in: query
+                  description: Keyword to search
+                  schema:
+                    type: string
+                - name: search_by
+                  in: query
+                  description: Search by option for keyword param
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SearchAddressPaginatedResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /address/search_city:
+        get:
+            tags:
+                - AddressService
+            description: SearchCity get a list of cities filterable by their name part
+            operationId: address.search_city
+            parameters:
+                - name: page
+                  in: query
+                  description: 'Requested page. Default: 1'
+                  schema:
+                    type: integer
+                    format: int32
+                - name: per_page
+                  in: query
+                  description: 'Requested item per page. Default: 20'
+                  schema:
+                    type: integer
+                    format: int32
+                - name: keyword
+                  in: query
+                  description: a word to filter a city by part of its name
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SearchCityPaginatedResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /calculation/collateral:
+        post:
+            tags:
+                - CalculationService
+            description: CalculateCollateral get calculated financing based on collateral
+            operationId: calculation.calculate_collateral
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CalculateCollateralRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CalculateCollateralResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /calculation/installment:
+        post:
+            tags:
+                - CalculationService
+            description: CalculateInstallment get calculated financing based on installment
+            operationId: calculation.calculate_installmentl
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CalculateInstallmentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CalculateInstallmentResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /product/packages:
+        get:
+            tags:
+                - ProductService
+            description: GetPackages get a list of packages by BPKB ownership and optional asset type
+            operationId: products.get_packages
+            parameters:
+                - name: bpkb_ownership
+                  in: query
+                  description: BPKB ownership value can be one of 0 (Unknown), 1 (Self), 2 (Other).
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: asset_type_id
+                  in: query
+                  description: vehicle type can be one of CAR, MOTORCYCLE
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetPackageResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/agent/profile:
+        get:
+            tags:
+                - AgentService
+            description: GetProfile get agent's profile info
+            operationId: agent.get_profile
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetProfileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+            security:
+                - BearerToken: []
+    /vehicles/brands:
+        get:
+            tags:
+                - VehicleService
+            description: GetAllBrand get a list of all vehicle brands
+            operationId: vehicles.get_all_brand
+            parameters:
+                - name: page
+                  in: query
+                  description: 'Requested page. Default: 1'
+                  schema:
+                    type: integer
+                    format: int32
+                - name: per_page
+                  in: query
+                  description: 'Requested item per page. Default: 20'
+                  schema:
+                    type: integer
+                    format: int32
+                - name: keyword
+                  in: query
+                  description: a word to search vehicle brands by parts of its brand name
+                  schema:
+                    type: string
+                - name: asset_type_id
+                  in: query
+                  description: 'asset_type_id can be CAR or MOTORCYCLE but default is: CAR'
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAllBrandPaginatedResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /vehicles/{brand_code}/models:
+        get:
+            tags:
+                - VehicleService
+            description: GetAllVehicleModelsByBranchCode get a list of all vehicle models by brand code
+            operationId: vehicles.get_all_vehicle_models_by_brand_code
+            parameters:
+                - name: brand_code
+                  in: path
+                  description: vehicle brand code
+                  required: true
+                  schema:
+                    type: string
+                - name: page
+                  in: query
+                  description: 'Requested page. Default: 1'
+                  schema:
+                    type: integer
+                    format: int32
+                - name: per_page
+                  in: query
+                  description: 'Requested item per page. Default: 20'
+                  schema:
+                    type: integer
+                    format: int32
+                - name: keyword
+                  in: query
+                  description: a word to search vehicle models by parts of its brand code
+                  schema:
+                    type: string
+                - name: asset_type_id
+                  in: query
+                  description: 'asset_type_id can be CAR or MOTORCYCLE but default is: CAR'
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAllVehicleModelsByBrandCodePaginatedResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        AddressDataItem:
+            type: object
+            properties:
+                province:
+                    $ref: '#/components/schemas/ProvinceDataItem'
+                city:
+                    $ref: '#/components/schemas/CityDataItem'
+                district:
+                    $ref: '#/components/schemas/DistrictDataItem'
+                sub_district:
+                    $ref: '#/components/schemas/SubDistrictDataItem'
+                confins_address:
+                    $ref: '#/components/schemas/ConfinsAddress'
+            description: AddressDataItem contains the address information
+        Bonus:
+            type: object
+            properties:
+                rate:
+                    type: number
+                    description: bonus rate
+                    format: float
+                max_tenure:
+                    type: integer
+                    description: maximum period of installments eligible for bonus
+                    format: uint32
+                min_tenure:
+                    type: integer
+                    description: minimum period of installments eligible for bonus
+                    format: uint32
+            description: Bonus contains bonus details info for a package
+        CalculateCollateralRequest:
+            required:
+                - calculation
+                - collateral
+            type: object
+            properties:
+                calculation:
+                    $ref: '#/components/schemas/CalculationInfoRequest'
+                collateral:
+                    $ref: '#/components/schemas/CollateralInfoRequest'
+            description: CalculateCollateralRequest is the request to calculate collateral
+        CalculateCollateralResponse:
+            type: object
+            properties:
+                ntf_amount:
+                    type: number
+                    description: calculated ntf_amount
+                    format: double
+                max_ltv:
+                    type: number
+                    description: calculated max_ltv
+                    format: double
+                asset_price:
+                    type: number
+                    description: collateral asset_price based on inputs
+                    format: double
+            description: CalculateCollateralResponse is the response message to the client
+        CalculateInstallmentRequest:
+            required:
+                - calculation
+                - collateral
+                - over_50_years
+            type: object
+            properties:
+                calculation:
+                    $ref: '#/components/schemas/InstallmentCalculationInfoRequest'
+                collateral:
+                    $ref: '#/components/schemas/InstallmentCollateralInfoRequest'
+                over_50_years:
+                    example: false
+                    required:
+                        - over_50_years
+                    type: boolean
+                    description: is installment over 50 years
+                insurance_coverage_type:
+                    example: TLO
+                    maxLength: 64
+                    minLength: 1
+                    enum:
+                        - TLO
+                        - ARK
+                        - MIX
+                    type: string
+                    description: insurance coverage type
+            description: CalculateInstallmentRequest is the request to calculate installments
+        CalculateInstallmentResponse:
+            type: object
+            properties:
+                transaction_id:
+                    type: string
+                    description: transaction id for the calculation
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CalculateInstallmentResponseItem'
+                    description: data item for the calculate installment response
+            description: CalculateInstallmentResponse is the response message to the client
+        CalculateInstallmentResponseItem:
+            type: object
+            properties:
+                tenor:
+                    type: number
+                    description: calculated tenor
+                    format: double
+                rounded_up_installment:
+                    type: number
+                    description: calculated rounded up installment
+                    format: double
+                capitalized_ntf_amount:
+                    type: number
+                    description: calculated capitalized ntf amount
+                    format: double
+                admin_fee:
+                    type: number
+                    description: calculated admin fee
+                    format: double
+                provision:
+                    $ref: '#/components/schemas/InstallmentProvisionInfo'
+                asset_insurance:
+                    $ref: '#/components/schemas/InstallmentAssetInsuranceInfo'
+                life_insurance:
+                    $ref: '#/components/schemas/InstallmentLifeInsuranceInfo'
+                ntf_amount:
+                    type: number
+                    description: calculated ntf amount
+                    format: double
+                effective_rate:
+                    type: number
+                    description: calculated effective rate
+                    format: double
+                fiducia_fee:
+                    type: number
+                    description: calculated fiducia fee
+                    format: double
+                other_fee:
+                    type: number
+                    description: calculated ntf amount
+                    format: double
+                rsa_insurance:
+                    $ref: '#/components/schemas/InstallmentRsaInsuranceInfo'
+                santunan_insurance:
+                    $ref: '#/components/schemas/InstallmentSantunanInsuranceInfo'
+            description: CalculateInstallmentResponseItem is the response object for the individual data
+        CalculationInfoRequest:
+            required:
+                - package_id
+                - product_id
+                - customer_type
+            type: object
+            properties:
+                package_id:
+                    example: 5
+                    required:
+                        - package_id
+                    type: integer
+                    description: package id that is being selected by the user
+                    format: uint32
+                product_id:
+                    example: 1
+                    required:
+                        - product_id
+                    type: integer
+                    description: product id that is being selected by the user
+                    format: uint32
+                city_code:
+                    example: 12.71
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                    description: applicant's domicile city code
+                sub_district_code:
+                    example: 12.71.05.1002
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                    description: applicant's domicile sub district code
+                customer_type:
+                    example: NEW
+                    maxLength: 64
+                    minLength: 1
+                    required:
+                        - customer_type
+                    enum:
+                        - NEW
+                    type: string
+                    description: applicant's customer type
+            description: CalculationInfoRequest contains calculation input that is being passed to CalculateCollateralRequest
+        CityDataItem:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: the city name
+                code:
+                    type: string
+                    description: the city code, eg "32.73"
+                zip_code:
+                    type: string
+                    description: the city postal code
+            description: CityDataItem contains city info
+        CollateralInfoRequest:
+            required:
+                - asset_code
+                - manufacturing_year
+                - is_new
+            type: object
+            properties:
+                asset_code:
+                    example: TOYOTA.RUSH.G15AT
+                    maxLength: 64
+                    minLength: 1
+                    required:
+                        - asset_code
+                    type: string
+                    description: collateral asset code
+                manufacturing_year:
+                    example: 2014
+                    required:
+                        - manufacturing_year
+                    type: integer
+                    description: collateral asset manufacturing year
+                    format: uint32
+                category_id:
+                    example: JEEP
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                    description: collateral asset category id
+                is_new:
+                    example: false
+                    required:
+                        - is_new
+                    type: boolean
+                    description: collateral asset newness
+                asset_type_id:
+                    example: CAR
+                    maxLength: 64
+                    minLength: 1
+                    enum:
+                        - CAR
+                        - MOTORCYCLE
+                    type: string
+                    description: collateral asset type id
+            description: CollateralInfoRequest contains collateral info that is being passed to CalculateCollateralRequest
+        ConfinsAddress:
+            type: object
+            properties:
+                province:
+                    type: string
+                    description: province name format in confins
+                city:
+                    type: string
+                    description: city name format in confins
+                district:
+                    type: string
+                    description: district name format in confins
+                sub_district:
+                    type: string
+                    description: sub_district name format in confins
+                zip_code:
+                    type: string
+                    description: postal code format in confins
+            description: ConfinsAddress contains the address name in confins format
+        DistrictDataItem:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: the district name
+                code:
+                    type: string
+                    description: the district code, eg "21.71.10"
+            description: DistrictDataItem contains district info
+        GetAllBrandPaginatedResponse:
+            type: object
+            properties:
+                pagination:
+                    $ref: '#/components/schemas/PageBasePaginationResponse'
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/VehicleBrand'
+                    description: List of vehicle brand data
+            description: GetAllBrandPaginatedResponse is the response message for the client
+        GetAllVehicleModelsByBrandCodePaginatedResponse:
+            type: object
+            properties:
+                pagination:
+                    $ref: '#/components/schemas/PageBasePaginationResponse'
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/VehicleModelVariant'
+                    description: Contain list of vehicle models with its' variants data
+            description: GetAllVehicleModelsByBrandCodePaginatedResponse is the response message for the client
+        GetPackageResponse:
+            type: object
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/PackageDetail'
+                    description: contain list of packages info
+            description: GetPackageResponse is the response message for the client
+        GetProfileResponse:
+            type: object
+            properties:
+                agent_id:
+                    type: string
+                    description: bravo agent id in a UUIDv4 format
+                marketing_id:
+                    type: string
+                    description: agent's marketing id
+                supervisor_id:
+                    type: string
+                    description: agent's supervisor id
+                name:
+                    type: string
+                    description: agent's full name
+                job_title:
+                    type: string
+                    description: agent's job title
+                branch_name:
+                    type: string
+                    description: agent's branch name
+                mobile:
+                    type: string
+                    description: agent's mobile phone number
+            description: GetProfileResponse is the response message sent to the client
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        InstallmentAssetInsuranceInfo:
+            type: object
+            properties:
+                premium:
+                    type: number
+                    description: calculated premium amount
+                    format: double
+                calculation_id:
+                    type: string
+                    description: calculation id
+            description: InstallmentAssetInsuranceInfo contains asset insurance info that is being passed to CalculateInstallmentResponse
+        InstallmentCalculationInfoRequest:
+            required:
+                - loan_amount
+                - product_id
+                - package_id
+                - customer_type
+            type: object
+            properties:
+                loan_amount:
+                    example: 12345
+                    required:
+                        - loan_amount
+                    type: number
+                    description: loan amount that is being sent by the user
+                    format: double
+                product_id:
+                    example: 1
+                    required:
+                        - product_id
+                    type: integer
+                    description: product id that is being selected by the user
+                    format: uint32
+                package_id:
+                    example: 5
+                    required:
+                        - package_id
+                    type: integer
+                    description: package id that is being selected by the user
+                    format: uint32
+                customer_type:
+                    example: NEW
+                    maxLength: 64
+                    minLength: 1
+                    required:
+                        - customer_type
+                    enum:
+                        - NEW
+                    type: string
+                    description: applicant's customer type
+                city_code:
+                    example: 12.71
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                    description: applicant's domicile city code
+                sub_district_code:
+                    example: 12.71.05.1002
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                    description: applicant's domicile sub district code
+            description: InstallmentCalculationInfoRequest contains calculation info that is being passed to CalculateInstallmentRequest
+        InstallmentCollateralInfoRequest:
+            required:
+                - asset_code
+                - manufacturing_year
+                - is_new
+                - otr
+            type: object
+            properties:
+                asset_code:
+                    example: TOYOTA.RUSH.G15AT
+                    maxLength: 64
+                    minLength: 1
+                    required:
+                        - asset_code
+                    type: string
+                    description: collateral asset code
+                manufacturing_year:
+                    example: 2014
+                    required:
+                        - manufacturing_year
+                    type: integer
+                    description: collateral asset manufacturing year
+                    format: uint32
+                category_id:
+                    example: JEEP
+                    maxLength: 64
+                    minLength: 1
+                    type: string
+                    description: collateral asset category id
+                is_new:
+                    example: false
+                    required:
+                        - is_new
+                    type: boolean
+                    description: collateral asset newness
+                asset_type_id:
+                    example: CAR
+                    maxLength: 64
+                    minLength: 1
+                    enum:
+                        - CAR
+                        - MOTORCYCLE
+                    type: string
+                    description: collateral asset type id
+                otr:
+                    example: 1234
+                    required:
+                        - otr
+                    type: number
+                    description: collateral otr value
+                    format: double
+            description: InstallmentCollateralInfoRequest contains collateral info that is being passed to CalculateInstallmentRequest
+        InstallmentLifeInsuranceInfo:
+            type: object
+            properties:
+                premium:
+                    type: number
+                    description: calculated premium amount
+                    format: double
+                calculation_id:
+                    type: string
+                    description: calculation id
+            description: InstallmentLifeInsuranceInfo contains life insurance info that is being passed to CalculateInstallmentResponse
+        InstallmentProvisionInfo:
+            type: object
+            properties:
+                rate:
+                    type: number
+                    description: calculated rate
+                    format: double
+                fee:
+                    type: number
+                    description: calculated fee
+                    format: double
+            description: InstallmentProvisionInfo contains provision info that is being passed to CalculateInstallmentResponse
+        InstallmentRsaInsuranceInfo:
+            type: object
+            properties:
+                premium:
+                    type: number
+                    description: calculated premium amount
+                    format: double
+                calculation_id:
+                    type: string
+                    description: calculation id
+            description: InstallmentRsaInsuranceInfo contains rsa insurance info that is being passed to CalculateInstallmentResponse
+        InstallmentSantunanInsuranceInfo:
+            type: object
+            properties:
+                premium:
+                    type: number
+                    description: calculated premium amount
+                    format: double
+                calculation_id:
+                    type: string
+                    description: calculation id
+            description: InstallmentSantunanInsurance contains santunan insurance info that is being passed to CalculateInstallmentResponse
+        PackageDetail:
+            type: object
+            properties:
+                tenures:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
+                    description: period of installments
+                tags:
+                    type: array
+                    items:
+                        type: string
+                    description: contains product package type, eg. retail, cmp, partnership
+                package:
+                    $ref: '#/components/schemas/PackageInfo'
+                product:
+                    $ref: '#/components/schemas/ProductInfo'
+                bonuses:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Bonus'
+                    description: list of bonus details for the package
+            description: PackageDetail contains package details info
+        PackageInfo:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    description: package identifier
+                    format: uint32
+                name:
+                    type: string
+                    description: package name
+            description: PackageInfo contains identifier and name of a package
+        PageBasePaginationResponse:
+            type: object
+            properties:
+                page:
+                    minimum: !!float 1
+                    type: integer
+                    default: !!float 1
+                    description: Requested page
+                    format: integer
+                per_page:
+                    maximum: !!float 100
+                    minimum: !!float 10
+                    type: integer
+                    default: !!float 20
+                    description: Requested items per page
+                    format: integer
+                total_item:
+                    type: integer
+                    default: !!float 100
+                    description: Total items available
+                    format: integer
+            description: Pagination info
+        ProductInfo:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    description: product identifier
+                    format: uint32
+                name:
+                    type: string
+                    description: product name
+            description: ProductInfo contains identifier and name of a product
+        ProvinceCityDataItem:
+            type: object
+            properties:
+                province:
+                    $ref: '#/components/schemas/ProvinceDataItem'
+                cities:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CityDataItem'
+                    description: contain a list of city info
+            description: ProvinceCityDataItem contains province info with its cities
+        ProvinceDataItem:
+            type: object
+            properties:
+                code:
+                    type: string
+                    description: the province code, eg "32"
+                name:
+                    type: string
+                    description: the province name
+            description: ProvinceDataItem contains province info
+        SearchAddressPaginatedResponse:
+            type: object
+            properties:
+                pagination:
+                    $ref: '#/components/schemas/PageBasePaginationResponse'
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AddressDataItem'
+                    description: Contain a list of address with city info
+            description: SearchAddressPaginatedResponse is the message response for the client
+        SearchCityPaginatedResponse:
+            type: object
+            properties:
+                pagination:
+                    $ref: '#/components/schemas/PageBasePaginationResponse'
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ProvinceCityDataItem'
+                    description: Contain list of provinces with city data
+            description: SearchCityPaginatedResponse is the message response for the client
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        SubDistrictDataItem:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: the sub district name
+                code:
+                    type: string
+                    description: the sub district code, eg "21.71.10.1002"
+            description: SubDistrictDataItem contains sub-district info
+        VehicleBrand:
+            type: object
+            properties:
+                code:
+                    type: string
+                    description: the brand code
+                name:
+                    type: string
+                    description: the brand name
+                image_url:
+                    type: string
+                    description: the brand image
+            description: VehicleBrand contains brand information
+        VehicleModel:
+            type: object
+            properties:
+                code:
+                    type: string
+                    description: vehicle model code
+                name:
+                    type: string
+                    description: vehicle model name
+                image_url:
+                    type: string
+                    description: vehicle model image location
+                category_id:
+                    type: string
+                    description: vehicle category
+            description: VehicleModel contains vehicle model info
+        VehicleModelVariant:
+            type: object
+            properties:
+                is_popular:
+                    type: boolean
+                    description: mark as popular vehicle model
+                model:
+                    $ref: '#/components/schemas/VehicleModel'
+                variants:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/VehicleVariant'
+                    description: vehicle variants for current model
+                years:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
+                    description: supported years for the vehicle model
+            description: VehicleModelVariant contains vehicle model with its variants information
+        VehicleVariant:
+            type: object
+            properties:
+                code:
+                    type: string
+                    description: vehicle variant code
+                name:
+                    type: string
+                    description: vehicle variant name
+                description:
+                    type: string
+                    description: vehicle variant description
+            description: VehicleVariant contains vehicle variant info
+    securitySchemes:
+        BearerToken:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+tags:
+    - name: AddressService
+      description: AddressService exposing service methods related with address data
+    - name: AgentService
+      description: AgentService exposing service methods related with agent's profile
+    - name: CalculationService
+      description: CalculationService exposing service methods related with collateral calculation
+    - name: ProductService
+      description: ProductService exposes service methods related with product data
+    - name: VehicleService
+      description: VehicleService exposing service methods related with vehicle data

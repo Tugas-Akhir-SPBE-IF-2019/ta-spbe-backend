@@ -1,0 +1,288 @@
+// Message definition for zsample foo service.
+
+syntax = "proto3";
+
+package bfi.bravoservice.zsample;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/zsample;zsample";
+option java_multiple_files = true;
+option java_outer_classname = "ZSampleService";
+option java_package = "com.bfi.bravoservice.zsample";
+
+// Request message to get single foo by its ID.
+message GetFooByIDRequest {
+  // Unique identifier of the data.
+  string id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      format: "uuid"
+      required: ["id"]
+      nullable: false
+    }
+  ];
+}
+
+// FooDataDetail is based response of the foo data.
+message FooDataDetail {
+  option(openapi.v3.schema) = {
+    nullable: true
+  };
+
+  // Unique identifier of the data.
+  string id = 1 [
+    json_name = "id",
+    (openapi.v3.property) = {
+      format: "uuid"
+      required: ["id"]
+      nullable: false
+      unique_items: true
+    }
+  ];
+  // Name of foo.
+  string name = 2 [
+    json_name = "name",
+    (openapi.v3.property) = {
+      required: ["name"]
+      nullable: false
+      unique_items: true
+      min_length: 3
+      max_length: 128
+    }
+  ];
+  // Optional description of foo.
+  string description = 3 [
+    json_name = "description",
+    (openapi.v3.property) = {
+      nullable: true
+      max_length: 512
+    }
+  ];
+  // Timestamp of the data creation.
+  // Datetime value format is [RFC3339](https://www.ietf.org/rfc/rfc3339.html).
+  google.protobuf.Timestamp created_at = 4 [
+    json_name = "created_at",
+    (openapi.v3.property) = {
+      nullable: false
+      format: "date-time"
+    }
+  ];
+  // Timestamp of the data when it was updated.
+  // This field is an example for openapi v3 annotation property.
+  google.protobuf.Timestamp updated_at = 5 [
+    json_name = "updated_at",
+    (openapi.v3.property) = {
+      nullable: true
+      format: "date-time"
+    }
+  ];
+}
+
+// FooDataListItem smaller data for item list data.
+message FooDataListItem{
+  // Unique identifier of the foo.
+  string id = 1 [
+    json_name = "id",
+    (openapi.v3.property) = {
+      format: "uuid"
+      unique_items: true
+    }
+  ];
+  // Name of the foo.
+  string name = 2 [json_name = "name"];
+}
+
+// Basic page base pagination info.
+message PageBasePagination {
+  // Requested page.
+  uint32 page = 1 [
+    json_name = "page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 1
+      default: {number: 1}
+    }
+  ];
+  // Requested item per page result.
+  uint32 per_page = 2 [
+    json_name = "per_page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 10
+      maximum: 100
+      default: {number: 50}
+    }
+  ];
+}
+
+// Definition of foo data list paginated response.
+message FooDataListPaginatedResponse{
+  // Foo data list.
+  repeated FooDataListItem data = 1 [json_name = "data"];
+  // Pagination info.
+  PageBasePagination pagination = 2 [json_name = "pagination"];
+}
+
+// GetFooRequest request definition for get foo.
+// It may contain filter, sorting, pagination, etc, but should be pre-filled with sane default on the server side.
+message GetFooRequest {
+  // Requested page. Default 1.
+  uint32 page = 1 [
+    json_name = "page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 1
+      example: {value: {value: "1"}}
+    }
+  ];
+  // Requested item per page result. Default: 50.
+  uint32 per_page = 2 [
+    json_name = "per_page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 10
+      maximum: 100
+      example: {value: {value: "50"}}
+    }
+  ];
+}
+
+// CreateFooRequest is request definition to create a new foo.
+message CreateFooRequest {
+  // Unique name of foo
+  string name = 1 [
+    json_name = "name",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["name"]
+      nullable: false
+      unique_items: true
+      min_length: 3
+      max_length: 128
+    }
+  ];
+  // Optional description of foo.
+  string description = 2 [
+    json_name = "description",
+    (openapi.v3.property) = {
+      nullable: true
+      max_length: 512
+    }
+  ];
+}
+
+// UpdateFooRequest is request definition to update foo by its unique ID.
+message UpdateFooRequest {
+  // Unique identifier of foo.
+  string id = 1 [
+    json_name = "id",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      format: "uuid"
+      required: ["id"]
+      nullable: false
+      unique_items: true
+    }
+  ];
+
+  // Name of foo.
+  string name = 2 [
+    json_name = "name",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["name"]
+      nullable: false
+      min_length: 3
+      max_length: 128
+    }
+  ];
+  // Optional description of foo.
+  string description = 3 [
+    json_name = "description",
+    (openapi.v3.property) = {
+      nullable: true
+      max_length: 512
+    }
+  ];
+}
+
+// CreateFooResult is the success result message when creating a new foo.
+message CreateFooResult {
+  // The newly created identifier of the submitted foo data.
+  string id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      format: "uuid"
+    }
+  ];
+}
+
+// FooService represent example server that is exposing zsample foo service.
+service FooService {
+  // Create a new foo and return newly created uuid.
+  rpc CreateFoo(CreateFooRequest) returns(CreateFooResult) {
+    option(google.api.http) = {
+      post: "/foo",
+      body: "*"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "foo.create"
+      security: [{
+        additional_properties: [
+          {name: "BearerToken"; value: {value: []}}
+        ]}
+      ]
+    };
+  }
+
+  // Update foo data identified by its `id`.
+  rpc UpdateFoo(UpdateFooRequest) returns(FooDataDetail) {
+    option(google.api.http) = {
+      post: "/foo/{id}",
+      body: "*"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "foo.update"
+      security: [{
+        additional_properties: [
+          {name: "BearerToken"; value: {value: []}}
+        ]}
+      ]
+    };
+  }
+
+  // Get list of foo data based on request parameter.
+  rpc GetFoo(GetFooRequest) returns(FooDataListPaginatedResponse) {
+    option(google.api.http) = {
+      get: "/foo"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "foo.all"
+      security: [{
+        additional_properties: [
+          {name: "BearerToken"; value: {value: []}}
+        ]}
+      ]
+    };
+  }
+
+  // Get single foo data by its identifier `id`.
+  rpc GetFooByID(GetFooByIDRequest) returns (FooDataDetail) {
+    option(google.api.http) = {
+      get: "/foo/{id}"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "foo.get_by_id"
+      security: [{
+        additional_properties: [
+          {name: "BearerToken"; value: {value: []}}
+        ]}
+      ]
+    };
+  }
+}

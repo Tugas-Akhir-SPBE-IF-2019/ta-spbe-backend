@@ -1,0 +1,47 @@
+// Healthcheck is common service for service healthcheck RPC access.
+
+syntax = "proto3";
+
+package bfi.bravoservice.healthcheck;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/healthcheck;healthcheck";
+option java_multiple_files = true;
+option java_outer_classname = "Healthcheck";
+option java_package = "com.bfi.bravoservice.healthcheck";
+
+// Healthcheck request definition.
+message HealthcheckRequest {
+  // Valid state for health check request.
+  enum Check {
+    // liveness is state whether the service is already up.
+    liveness = 0;
+    // readiness is state whether the service is already up AND all ready to serve the user request.
+    readiness = 1;
+  }
+  // Can be string: `liveness`|`readiness` OR, integer: `0`|`1`.
+  Check state = 1 [(google.api.field_behavior) = INPUT_ONLY];
+}
+
+// Response of HealthcheckRequest
+message HealthcheckResponse {
+  // Contain value of the state. e.g. "OK" or "UP"
+  string status = 1 [json_name = "status"];
+}
+
+// Service to provide info of the application readiness and liveness.
+service HealthcheckService {
+  // Get readiness and liveness of the service.
+  rpc GetHealthcheck(HealthcheckRequest) returns (HealthcheckResponse) {
+    option(google.api.http) = {
+      get: "/healthcheck/{state}",
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "healthcheck.by_state"
+    };
+  }
+}

@@ -1,0 +1,174 @@
+// Message definition for agent-marketing's vehicle service
+
+syntax = "proto3";
+
+package bfi.bravoservice.agentmarketing;
+
+import "spbe/service/agentmarketing/response.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/agentmarketing;agentmarketing";
+option java_multiple_files = true;
+option java_outer_classname = "AgentMarketingVehicle";
+option java_package = "com.bfi.bravoservice.agentmarketing";
+
+// VehicleModel contains vehicle model info
+message VehicleModel {
+  // vehicle model code
+  string code = 1 [json_name = "code"];
+  // vehicle model name
+  string name = 2 [json_name = "name"];
+  // vehicle model image location
+  string image_url = 3 [json_name = "image_url"];
+  // vehicle category
+  string category_id = 4 [json_name = "category_id"];
+}
+
+// VehicleVariant contains vehicle variant info
+message VehicleVariant {
+  // vehicle variant code
+  string code = 1 [json_name = "code"];
+  // vehicle variant name
+  string name = 2 [json_name = "name"];
+  // vehicle variant description
+  string description = 3 [json_name = "description"];
+}
+
+// VehicleModelVariant contains vehicle model with its variants information
+message VehicleModelVariant {
+  // mark as popular vehicle model
+  bool is_popular = 1 [json_name = "is_popular"];
+  // vehicle model info
+  VehicleModel model = 2 [json_name = "model"];
+  // vehicle variants for current model
+  repeated VehicleVariant variants = 3 [json_name = "variants"];
+  // supported years for the vehicle model
+  repeated uint32 years = 4 [json_name = "years"];
+}
+
+// GetAllVehicleModelsByBrandCodePaginatedRequest is the request message to get all vehicle model by brand code
+message GetAllVehicleModelsByBrandCodePaginatedRequest {
+  // vehicle brand code
+  string brand_code = 1 [
+    json_name = "brand_code",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["brand_code"]
+    }
+  ];
+
+  // Requested page. Default: 1
+  int32 page = 2 [
+    json_name = "page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 1
+      example: {value: {value: "1"}}
+    }
+  ];
+
+  // Requested item per page. Default: 20
+  int32 per_page = 3 [
+    json_name = "per_page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 10
+      maximum: 100
+      example: {value: {value: "20"}}
+    }
+  ];
+
+  // a word to search vehicle models by parts of its brand code
+  string keyword = 4 [json_name = "keyword"];
+
+  // asset_type_id can be CAR or MOTORCYCLE but default is: CAR
+  string asset_type_id = 5 [json_name = "asset_type_id"];
+
+}
+
+// GetAllVehicleModelsByBrandCodePaginatedResponse is the response message for the client
+message GetAllVehicleModelsByBrandCodePaginatedResponse {
+  // Pagination info
+  PageBasePaginationResponse pagination = 1 [json_name = "pagination"];
+
+  // Contain list of vehicle models with its' variants data
+  repeated VehicleModelVariant data = 2 [json_name = "data"];
+
+}
+
+// GetAllBrandPaginatedRequest is request message to get all vehicle brands
+message GetAllBrandPaginatedRequest {
+  // Requested page. Default: 1
+  int32 page = 1 [
+    json_name = "page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 1
+      example: {value: {value: "1"}}
+    }
+  ];
+
+  // Requested item per page. Default: 20
+  int32 per_page = 2 [
+    json_name = "per_page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 10
+      maximum: 100
+      example: {value: {value: "20"}}
+    }
+  ];
+
+  // a word to search vehicle brands by parts of its brand name
+  string keyword = 3 [json_name = "keyword"];
+
+  // asset_type_id can be CAR or MOTORCYCLE but default is: CAR
+  string asset_type_id = 4 [json_name = "asset_type_id"];
+}
+
+// VehicleBrand contains brand information
+message VehicleBrand {
+  // the brand code
+  string code = 1 [json_name = "code"];
+  // the brand name
+  string name = 2 [json_name = "name"];
+  // the brand image
+  string image_url = 3 [json_name = "image_url"];
+}
+
+// GetAllBrandPaginatedResponse is the response message for the client
+message GetAllBrandPaginatedResponse {
+  // Pagination info
+  PageBasePaginationResponse pagination = 1 [json_name = "pagination"];
+
+  // List of vehicle brand data
+  repeated VehicleBrand data = 2 [json_name = "data"];
+
+}
+
+// VehicleService exposing service methods related with vehicle data
+service VehicleService {
+  // GetAllVehicleModelsByBranchCode get a list of all vehicle models by brand code
+  rpc GetAllVehicleModelsByBrandCode(GetAllVehicleModelsByBrandCodePaginatedRequest)
+      returns (GetAllVehicleModelsByBrandCodePaginatedResponse) {
+    option(google.api.http) = {
+      get: "/vehicles/{brand_code}/models"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "vehicles.get_all_vehicle_models_by_brand_code"
+    };
+  }
+
+  // GetAllBrand get a list of all vehicle brands
+  rpc GetAllBrand(GetAllBrandPaginatedRequest) returns (GetAllBrandPaginatedResponse) {
+    option(google.api.http) = {
+      get: "/vehicles/brands"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "vehicles.get_all_brand"
+    };
+  }
+}

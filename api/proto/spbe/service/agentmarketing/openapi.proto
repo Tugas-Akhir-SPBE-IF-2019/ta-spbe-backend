@@ -1,0 +1,36 @@
+// OpenAPI base definition of the service.
+
+syntax = "proto3";
+
+package bfi.bravoservice.agentmarketing;
+
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/agentmarketing;agentmarketing";
+option java_multiple_files = true;
+option java_outer_classname = "OpenAPI";
+option java_package = "com.bfi.bravoservice.agentmarketing";
+
+option (openapi.v3.document) = {
+  info: {
+    title: "Agent Marketing service documentation",
+    version: "1.0",
+  },
+  components: {
+    security_schemes: {
+      additional_properties: [
+        {
+          name: "BearerToken";
+          value: {
+            security_scheme: {
+              type: "http";
+              scheme: "bearer";
+              bearer_format: "JWT";
+            }
+          }
+        }
+      ]
+    }
+  }
+};

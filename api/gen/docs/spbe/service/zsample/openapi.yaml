@@ -1,0 +1,292 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Zsample service documentation
+    description: API documentation that is generated from protobuf file and act as an example
+    version: "1.0"
+paths:
+    /foo:
+        get:
+            tags:
+                - FooService
+            description: Get list of foo data based on request parameter.
+            operationId: foo.all
+            parameters:
+                - name: page
+                  in: query
+                  description: Requested page. Default 1.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: per_page
+                  in: query
+                  description: 'Requested item per page result. Default: 50.'
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/FooDataListPaginatedResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+            security:
+                - BearerToken: []
+        post:
+            tags:
+                - FooService
+            description: Create a new foo and return newly created uuid.
+            operationId: foo.create
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateFooRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateFooResult'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+            security:
+                - BearerToken: []
+    /foo/{id}:
+        get:
+            tags:
+                - FooService
+            description: Get single foo data by its identifier `id`.
+            operationId: foo.get_by_id
+            parameters:
+                - name: id
+                  in: path
+                  description: Unique identifier of the data.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/FooDataDetail'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+            security:
+                - BearerToken: []
+        post:
+            tags:
+                - FooService
+            description: Update foo data identified by its `id`.
+            operationId: foo.update
+            parameters:
+                - name: id
+                  in: path
+                  description: Unique identifier of foo.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateFooRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/FooDataDetail'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+            security:
+                - BearerToken: []
+components:
+    schemas:
+        CreateFooRequest:
+            required:
+                - name
+            type: object
+            properties:
+                name:
+                    maxLength: 128
+                    minLength: 3
+                    uniqueItems: true
+                    required:
+                        - name
+                    type: string
+                    description: Unique name of foo
+                description:
+                    nullable: true
+                    maxLength: 512
+                    type: string
+                    description: Optional description of foo.
+            description: CreateFooRequest is request definition to create a new foo.
+        CreateFooResult:
+            required:
+                - id
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: The newly created identifier of the submitted foo data.
+                    format: uuid
+            description: CreateFooResult is the success result message when creating a new foo.
+        FooDataDetail:
+            nullable: true
+            type: object
+            properties:
+                id:
+                    uniqueItems: true
+                    required:
+                        - id
+                    type: string
+                    description: Unique identifier of the data.
+                    format: uuid
+                name:
+                    maxLength: 128
+                    minLength: 3
+                    uniqueItems: true
+                    required:
+                        - name
+                    type: string
+                    description: Name of foo.
+                description:
+                    nullable: true
+                    maxLength: 512
+                    type: string
+                    description: Optional description of foo.
+                created_at:
+                    type: string
+                    description: Timestamp of the data creation. Datetime value format is [RFC3339](https://www.ietf.org/rfc/rfc3339.html).
+                    format: date-time
+                updated_at:
+                    nullable: true
+                    type: string
+                    description: Timestamp of the data when it was updated. This field is an example for openapi v3 annotation property.
+                    format: date-time
+            description: FooDataDetail is based response of the foo data.
+        FooDataListItem:
+            type: object
+            properties:
+                id:
+                    uniqueItems: true
+                    type: string
+                    description: Unique identifier of the foo.
+                    format: uuid
+                name:
+                    type: string
+                    description: Name of the foo.
+            description: FooDataListItem smaller data for item list data.
+        FooDataListPaginatedResponse:
+            type: object
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/FooDataListItem'
+                    description: Foo data list.
+                pagination:
+                    $ref: '#/components/schemas/PageBasePagination'
+            description: Definition of foo data list paginated response.
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        PageBasePagination:
+            type: object
+            properties:
+                page:
+                    minimum: !!float 1
+                    type: integer
+                    default: !!float 1
+                    description: Requested page.
+                    format: integer
+                per_page:
+                    maximum: !!float 100
+                    minimum: !!float 10
+                    type: integer
+                    default: !!float 50
+                    description: Requested item per page result.
+                    format: integer
+            description: Basic page base pagination info.
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateFooRequest:
+            required:
+                - id
+                - name
+            type: object
+            properties:
+                id:
+                    uniqueItems: true
+                    required:
+                        - id
+                    type: string
+                    description: Unique identifier of foo.
+                    format: uuid
+                name:
+                    maxLength: 128
+                    minLength: 3
+                    required:
+                        - name
+                    type: string
+                    description: Name of foo.
+                description:
+                    nullable: true
+                    maxLength: 512
+                    type: string
+                    description: Optional description of foo.
+            description: UpdateFooRequest is request definition to update foo by its unique ID.
+    securitySchemes:
+        BearerToken:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+tags:
+    - name: FooService

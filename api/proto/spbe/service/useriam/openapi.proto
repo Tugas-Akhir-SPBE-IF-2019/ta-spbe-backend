@@ -1,0 +1,38 @@
+// OpenAPI base definition of the service.
+
+syntax = "proto3";
+
+package bfi.bravoservice.useriam;
+
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/useriam;useriam";
+option java_multiple_files = true;
+option java_outer_classname = "OpenAPI";
+option java_package = "com.bfi.bravoservice.useriam";
+
+option (openapi.v3.document) = {
+  info: {
+    title: "User Identity and Access Management (IAM) API documentation"
+    version: "1.0",
+    description: "Exposable REST API for User Identity and Access Management service",
+  },
+  components: {
+    security_schemes: {
+      additional_properties: [
+        {
+          name: "BearerToken";
+          value: {
+            security_scheme: {
+              type: "http";
+              scheme: "bearer";
+              bearer_format: "JWT";
+              description: "Token from Keycloak that is represent a user identity."
+            }
+          }
+        }
+      ]
+    }
+  }
+};

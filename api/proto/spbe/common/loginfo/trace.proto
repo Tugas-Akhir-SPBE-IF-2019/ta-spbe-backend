@@ -1,0 +1,32 @@
+// Trace information for request identifier.
+
+syntax = "proto3";
+
+package bfi.common.loginfo;
+
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/common/loginfo;loginfo";
+option java_multiple_files = true;
+option java_outer_classname = "TraceInfo";
+option java_package = "com.bfi.common.loginfo";
+
+// Trace is an optional object to help developer tracking in centralized log server or
+// distributed tracing server like Datadog.
+// It contains unique ID to identify an incoming request.
+message Trace{
+  option(openapi.v3.schema) = {
+    nullable: false
+  };
+
+  // request_id is unique identifier and an incoming request.
+  // It should be carried to all request scoped context.
+  string request_id = 1 [
+    json_name = "request_id",
+    (openapi.v3.property) = {
+      unique_items: true
+      example: {value: { value: "9fc585c3a743c0b01895e7425e2453a3"}}
+    }
+  ];
+}

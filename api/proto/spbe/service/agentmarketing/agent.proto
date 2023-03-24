@@ -1,0 +1,51 @@
+// Message definition for agent-marketing's product service
+
+syntax = "proto3";
+
+package bfi.bravoservice.agentmarketing;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/agentmarketing;agentmarketing";
+option java_multiple_files = true;
+option java_outer_classname = "AgentMarketingAgent";
+option java_package = "com.bfi.bravoservice.agentmarketing";
+
+// GetProfileResponse is the response message sent to the client
+message GetProfileResponse {
+  // bravo agent id in a UUIDv4 format
+  string agent_id = 1 [json_name = "agent_id"];
+  // agent's marketing id
+  string marketing_id = 2 [json_name = "marketing_id"];
+  // agent's supervisor id
+  string supervisor_id = 3 [json_name = "supervisor_id"];
+  // agent's full name
+  string name = 4 [json_name = "name"];
+  // agent's job title
+  string job_title = 5 [json_name = "job_title"];
+  // agent's branch name
+  string branch_name = 6 [json_name = "branch_name"];
+  // agent's mobile phone number
+  string mobile = 7 [json_name = "mobile"];
+}
+
+// AgentService exposing service methods related with agent's profile
+service AgentService {
+  // GetProfile get agent's profile info
+  rpc GetProfile(google.protobuf.Empty) returns (GetProfileResponse) {
+    option(google.api.http) = {
+      get: "/v1/agent/profile"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "agent.get_profile"
+      security: [{
+        additional_properties: [
+          {name: "BearerToken"; value: {value: []}}
+        ]}
+      ]
+    };
+  }
+}

@@ -1,0 +1,44 @@
+// Definition for common response message
+
+syntax = "proto3";
+
+package bfi.bravoservice.agentmarketing;
+
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/agentmarketing;agentmarketing";
+option java_multiple_files = true;
+option java_outer_classname = "AgentMarketingResponse";
+option java_package = "com.bfi.bravoservice.agentmarketing";
+
+// Pagination info
+message PageBasePaginationResponse {
+  // Requested page
+  uint32 page = 1 [
+    json_name = "page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 1
+      default: {number: 1}
+    }
+  ];
+  // Requested items per page
+  uint32 per_page = 2 [
+    json_name = "per_page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 10
+      maximum: 100
+      default: {number: 20}
+    }
+  ];
+  // Total items available
+  uint32 total_item = 3 [
+    json_name = "total_item",
+    (openapi.v3.property) = {
+      format: "integer"
+      default: {number: 100}
+    }
+  ];
+}

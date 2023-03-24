@@ -1,0 +1,45 @@
+// Message to change currently running service structured-log level.
+
+syntax = "proto3";
+
+package bfi.bravorabbitmq.loglevelchanger;
+
+import "spbe/common/amqpmessage/header.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravorabbitmq/loglevelchanger;loglevelchanger";
+option java_multiple_files = true;
+option java_outer_classname = "LogLevelChanger";
+option java_package = "com.bfi.bravorabbitmq.loglevelchanger";
+
+// ChangeLevelRequest is a message type to change log level on runtime to all service that consume it.
+message ChangeLevelRequest {
+  // Level is list of valid values to be set for log level.
+  enum Level {
+    // DISABLED to disable the log.
+    DISABLED = 0;
+    // TRACE to set logger to trace level.
+    TRACE = 1;
+    // DEBUG to set logger to debug level.
+    DEBUG = 2;
+    // INFO to set logger to info level.
+    INFO = 3;
+    // WARN to set logger to warn level.
+    WARN = 4;
+    // ERROR to set logger to error level.
+    ERROR = 5;
+  }
+
+  // level is log level to be set.
+  Level level = 1 [json_name = "level"];
+}
+
+// Consume is the valid incoming message to log level changer consumer.
+message Consume {
+  // header is the header for incoming message. Required.
+  bfi.common.amqpmessage.Header header = 1 [json_name = "header"];
+  oneof message {
+    // change_level is request to change log level.
+    ChangeLevelRequest change_level = 2 [json_name = "change_level"];
+  }
+}

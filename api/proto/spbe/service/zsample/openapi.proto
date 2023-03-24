@@ -1,0 +1,37 @@
+// OpenAPI base definition of the service.
+
+syntax = "proto3";
+
+package bfi.bravoservice.zsample;
+
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/zsample;zsample";
+option java_multiple_files = true;
+option java_outer_classname = "OpenAPI";
+option java_package = "com.bfi.bravoservice.zsample";
+
+option (openapi.v3.document) = {
+  info: {
+    title: "Zsample service documentation"
+    version: "1.0",
+    description: "API documentation that is generated from protobuf file and act as an example",
+  },
+  components: {
+    security_schemes: {
+      additional_properties: [
+        {
+          name: "BearerToken";
+          value: {
+            security_scheme: {
+              type: "http";
+              scheme: "bearer";
+              bearer_format: "JWT";
+            }
+          }
+        }
+      ]
+    }
+  }
+};

@@ -1,0 +1,198 @@
+// Message definition for agent-marketing's address service
+
+syntax = "proto3";
+
+package bfi.bravoservice.agentmarketing;
+
+import "spbe/service/agentmarketing/response.proto";
+import "google/api/annotations.proto";
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/agentmarketing;agentmarketing";
+option java_multiple_files = true;
+option java_outer_classname = "AgentMarketingAddress";
+option java_package = "com.bfi.bravoservice.agentmarketing";
+
+// SearchCityPaginatedRequest is request message to search city by city name
+message SearchCityPaginatedRequest {
+  // Requested page. Default: 1
+  int32 page = 1 [
+    json_name = "page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 1
+      example: {value: {value: "1"}}
+    }
+  ];
+
+  // Requested item per page. Default: 20
+  int32 per_page = 2 [
+    json_name = "per_page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 10
+      maximum: 100
+      example: {value: {value: "20"}}
+    }
+  ];
+
+  // a word to filter a city by part of its name
+  string keyword = 3 [json_name = "keyword"];
+}
+
+// ProvinceDataItem contains province info
+message ProvinceDataItem {
+  // the province code, eg "32"
+  string code = 1 [json_name = "code"];
+  // the province name
+  string name = 2 [json_name = "name"];
+}
+
+// CityDataItem contains city info
+message CityDataItem {
+  // the city name
+  string name = 1 [json_name = "name"];
+  // the city code, eg "32.73"
+  string code = 2 [json_name = "code"];
+  // the city postal code
+  string zip_code = 3 [json_name = "zip_code"];
+}
+
+// SubDistrictDataItem contains sub-district info
+message SubDistrictDataItem {
+  // the sub district name
+  string name = 1 [json_name = "name"];
+  // the sub district code, eg "21.71.10.1002"
+  string code = 2 [json_name = "code"];
+}
+
+// DistrictDataItem contains district info
+message DistrictDataItem {
+  // the district name
+  string name = 1 [json_name = "name"];
+  // the district code, eg "21.71.10"
+  string code = 2 [json_name = "code"];
+}
+
+// ProvinceCityDataItem contains province info with its cities
+message ProvinceCityDataItem {
+
+  // province info
+  ProvinceDataItem province = 1 [json_name = "province"];
+
+  // contain a list of city info
+  repeated CityDataItem cities = 2 [json_name = "cities"];
+}
+
+// SearchCityPaginatedResponse is the message response for the client
+message SearchCityPaginatedResponse {
+  // Pagination info
+  PageBasePaginationResponse pagination = 1 [json_name = "pagination"];
+
+  // Contain list of provinces with city data
+  repeated ProvinceCityDataItem data = 2 [json_name = "data"];
+}
+
+// SearchAddressPaginatedRequest is the message request to search an address by a given string
+message SearchAddressPaginatedRequest {
+  // Requested page. Default: 1
+  int32 page = 1 [
+    json_name = "page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 1
+      example: {value: {value: "1"}}
+    }
+  ];
+
+  // Requested item per page. Default: 20
+  int32 per_page = 2 [
+    json_name = "per_page",
+    (openapi.v3.property) = {
+      format: "integer"
+      minimum: 10
+      maximum: 100
+      example: {value: {value: "20"}}
+    }
+  ];
+
+  // Keyword to search
+  string keyword = 3 [json_name = "keyword"];
+
+  // Search by option for keyword param
+  string search_by = 4 [
+    json_name = "search_by",
+    (openapi.v3.property) = {
+      min_length: 1
+      max_length: 64
+      example: {yaml: "city"}
+      enum: [
+        {yaml: "province"},
+        {yaml: "city"},
+        {yaml: "district"},
+        {yaml: "sub_district"}
+      ]
+    }
+  ];
+}
+
+// AddressDataItem contains the address information
+message AddressDataItem {
+  // province info
+  ProvinceDataItem province = 1 [json_name = "province"];
+  // city info
+  CityDataItem city = 2 [json_name = "city"];
+  // district info
+  DistrictDataItem district = 3 [json_name = "district"];
+  // sub-district info
+  SubDistrictDataItem sub_district = 4 [json_name = "sub_district"];
+  // address name in confins format
+  ConfinsAddress confins_address = 5 [json_name = "confins_address"];
+}
+
+// ConfinsAddress contains the address name in confins format
+message ConfinsAddress {
+  // province name format in confins
+  string province = 1 [json_name = "province"];
+  // city name format in confins
+  string city = 2 [json_name = "city"];
+  // district name format in confins
+  string district = 3 [json_name = "district"];
+  // sub_district name format in confins
+  string sub_district = 4 [json_name = "sub_district"];
+  // postal code format in confins
+  string zip_code = 5 [json_name = "zip_code"];
+}
+
+// SearchAddressPaginatedResponse is the message response for the client
+message SearchAddressPaginatedResponse {
+  // Pagination info
+  PageBasePaginationResponse pagination = 1 [json_name = "pagination"];
+
+  // Contain a list of address with city info
+  repeated AddressDataItem data = 2 [json_name = "data"];
+}
+
+// AddressService exposing service methods related with address data
+service AddressService {
+  // SearchCity get a list of cities filterable by their name part
+  rpc SearchCity(SearchCityPaginatedRequest) returns (SearchCityPaginatedResponse) {
+    option(google.api.http) = {
+      get: "/address/search_city"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "address.search_city"
+    };
+  }
+
+  // SearchAddress get a list of addresses filterable by their name part
+  rpc SearchAddress(SearchAddressPaginatedRequest) returns (SearchAddressPaginatedResponse) {
+    option(google.api.http) = {
+      get: "/address/search"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "address.search"
+    };
+  }
+}

@@ -1,0 +1,429 @@
+// Message definition for agent-marketing's calculation service
+
+syntax = "proto3";
+
+package bfi.bravoservice.agentmarketing;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "openapiv3/annotations.proto";
+
+option optimize_for = SPEED;
+option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/agentmarketing;agentmarketing";
+option java_multiple_files = true;
+option java_outer_classname = "AgentMarketingCalculation";
+option java_package = "com.bfi.bravoservice.agentmarketing";
+
+//CalculationInfoRequest contains calculation input that is being passed to CalculateCollateralRequest
+message CalculationInfoRequest {
+  //package id that is being selected by the user
+  uint32 package_id = 1 [
+    json_name = "package_id",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["package_id"]
+      example: {yaml: "5"}
+    }
+  ];
+  //product id that is being selected by the user
+  uint32 product_id = 2 [
+    json_name = "product_id",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["product_id"]
+      example: {yaml: "1"}
+    }
+  ];
+  //applicant's domicile city code
+  string city_code = 3 [
+    json_name = "city_code",
+    (openapi.v3.property) = {
+      min_length: 1
+      max_length: 64
+      example: {yaml: "12.71"}
+    }
+  ];
+  //applicant's domicile sub district code
+  string sub_district_code = 4 [
+    json_name = "sub_district_code",
+    (openapi.v3.property) =  {
+      min_length: 1
+      max_length: 64
+      example: {yaml: "12.71.05.1002"}
+    }
+  ];
+  //applicant's customer type
+  string customer_type = 5 [
+    json_name = "customer_type",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["customer_type"]
+      min_length: 1
+      max_length: 64
+      nullable: false
+      example: {yaml: "NEW"}
+      enum: [{yaml: "NEW"}]
+    }
+  ];
+}
+
+//CollateralInfoRequest contains collateral info that is being passed to CalculateCollateralRequest
+message CollateralInfoRequest {
+  //collateral asset code
+  string asset_code = 1 [
+    json_name = "asset_code",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["asset_code"]
+      nullable: false
+      min_length: 1
+      max_length: 64
+      example: {yaml: "TOYOTA.RUSH.G15AT"}
+    }
+  ];
+  //collateral asset manufacturing year
+  uint32 manufacturing_year = 2 [
+    json_name = "manufacturing_year",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["manufacturing_year"]
+      nullable: false
+      example: {yaml: "2014"}
+    }
+  ];
+  //collateral asset category id
+  string category_id = 3 [
+    json_name = "category_id",
+    (openapi.v3.property) = {
+      min_length: 1
+      max_length: 64
+      example: {yaml: "JEEP"}
+    }];
+  //collateral asset newness
+  bool is_new = 4 [
+    json_name = "is_new",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["is_new"]
+      example: {yaml: "false"}
+    }
+  ];
+  //collateral asset type id
+  string asset_type_id = 5 [
+    json_name = "asset_type_id",
+    (openapi.v3.property) = {
+      min_length: 1
+      max_length: 64
+      example: {yaml: "CAR"}
+      enum: [
+        {yaml: "CAR"},
+        {yaml: "MOTORCYCLE"}
+      ]
+    }
+  ];
+}
+
+//CalculateCollateralRequest is the request to calculate collateral
+message CalculateCollateralRequest {
+  //calculation input
+  CalculationInfoRequest calculation = 1 [
+    json_name = "calculation",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["calculation"]
+    }
+  ];
+  //collateral asset info
+  CollateralInfoRequest collateral = 2 [
+    json_name = "collateral",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["collateral"]
+    }
+  ];
+}
+
+//CalculateCollateralResponse is the response message to the client
+message CalculateCollateralResponse {
+  //calculated ntf_amount
+  double ntf_amount = 1 [json_name = "ntf_amount"];
+  //calculated max_ltv
+  double max_ltv = 2 [json_name = "max_ltv"];
+  //collateral asset_price based on inputs
+  double asset_price = 3 [json_name = "asset_price"];
+}
+
+//InstallmentCalculationInfoRequest contains calculation info that is being passed to CalculateInstallmentRequest
+message InstallmentCalculationInfoRequest {
+  //loan amount that is being sent by the user
+  double loan_amount = 1 [
+    json_name = "loan_amount",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["loan_amount"]
+      example: {yaml: "12345"}
+    }
+  ];
+  //product id that is being selected by the user
+  uint32 product_id = 2 [
+    json_name = "product_id",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["product_id"]
+      example: {yaml: "1"}
+    }
+  ];
+  //package id that is being selected by the user
+  uint32 package_id = 3 [
+    json_name = "package_id",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["package_id"]
+      example: {yaml: "5"}
+    }
+  ];
+  //applicant's customer type
+  string customer_type = 4 [
+    json_name = "customer_type",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["customer_type"]
+      min_length: 1
+      max_length: 64
+      nullable: false
+      example: {yaml: "NEW"}
+      enum: [{yaml: "NEW"}]
+    }
+  ];
+  //applicant's domicile city code
+  string city_code = 5 [
+    json_name = "city_code",
+    (openapi.v3.property) = {
+      min_length: 1
+      max_length: 64
+      example: {yaml: "12.71"}
+    }
+  ];
+  //applicant's domicile sub district code
+  string sub_district_code = 6 [
+    json_name = "sub_district_code",
+    (openapi.v3.property) =  {
+      min_length: 1
+      max_length: 64
+      example: {yaml: "12.71.05.1002"}
+    }
+  ];
+}
+
+//InstallmentCollateralInfoRequest contains collateral info that is being passed to CalculateInstallmentRequest
+message InstallmentCollateralInfoRequest {
+  //collateral asset code
+  string asset_code = 1 [
+    json_name = "asset_code",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["asset_code"]
+      nullable: false
+      min_length: 1
+      max_length: 64
+      example: {yaml: "TOYOTA.RUSH.G15AT"}
+    }
+  ];
+  //collateral asset manufacturing year
+  uint32 manufacturing_year = 2 [
+    json_name = "manufacturing_year",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["manufacturing_year"]
+      nullable: false
+      example: {yaml: "2014"}
+    }
+  ];
+  //collateral asset category id
+  string category_id = 3 [
+    json_name = "category_id",
+    (openapi.v3.property) = {
+      min_length: 1
+      max_length: 64
+      example: {yaml: "JEEP"}
+    }];
+  //collateral asset newness
+  bool is_new = 4 [
+    json_name = "is_new",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["is_new"]
+      example: {yaml: "false"}
+    }
+  ];
+  //collateral asset type id
+  string asset_type_id = 5 [
+    json_name = "asset_type_id",
+    (openapi.v3.property) = {
+      min_length: 1
+      max_length: 64
+      example: {yaml: "CAR"}
+      enum: [
+        {yaml: "CAR"},
+        {yaml: "MOTORCYCLE"}
+      ]
+    }
+  ];
+  //collateral otr value
+  double otr = 6 [
+    json_name = "otr",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["otr"]
+      example: {yaml: "1234"}
+    }
+  ];
+}
+
+//CalculateInstallmentRequest is the request to calculate installments
+message CalculateInstallmentRequest {
+  //installment calculation input
+  InstallmentCalculationInfoRequest calculation = 1 [
+    json_name = "calculation",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["calculation"]
+    }
+  ];
+  //installment collateral asset info
+  InstallmentCollateralInfoRequest collateral = 2 [
+    json_name = "collateral",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["collateral"]
+    }
+  ];
+  //is installment over 50 years
+  bool over_50_years = 3 [
+    json_name = "over_50_years",
+    (google.api.field_behavior) = REQUIRED,
+    (openapi.v3.property) = {
+      required: ["over_50_years"]
+      example: {yaml: "false"}
+    }
+  ];
+  //insurance coverage type
+  string insurance_coverage_type = 4 [
+    json_name = "insurance_coverage_type",
+    (openapi.v3.property) = {
+      min_length: 1
+      max_length: 64
+      example: {yaml: "TLO"}
+      enum: [
+        {yaml: "TLO"},
+        {yaml: "ARK"},
+        {yaml: "MIX"}
+      ]
+    }
+  ];
+}
+
+//InstallmentProvisionInfo contains provision info that is being passed to CalculateInstallmentResponse
+message InstallmentProvisionInfo {
+  //calculated rate
+  double rate = 1 [json_name = "rate"];
+  //calculated fee
+  double fee = 2 [json_name = "fee"];
+}
+
+//InstallmentAssetInsuranceInfo contains asset insurance info that is being passed to CalculateInstallmentResponse
+message InstallmentAssetInsuranceInfo {
+  //calculated premium amount
+  double premium = 1 [json_name = "premium"];
+  //calculation id
+  string calculation_id = 2 [json_name = "calculation_id"];
+}
+
+//InstallmentLifeInsuranceInfo contains life insurance info that is being passed to CalculateInstallmentResponse
+message InstallmentLifeInsuranceInfo {
+  //calculated premium amount
+  double premium = 1 [json_name = "premium"];
+  //calculation id
+  string calculation_id = 2 [json_name = "calculation_id"];
+}
+
+//InstallmentRsaInsuranceInfo contains rsa insurance info that is being passed to CalculateInstallmentResponse
+message InstallmentRsaInsuranceInfo {
+  //calculated premium amount
+  double premium = 1 [json_name = "premium"];
+  //calculation id
+  string calculation_id = 2 [json_name = "calculation_id"];
+}
+
+//InstallmentSantunanInsurance contains santunan insurance info that is being passed to CalculateInstallmentResponse
+message InstallmentSantunanInsuranceInfo {
+  //calculated premium amount
+  double premium = 1 [json_name = "premium"];
+  //calculation id
+  string calculation_id = 2 [json_name = "calculation_id"];
+}
+
+//CalculateInstallmentResponseItem is the response object for the individual data
+message CalculateInstallmentResponseItem {
+  //calculated tenor
+  double tenor = 1 [json_name = "tenor"];
+  //calculated rounded up installment
+  double rounded_up_installment = 2 [json_name = "rounded_up_installment"];
+  //calculated capitalized ntf amount
+  double capitalized_ntf_amount = 3 [json_name = "capitalized_ntf_amount"];
+  //calculated admin fee
+  double admin_fee = 4 [json_name = "admin_fee"];
+  //calculated provision
+  InstallmentProvisionInfo provision = 5 [json_name = "provision"];
+  //calculated asset insurance
+  InstallmentAssetInsuranceInfo asset_insurance = 6 [json_name = "asset_insurance"];
+  //calculated life insurance
+  InstallmentLifeInsuranceInfo life_insurance = 7 [json_name = "life_insurance"];
+  //calculated ntf amount
+  double ntf_amount = 8 [json_name = "ntf_amount"];
+  //calculated effective rate
+  double effective_rate = 9 [json_name = "effective_rate"];
+  //calculated fiducia fee
+  double fiducia_fee = 10 [json_name = "fiducia_fee"];
+  //calculated ntf amount
+  double other_fee = 11 [json_name = "other_fee"];
+  //calculated rsa insurance
+  InstallmentRsaInsuranceInfo rsa_insurance = 12 [json_name = "rsa_insurance"];
+  //calculated santunan insurance
+  InstallmentSantunanInsuranceInfo santunan_insurance = 13 [json_name = "santunan_insurance"];
+}
+
+//CalculateInstallmentResponse is the response message to the client
+message CalculateInstallmentResponse {
+  //transaction id for the calculation
+  string transaction_id = 1 [json_name = "transaction_id"];
+  //data item for the calculate installment response
+  repeated CalculateInstallmentResponseItem data = 2 [json_name = "data"];
+}
+
+// CalculationService exposing service methods related with collateral calculation
+service CalculationService {
+  // CalculateCollateral get calculated financing based on collateral
+  rpc CalculateCollateral(CalculateCollateralRequest)
+      returns (CalculateCollateralResponse) {
+    option(google.api.http) = {
+      post: "/calculation/collateral",
+      body: "*"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "calculation.calculate_collateral"
+    };
+  }
+
+  // CalculateInstallment get calculated financing based on installment
+  rpc CalculateInstallment(CalculateInstallmentRequest)
+      returns (CalculateInstallmentResponse) {
+    option(google.api.http) = {
+      post: "/calculation/installment",
+      body: "*"
+    };
+    option(openapi.v3.operation) = {
+      operation_id: "calculation.calculate_installmentl"
+    };
+  }
+}

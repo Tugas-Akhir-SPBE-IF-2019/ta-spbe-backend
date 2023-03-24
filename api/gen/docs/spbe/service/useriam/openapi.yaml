@@ -1,0 +1,132 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: User Identity and Access Management (IAM) API documentation
+    description: Exposable REST API for User Identity and Access Management service
+    version: "1.0"
+paths:
+    /web/menu/other-apps:
+        get:
+            tags:
+                - WebMenuService
+            description: |-
+                Get list of other web application menus for current user. The menus will depends on current user authorization.
+
+                 It contains list of other web application that can be accessed by current user along with allowed page menu.
+            operationId: web.menu.other-apps
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/WebMenuOtherAppListResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+            security:
+                - BearerToken: []
+components:
+    schemas:
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        WebAppInfo:
+            type: object
+            properties:
+                id:
+                    example: lms
+                    required:
+                        - id
+                    type: string
+                    description: Unique identifier of the web application.
+                name:
+                    example: LMS
+                    required:
+                        - name
+                    type: string
+                    description: Name of the web application.
+                base_url:
+                    example: https://lms.sit.bravo.bfi.co.id
+                    required:
+                        - base_url
+                    type: string
+                    description: Base server URL of the web application. API consumer will need to prepend this value to get the full URL of the page.
+                    format: uri
+            description: Web application basic info object.
+        WebMenuDataItem:
+            type: object
+            properties:
+                app:
+                    $ref: '#/components/schemas/WebAppInfo'
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/WebMenuItem'
+                    description: Available web menu of the application.
+            description: Web application and its menu data.
+        WebMenuItem:
+            type: object
+            properties:
+                label:
+                    example: Payment
+                    required:
+                        - label
+                    type: string
+                    description: Label of the menu item.
+                path:
+                    nullable: true
+                    example: /payment
+                    required:
+                        - path
+                    type: string
+                    description: Path of the menu item from the base server perspective. If not empty/null, prepend it with `base_url` field from `application` object to get the full URL of the path.
+                sub_menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/WebMenuItem'
+                    description: List of sub-menus (non-empty if a menu has sub-menus).
+            description: Web application menu item object.
+        WebMenuOtherAppListResponse:
+            type: object
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/WebMenuDataItem'
+                    description: List of available web application and its menu for current user.
+            description: Available web application menus for current user.
+    securitySchemes:
+        BearerToken:
+            type: http
+            description: Token from Keycloak that is represent a user identity.
+            scheme: bearer
+            bearerFormat: JWT
+tags:
+    - name: WebMenuService
