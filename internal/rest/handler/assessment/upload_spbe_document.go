@@ -24,16 +24,17 @@ import (
 const MAX_UPLOAD_SIZE = 10240 * 10240 // 10MB
 
 type UploadSpbeDocumentRequest struct {
-	institutionName              string
-	indicatorNumberStr           string
-	indicatorNumbersStr          []string
-	indicatorNumber              int
-	indicatorNumbers             []int
-	phoneNumberStr               string
-	supportingDocumentFile       multipart.File
-	supportingDocumentFileHeader *multipart.FileHeader
-	oldDocumentFile              multipart.File
-	oldDocumentFileHeader        *multipart.FileHeader
+	institutionName                 string
+	indicatorNumberStr              string
+	indicatorNumbersStr             []string
+	indicatorNumber                 int
+	indicatorNumbers                []int
+	phoneNumberStr                  string
+	supportingDocumentFile          multipart.File
+	supportingDocumentFileHeader    *multipart.FileHeader
+	supportingDocumenFileHeaderList []*multipart.FileHeader
+	oldDocumentFile                 multipart.File
+	oldDocumentFileHeader           *multipart.FileHeader
 }
 
 type UploadProducerMessage struct {
@@ -53,6 +54,14 @@ func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldE
 
 	if err := r.ParseMultipartForm(MAX_UPLOAD_SIZE); err != nil {
 		fieldErr = fieldErr.WithField("supporting_document", "the uploaded file is too big! The maximum allowed size is 1MB")
+	}
+
+	fhs := r.MultipartForm.File["supporting_document"]
+	for _, fh := range fhs {
+		req.supportingDocumenFileHeaderList = append(req.supportingDocumenFileHeaderList, fh)
+	}
+	if len(req.supportingDocumenFileHeaderList) == 0 {
+		fieldErr = fieldErr.WithField("supporting_document", "supporting document is missing")
 	}
 
 	req.supportingDocumentFile, req.supportingDocumentFileHeader, err = r.FormFile("supporting_document")
@@ -85,10 +94,15 @@ func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldE
 	return nil
 }
 
+type DocumentInfo struct {
+	Name string `json:"name"`
+	Url  string `json:"url"`
+}
+
 type UploadSpbeDocumentResponse struct {
-	Message      string `json:"string"`
-	AssessmentId string `json:"assessment_id"`
-	DocumentUrl  string `json:"document_url"`
+	Message          string         `json:"string"`
+	AssessmentId     string         `json:"assessment_id"`
+	DocumentInfoList []DocumentInfo `json:"documents_info"`
 }
 
 func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *http.Request) {
@@ -116,55 +130,104 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 		return
 	}
 
-	defer req.supportingDocumentFile.Close()
+	var documentInfoList []DocumentInfo
+	var supportDataDocumentInfoList []store.SupportDataDocumentInfo
+	for _, supportingDocumenFileHeader := range req.supportingDocumenFileHeaderList {
+		supportingDocumentFile, err := supportingDocumenFileHeader.Open()
+		if err != nil {
+			log.Println(err.Error())
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+		defer supportingDocumentFile.Close()
 
-	uniqueId := uuid.New()
-	filename := strings.Replace(uniqueId.String(), "-", "", -1)
-	fileExt := filepath.Ext(req.supportingDocumentFileHeader.Filename)
-	supportingDocument := fmt.Sprintf("%s%s", filename, fileExt)
-	supportingDocumentUrl := fmt.Sprintf("http://%s/static/%s", handler.apiCfg.Host, supportingDocument)
+		uniqueId := uuid.New()
+		filename := strings.Replace(uniqueId.String(), "-", "", -1)
+		fileExt := filepath.Ext(supportingDocumenFileHeader.Filename)
+		originalDocumentName := supportingDocumenFileHeader.Filename
+		supportingDocument := fmt.Sprintf("%s%s", filename, fileExt)
+		supportingDocumentUrl := fmt.Sprintf("http://%s/static/%s", handler.apiCfg.Host, supportingDocument)
 
-	var dst *os.File
-	dst, err := handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
-	if err != nil {
-		log.Println(err.Error())
+		var dst *os.File
+		dst, err = handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
+		if err != nil {
+			log.Println(err.Error())
 
-		os.MkdirAll("./static/supporting-documents", os.ModePerm)
-		dst, _ = handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
+			os.MkdirAll("./static/supporting-documents", os.ModePerm)
+			dst, _ = handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
+		}
+		defer dst.Close()
+
+		_, err = handler.filesystemClient.Copy(dst, supportingDocumentFile)
+		if err != nil {
+			log.Println(err.Error())
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+
+		supportDataDocumentInfoList = append(supportDataDocumentInfoList, store.SupportDataDocumentInfo{
+			DocumentName:         supportingDocument,
+			DocumentUrl:          supportingDocumentUrl,
+			OriginalDocumentName: originalDocumentName,
+		})
+		documentInfoList = append(documentInfoList, DocumentInfo{
+			Name: originalDocumentName,
+			Url:  supportingDocumentUrl,
+		})
+
 	}
-	defer dst.Close()
+	// defer req.supportingDocumentFile.Close()
 
-	_, err = handler.filesystemClient.Copy(dst, req.supportingDocumentFile)
-	if err != nil {
-		log.Println(err.Error())
-		response.Error(w, apierror.InternalServerError())
-		return
-	}
+	// uniqueId := uuid.New()
+	// filename := strings.Replace(uniqueId.String(), "-", "", -1)
+	// fileExt := filepath.Ext(req.supportingDocumentFileHeader.Filename)
+	// originalDocumentName := req.supportingDocumentFileHeader.Filename
+	// supportingDocument := fmt.Sprintf("%s%s", filename, fileExt)
+	// supportingDocumentUrl := fmt.Sprintf("http://%s/static/%s", handler.apiCfg.Host, supportingDocument)
+
+	// var dst *os.File
+	// dst, err := handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
+	// if err != nil {
+	// 	log.Println(err.Error())
+
+	// 	os.MkdirAll("./static/supporting-documents", os.ModePerm)
+	// 	dst, _ = handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
+	// }
+	// defer dst.Close()
+
+	// _, err = handler.filesystemClient.Copy(dst, req.supportingDocumentFile)
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// 	response.Error(w, apierror.InternalServerError())
+	// 	return
+	// }
 
 	// var assessmentUploadDetail store.AssessmentUploadDetail
 	assessmentUploadDetail := store.AssessmentUploadDetail{
 		AssessmentDetail: store.AssessmentDetail{
 			InstitutionName: req.institutionName,
 		},
-		SupportDataDocumentInfo: store.SupportDataDocumentInfo{
-			DocumentName: supportingDocument,
-			DocumentUrl:  supportingDocumentUrl,
-		},
+		SupportDataDocumentInfoList: supportDataDocumentInfoList,
 		UserId: userCred.ID,
 	}
 	for _, indicatorNumber := range req.indicatorNumbers {
 		assessmentUploadDetail.IndicatorAssessmentInfo.IndicatorNumber = indicatorNumber
-		err = handler.assessmentStore.InsertUploadDocument(ctx, &assessmentUploadDetail)
+		err := handler.assessmentStore.InsertUploadDocument(ctx, &assessmentUploadDetail)
+		if err != nil {
+			log.Println(err)
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
 
 		topic := "SPBE_Assessment"
 		msg := UploadProducerMessage{
 			Name:                  assessmentUploadDetail.AssessmentDetail.InstitutionName,
-			Content:               assessmentUploadDetail.SupportDataDocumentInfo.Id,
+			Content:               assessmentUploadDetail.SupportDataDocumentInfoList[0].Id, // WIP need to be updated later
 			UserId:                userCred.ID,
 			RecipientNumber:       req.phoneNumberStr,
 			AssessmentId:          assessmentUploadDetail.AssessmentDetail.Id,
 			IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
-			Filename:              assessmentUploadDetail.SupportDataDocumentInfo.DocumentName,
+			Filename:              assessmentUploadDetail.SupportDataDocumentInfoList[0].DocumentName, // WIP need to be updated later
 			Timestamp:             time.Now().UTC().String(),
 		}
 
@@ -200,9 +263,9 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 	}()
 
 	resp := UploadSpbeDocumentResponse{
-		Message:      "Document has been successfully uploaded",
-		AssessmentId: assessmentUploadDetail.AssessmentDetail.Id,
-		DocumentUrl:  supportingDocumentUrl,
+		Message:          "Document has been successfully uploaded",
+		AssessmentId:     assessmentUploadDetail.AssessmentDetail.Id,
+		DocumentInfoList: documentInfoList,
 	}
 
 	protoMessage := generateWhatsAppMessage()

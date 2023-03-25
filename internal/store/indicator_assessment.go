@@ -12,14 +12,15 @@ type IndicatorAssessmentDetail struct {
 }
 
 type IndicatorAssessmentResultInfo struct {
-	Domain          string
-	Aspect          string
-	IndicatorNumber int
-	Level           int
-	Explanation     string
-	SupportDocument string
-	OldDocument     string
-	Proof           string
+	Domain              string
+	Aspect              string
+	IndicatorNumber     int
+	Level               int
+	Explanation         string
+	SupportDocument     string
+	SupportDocumentName string
+	OldDocument         string
+	Proof               string
 }
 
 type IndicatorAssessmentResultDetail struct {

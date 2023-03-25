@@ -27,15 +27,16 @@ type IndicatorAssessmentInfo struct {
 }
 
 type SupportDataDocumentInfo struct {
-	Id           string
-	DocumentName string
-	DocumentUrl  string
+	Id                   string
+	DocumentName         string
+	DocumentUrl          string
+	OriginalDocumentName string
 }
 
 type AssessmentUploadDetail struct {
 	AssessmentDetail        AssessmentDetail
 	IndicatorAssessmentInfo IndicatorAssessmentInfo
-	SupportDataDocumentInfo SupportDataDocumentInfo
+	SupportDataDocumentInfoList []SupportDataDocumentInfo
 	UserId                  string
 }
 

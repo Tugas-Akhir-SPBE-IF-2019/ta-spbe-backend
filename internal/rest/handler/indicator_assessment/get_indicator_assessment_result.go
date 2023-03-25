@@ -11,14 +11,15 @@ import (
 )
 
 type IndicatorAssessmentResultItem struct {
-	Domain          string `json:"domain"`
-	Aspect          string `json:"aspect"`
-	IndicatorNumber int    `json:"indicator_number"`
-	Level           int    `json:"level"`
-	Explanation     string `json:"explanation"`
-	SupportDocument string `json:"support_document"`
-	OldDocument     string `json:"old_document"`
-	Proof           string `json:"proof"`
+	Domain              string `json:"domain"`
+	Aspect              string `json:"aspect"`
+	IndicatorNumber     int    `json:"indicator_number"`
+	Level               int    `json:"level"`
+	Explanation         string `json:"explanation"`
+	SupportDocument     string `json:"support_document"`
+	SupportDocumentName string `json:"support_document_name"`
+	OldDocument         string `json:"old_document"`
+	Proof               string `json:"proof"`
 }
 
 type IndicatorAssessmentResultResponse struct {
@@ -40,13 +41,14 @@ func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentResultGetIndica
 	result := make([]IndicatorAssessmentResultItem, len(indicatorAssessmentList))
 	for idx, indicatorAssessment := range indicatorAssessmentList {
 		resultItem := IndicatorAssessmentResultItem{
-			Domain:          indicatorAssessment.Result.Domain,
-			Aspect:          indicatorAssessment.Result.Aspect,
-			IndicatorNumber: indicatorAssessment.Result.IndicatorNumber,
-			Level:           indicatorAssessment.Result.Level,
-			Explanation:     indicatorAssessment.Result.Explanation,
-			SupportDocument: indicatorAssessment.Result.SupportDocument,
-			Proof:           indicatorAssessment.Result.Proof,
+			Domain:              indicatorAssessment.Result.Domain,
+			Aspect:              indicatorAssessment.Result.Aspect,
+			IndicatorNumber:     indicatorAssessment.Result.IndicatorNumber,
+			Level:               indicatorAssessment.Result.Level,
+			Explanation:         indicatorAssessment.Result.Explanation,
+			SupportDocument:     indicatorAssessment.Result.SupportDocument,
+			SupportDocumentName: indicatorAssessment.Result.SupportDocumentName,
+			Proof:               indicatorAssessment.Result.Proof,
 		}
 		result[idx] = resultItem
 	}

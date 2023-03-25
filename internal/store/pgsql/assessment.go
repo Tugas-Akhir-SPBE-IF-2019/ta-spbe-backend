@@ -188,9 +188,9 @@ const indicatorAssessmentUploadDocumentInsertQuery = `INSERT into
 const supportDataDocumentUploadInsert = "supportDataDocumentUploadInsert"
 const supportDataDocumentUploadInsertQuery = `INSERT into
 	support_data_documents(
-		id, indicator_assessment_id, document_name, document_url, created_at
+		id, assessment_id, indicator_assessment_id, document_name, document_url, document_original_name, created_at
 	) values(
-		$1, $2, $3, $4, $5
+		$1, $2, $3, $4, $5, $6, $7
 	)
 `
 
@@ -232,14 +232,25 @@ func (s *Assessment) InsertUploadDocument(ctx context.Context, assessmentUploadD
 	}
 	assessmentUploadDetail.IndicatorAssessmentInfo.Id = indicatorAssessmentId
 
-	supportDataDocumentId := uuid.NewString()
 	supportDataDocumentUploadInsertStmt, err := s.db.PrepareContext(ctx, supportDataDocumentUploadInsertQuery)
-	_, err = tx.StmtContext(ctx, supportDataDocumentUploadInsertStmt).ExecContext(ctx,
-		supportDataDocumentId, indicatorAssessmentId, assessmentUploadDetail.SupportDataDocumentInfo.DocumentName, assessmentUploadDetail.SupportDataDocumentInfo.DocumentUrl, assessmentCreatedAt)
-	if err != nil {
-		return fmt.Errorf("failed to insert support data document: %w", err)
+
+	// WIP
+	// The current implementation will make a new entry for each indicator number
+	// The intended behavior should be just make the document have foreign key to assessment, not indicator assessment
+	// This mean that indicator_assessment_id need to be deleted in the future
+	for idx, supportDataDocumentInfo := range assessmentUploadDetail.SupportDataDocumentInfoList {
+		supportDataDocumentId := uuid.NewString()
+		_, err = tx.StmtContext(ctx, supportDataDocumentUploadInsertStmt).ExecContext(ctx,
+			supportDataDocumentId, assessmentUploadDetail.AssessmentDetail.Id, indicatorAssessmentId,
+			supportDataDocumentInfo.DocumentName,
+			supportDataDocumentInfo.DocumentUrl,
+			supportDataDocumentInfo.OriginalDocumentName,
+			assessmentCreatedAt)
+		if err != nil {
+			return fmt.Errorf("failed to insert support data document: %w", err)
+		}
+		assessmentUploadDetail.SupportDataDocumentInfoList[idx].Id = supportDataDocumentId
 	}
-	assessmentUploadDetail.SupportDataDocumentInfo.Id = supportDataDocumentId
 
 	if err = tx.Commit(); err != nil {
 		return fmt.Errorf("failed to commit insert upload document tx: %w", err)

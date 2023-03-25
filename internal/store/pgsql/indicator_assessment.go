@@ -82,7 +82,7 @@ func (s *IndicatorAssessment) FindAllPagination(ctx context.Context, offset int,
 }
 
 const indicatorAssessmentResultFindByIdQuery = `SELECT ia.id, a.institution_name, ia.created_at, ia.status, i.domain, i.aspect, i.indicator_number, 
-		ia.level, sdd.document_url, COALESCE(ia.explanation, ''),  COALESCE(sddp.proof, '')
+		ia.level, sdd.document_url, sdd.document_original_name, COALESCE(ia.explanation, ''),  COALESCE(sddp.proof, '')
 		FROM indicator_assessments ia
 		LEFT JOIN assessments a
 		ON ia.assessment_id = a.id
@@ -101,7 +101,7 @@ func (s *IndicatorAssessment) FindIndicatorAssessmentResultById(ctx context.Cont
 	err := row.Scan(&assessmentResult.IndicatorAssessmentId, &assessmentResult.InstitutionName, &assessmentResult.SubmittedDate,
 		&assessmentResult.AssessmentStatus, &assessmentResult.Result.Domain, &assessmentResult.Result.Aspect,
 		&assessmentResult.Result.IndicatorNumber, &assessmentResult.Result.Level, &assessmentResult.Result.SupportDocument,
-		&assessmentResult.Result.Explanation, &assessmentResult.Result.Proof,
+		&assessmentResult.Result.SupportDocumentName, &assessmentResult.Result.Explanation, &assessmentResult.Result.Proof,
 	)
 	if err != nil {
 		return assessmentResult, err
@@ -111,7 +111,7 @@ func (s *IndicatorAssessment) FindIndicatorAssessmentResultById(ctx context.Cont
 }
 
 const indicatorAssessmentResultFindByAssessmentIdQuery = `SELECT ia.id, a.institution_name, ia.created_at, ia.status, i.domain, i.aspect, i.indicator_number, 
-		ia.level, sdd.document_url, COALESCE(ia.explanation, ''),  COALESCE(sddp.proof, '')
+		ia.level, sdd.document_url, sdd.document_original_name, COALESCE(ia.explanation, ''),  COALESCE(sddp.proof, '')
 		FROM indicator_assessments ia
 		LEFT JOIN assessments a
 		ON ia.assessment_id = a.id
@@ -137,7 +137,7 @@ func (s *IndicatorAssessment) FindIndicatorAssessmentResultByAssessmentId(ctx co
 		err := rows.Scan(&assessmentResult.IndicatorAssessmentId, &assessmentResult.InstitutionName, &assessmentResult.SubmittedDate,
 			&assessmentResult.AssessmentStatus, &assessmentResult.Result.Domain, &assessmentResult.Result.Aspect,
 			&assessmentResult.Result.IndicatorNumber, &assessmentResult.Result.Level, &assessmentResult.Result.SupportDocument,
-			&assessmentResult.Result.Explanation, &assessmentResult.Result.Proof,
+			&assessmentResult.Result.SupportDocumentName, &assessmentResult.Result.Explanation, &assessmentResult.Result.Proof,
 		)
 		if err != nil {
 			return nil, err
