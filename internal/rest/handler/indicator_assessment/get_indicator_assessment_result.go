@@ -22,25 +22,24 @@ type IndicatorAssessmentResultItem struct {
 }
 
 type IndicatorAssessmentResultResponse struct {
-	InstitutionName  string                        `json:"institution_name"`
-	SubmittedDate    time.Time                     `json:"submitted_date"`
-	AssessmentStatus int                           `json:"assessment_status"`
-	Result           IndicatorAssessmentResultItem `json:"result"`
+	InstitutionName  string                          `json:"institution_name"`
+	SubmittedDate    time.Time                       `json:"submitted_date"`
+	AssessmentStatus int                             `json:"assessment_status"`
+	Result           []IndicatorAssessmentResultItem `json:"result"`
 }
 
 func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	indicatorAssessmentId := chi.URLParam(r, "id")
-	indicatorAssessment, err := handler.indicatorAssessmentStore.FindIndicatorAssessmentResultById(ctx, indicatorAssessmentId)
+	indicatorAssessmentList, err := handler.indicatorAssessmentStore.FindIndicatorAssessmentResultByAssessmentId(ctx, indicatorAssessmentId)
 	if err != nil {
 		response.Error(w, apierror.NotFoundError("indicator assessment not found"))
 		return
 	}
-	resp := IndicatorAssessmentResultResponse{
-		InstitutionName:  indicatorAssessment.InstitutionName,
-		SubmittedDate:    indicatorAssessment.SubmittedDate,
-		AssessmentStatus: indicatorAssessment.AssessmentStatus,
-		Result: IndicatorAssessmentResultItem{
+
+	result := make([]IndicatorAssessmentResultItem, len(indicatorAssessmentList))
+	for idx, indicatorAssessment := range indicatorAssessmentList {
+		resultItem := IndicatorAssessmentResultItem{
 			Domain:          indicatorAssessment.Result.Domain,
 			Aspect:          indicatorAssessment.Result.Aspect,
 			IndicatorNumber: indicatorAssessment.Result.IndicatorNumber,
@@ -48,9 +47,15 @@ func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentResultGetIndica
 			Explanation:     indicatorAssessment.Result.Explanation,
 			SupportDocument: indicatorAssessment.Result.SupportDocument,
 			Proof:           indicatorAssessment.Result.Proof,
-		},
+		}
+		result[idx] = resultItem
+	}
+	resp := IndicatorAssessmentResultResponse{
+		InstitutionName:  indicatorAssessmentList[0].InstitutionName,
+		SubmittedDate:    indicatorAssessmentList[0].SubmittedDate,
+		AssessmentStatus: indicatorAssessmentList[0].AssessmentStatus,
+		Result:           result,
 	}
 
 	response.Respond(w, http.StatusOK, resp)
-
 }

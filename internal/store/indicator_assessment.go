@@ -41,6 +41,7 @@ type IndicatorAssessment interface {
 	FindAll(ctx context.Context) ([]*IndicatorAssessmentDetail, error)
 	FindAllPagination(ctx context.Context, offset int, limit int) ([]*IndicatorAssessmentDetail, error)
 	FindIndicatorAssessmentResultById(ctx context.Context, id string) (IndicatorAssessmentResultDetail, error)
+	FindIndicatorAssessmentResultByAssessmentId(ctx context.Context, id string) ([]*IndicatorAssessmentResultDetail, error)
 	ValidateAssessmentResult(ctx context.Context, resultCorrect bool, indicatorAssessmentResult *IndicatorAssessmentResultDetail) error
 	UpdateAssessmentResult(ctx context.Context, resultDetail *IndicatorAssessmentResultDetail) error
 }

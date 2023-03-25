@@ -26,7 +26,9 @@ const MAX_UPLOAD_SIZE = 10240 * 10240 // 10MB
 type UploadSpbeDocumentRequest struct {
 	institutionName              string
 	indicatorNumberStr           string
+	indicatorNumbersStr          []string
 	indicatorNumber              int
+	indicatorNumbers             []int
 	phoneNumberStr               string
 	supportingDocumentFile       multipart.File
 	supportingDocumentFileHeader *multipart.FileHeader
@@ -41,6 +43,7 @@ type UploadProducerMessage struct {
 	RecipientNumber       string
 	AssessmentId          string
 	IndicatorAssessmentId string
+	Filename              string
 	Timestamp             string
 }
 
@@ -62,14 +65,12 @@ func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldE
 		fieldErr = fieldErr.WithField("institution_name", "institution name is missing")
 	}
 
-	req.indicatorNumberStr = strings.TrimSpace(req.indicatorNumberStr)
-	if req.indicatorNumberStr == "" {
-		fieldErr = fieldErr.WithField("indicator_number", "indicator number is missing")
-	}
-
-	req.indicatorNumber, err = strconv.Atoi(req.indicatorNumberStr)
-	if err != nil || req.indicatorNumber < 1 && req.indicatorNumber > 10 {
-		fieldErr = fieldErr.WithField("indicator_number", "indicator number must be a positive integer ranging between 1 and 10")
+	for _, indicatorNumberStr := range req.indicatorNumbersStr {
+		indicatorNumber, err := strconv.Atoi(indicatorNumberStr)
+		if err != nil {
+			fieldErr = fieldErr.WithField("indicator_number", "indicator number must be a positive integer ranging between 1 and 10")
+		}
+		req.indicatorNumbers = append(req.indicatorNumbers, indicatorNumber)
 	}
 
 	// FOR TESTING PURPOSE
@@ -95,10 +96,13 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 
 	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)
 	req := UploadSpbeDocumentRequest{
-		institutionName:    r.FormValue("institution_name"),
-		indicatorNumberStr: r.FormValue("indicator_number"),
-		phoneNumberStr:     r.FormValue("phone_number"),
+		institutionName: r.FormValue("institution_name"),
+		// indicatorNumberStr: r.FormValue("indicator_number"),
+		phoneNumberStr: r.FormValue("phone_number"),
 	}
+
+	r.ParseForm()
+	req.indicatorNumbersStr = r.Form["indicator_number"]
 
 	fieldErr := req.validate(r)
 	if fieldErr != nil {
@@ -137,12 +141,10 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 		return
 	}
 
+	// var assessmentUploadDetail store.AssessmentUploadDetail
 	assessmentUploadDetail := store.AssessmentUploadDetail{
 		AssessmentDetail: store.AssessmentDetail{
 			InstitutionName: req.institutionName,
-		},
-		IndicatorAssessmentInfo: store.IndicatorAssessmentInfo{
-			IndicatorNumber: req.indicatorNumber,
 		},
 		SupportDataDocumentInfo: store.SupportDataDocumentInfo{
 			DocumentName: supportingDocument,
@@ -150,31 +152,35 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 		},
 		UserId: userCred.ID,
 	}
-	err = handler.assessmentStore.InsertUploadDocument(ctx, &assessmentUploadDetail)
+	for _, indicatorNumber := range req.indicatorNumbers {
+		assessmentUploadDetail.IndicatorAssessmentInfo.IndicatorNumber = indicatorNumber
+		err = handler.assessmentStore.InsertUploadDocument(ctx, &assessmentUploadDetail)
 
-	topic := "SPBE_Assessment"
-	msg := UploadProducerMessage{
-		Name:                  assessmentUploadDetail.AssessmentDetail.InstitutionName,
-		Content:               assessmentUploadDetail.SupportDataDocumentInfo.Id,
-		UserId:                userCred.ID,
-		RecipientNumber:       req.phoneNumberStr,
-		AssessmentId:          assessmentUploadDetail.AssessmentDetail.Id,
-		IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
-		Timestamp:             time.Now().UTC().String(),
-	}
+		topic := "SPBE_Assessment"
+		msg := UploadProducerMessage{
+			Name:                  assessmentUploadDetail.AssessmentDetail.InstitutionName,
+			Content:               assessmentUploadDetail.SupportDataDocumentInfo.Id,
+			UserId:                userCred.ID,
+			RecipientNumber:       req.phoneNumberStr,
+			AssessmentId:          assessmentUploadDetail.AssessmentDetail.Id,
+			IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
+			Filename:              assessmentUploadDetail.SupportDataDocumentInfo.DocumentName,
+			Timestamp:             time.Now().UTC().String(),
+		}
 
-	producerPayload, err := handler.jsonClient.Marshal(msg)
-	if err != nil {
-		log.Println(err)
-		response.Error(w, apierror.InternalServerError())
-		return
-	}
+		producerPayload, err := handler.jsonClient.Marshal(msg)
+		if err != nil {
+			log.Println(err)
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
 
-	err = handler.messageQueue.Produce(topic, producerPayload)
-	if err != nil {
-		log.Println(err)
-		response.Error(w, apierror.InternalServerError())
-		return
+		err = handler.messageQueue.Produce(topic, producerPayload)
+		if err != nil {
+			log.Println(err)
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
 	}
 
 	user, err := handler.userStore.FindOneByID(ctx, userCred.ID)

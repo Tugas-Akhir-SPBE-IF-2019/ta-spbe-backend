@@ -40,7 +40,7 @@ type AssessmentUploadDetail struct {
 }
 
 type Assessment interface {
-	FindAll(ctx context.Context) ([]*AssessmentDetail, error)
-	FindAllPagination(ctx context.Context, offset int, limit int) ([]*AssessmentDetail, error)
+	FindAll(ctx context.Context, queryInstitution string, status int, startDate string, endDate string) ([]*AssessmentDetail, error)
+	FindAllPagination(ctx context.Context, offset int, limit int, queryInstitution string, status int, startDate string, endDate string) ([]*AssessmentDetail, error)
 	InsertUploadDocument(ctx context.Context, assessmentUploadDetail *AssessmentUploadDetail) error
 }

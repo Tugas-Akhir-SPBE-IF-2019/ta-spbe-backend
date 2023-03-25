@@ -14,10 +14,17 @@ import (
 )
 
 type GetAssessmentListRequest struct {
-	pageStr  string
-	limitStr string
-	page     int
-	limit    int
+	institution  string
+	startDateStr string
+	startDate    time.Time
+	endDateStr   string
+	endDate      time.Time
+	status       int
+	statusStr    string
+	pageStr      string
+	limitStr     string
+	page         int
+	limit        int
 }
 
 func (r *GetAssessmentListRequest) validate() *apierror.FieldError {
@@ -44,6 +51,29 @@ func (r *GetAssessmentListRequest) validate() *apierror.FieldError {
 		fieldErr = fieldErr.WithField("limit", "limit must be a positive integer")
 	}
 
+	if r.statusStr != "" {
+		r.status, err = strconv.Atoi(r.statusStr)
+		if err != nil || (r.status < 0 && r.status > 3) {
+			fieldErr = fieldErr.WithField("status", "status must be a positive integer between 0 and 3 inclusive")
+		}
+	} else {
+		r.status = -1 // value for no filter
+	}
+
+	if r.startDateStr != "" {
+		r.startDate, err = time.Parse(time.DateOnly, r.startDateStr)
+		if err != nil {
+			fieldErr = fieldErr.WithField("start_date", "start_date must be in the format of YYYY-MM-DD!")
+		}
+	}
+
+	if r.endDateStr != "" {
+		r.endDate, err = time.Parse(time.DateOnly, r.endDateStr)
+		if err != nil {
+			fieldErr = fieldErr.WithField("end_date", "end_date must be in the format of YYYY-MM-DD!")
+		}
+	}
+
 	if len(fieldErr.Fields) != 0 {
 		return &fieldErr
 	}
@@ -68,8 +98,12 @@ func (handler *assessmentHandler) GetSPBEAssessmentList(w http.ResponseWriter, r
 	ctx := r.Context()
 
 	req := GetAssessmentListRequest{
-		pageStr:  r.URL.Query().Get("page"),
-		limitStr: r.URL.Query().Get("limit"),
+		pageStr:      r.URL.Query().Get("page"),
+		limitStr:     r.URL.Query().Get("limit"),
+		institution:  r.URL.Query().Get("institution"),
+		statusStr:    r.URL.Query().Get("status"),
+		startDateStr: r.URL.Query().Get("start_date"),
+		endDateStr:   r.URL.Query().Get("end_date"),
 	}
 
 	fieldErr := req.validate()
@@ -78,7 +112,7 @@ func (handler *assessmentHandler) GetSPBEAssessmentList(w http.ResponseWriter, r
 		return
 	}
 
-	assessmentListAll, err := handler.assessmentStore.FindAll(ctx)
+	assessmentListAll, err := handler.assessmentStore.FindAll(ctx, req.institution, req.status, req.startDateStr, req.endDateStr)
 	if err != nil {
 		log.Println(err)
 
@@ -88,7 +122,7 @@ func (handler *assessmentHandler) GetSPBEAssessmentList(w http.ResponseWriter, r
 	totalItems := len(assessmentListAll)
 
 	offset := req.limit * (req.page - 1)
-	assessmentList, err := handler.assessmentStore.FindAllPagination(ctx, offset, req.limit)
+	assessmentList, err := handler.assessmentStore.FindAllPagination(ctx, offset, req.limit, req.institution, req.status, req.startDateStr, req.endDateStr)
 	if err != nil {
 		log.Println(err)
 
@@ -110,6 +144,13 @@ func (handler *assessmentHandler) GetSPBEAssessmentList(w http.ResponseWriter, r
 	resp.TotalItems = totalItems
 	resp.TotalPages = int(math.Ceil(float64(totalItems) / float64(req.limit)))
 	resp.Items = items
+
+	log.Println("status")
+	log.Println(req.status)
+	log.Println("start_date")
+	log.Println(req.startDate.UTC())
+	log.Println("end_date")
+	log.Println(req.endDate.UTC())
 
 	response.Respond(w, http.StatusOK, resp)
 }

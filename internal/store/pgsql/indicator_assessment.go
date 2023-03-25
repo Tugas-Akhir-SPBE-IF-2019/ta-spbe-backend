@@ -110,6 +110,44 @@ func (s *IndicatorAssessment) FindIndicatorAssessmentResultById(ctx context.Cont
 	return assessmentResult, nil
 }
 
+const indicatorAssessmentResultFindByAssessmentIdQuery = `SELECT ia.id, a.institution_name, ia.created_at, ia.status, i.domain, i.aspect, i.indicator_number, 
+		ia.level, sdd.document_url, COALESCE(ia.explanation, ''),  COALESCE(sddp.proof, '')
+		FROM indicator_assessments ia
+		LEFT JOIN assessments a
+		ON ia.assessment_id = a.id
+		LEFT JOIN indicators i
+		ON ia.indicator_id = i.id
+		LEFT JOIN support_data_documents sdd
+		ON ia.id = sdd.indicator_assessment_id
+		LEFT JOIN support_data_document_proofs sddp
+		ON ia.id = sddp.indicator_assessment_id
+		WHERE a.id = $1`
+
+func (s *IndicatorAssessment) FindIndicatorAssessmentResultByAssessmentId(ctx context.Context, id string) ([]*store.IndicatorAssessmentResultDetail, error) {
+	assessmentResultList := []*store.IndicatorAssessmentResultDetail{}
+
+	rows, err := s.db.QueryContext(ctx, indicatorAssessmentResultFindByAssessmentIdQuery, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		assessmentResult := &store.IndicatorAssessmentResultDetail{}
+		err := rows.Scan(&assessmentResult.IndicatorAssessmentId, &assessmentResult.InstitutionName, &assessmentResult.SubmittedDate,
+			&assessmentResult.AssessmentStatus, &assessmentResult.Result.Domain, &assessmentResult.Result.Aspect,
+			&assessmentResult.Result.IndicatorNumber, &assessmentResult.Result.Level, &assessmentResult.Result.SupportDocument,
+			&assessmentResult.Result.Explanation, &assessmentResult.Result.Proof,
+		)
+		if err != nil {
+			return nil, err
+		}
+		assessmentResultList = append(assessmentResultList, assessmentResult)
+	}
+
+	return assessmentResultList, nil
+}
+
 const insertAssessmentFeedbackQuery = `INSERT INTO 
 	indicator_assessment_feedbacks(
 		id, indicator_assessment_id, level,

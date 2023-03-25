@@ -43,7 +43,7 @@ def txtreader(filename, keyword):
 # if __name__ == '__main__':
 #     pdfparser(sys.argv[1])
 
-def ceklvl():
+def ceklvl(filename):
     list_final = []
     text_final = ''
 
@@ -130,11 +130,14 @@ model = pickle.load(open('model.pckl', 'rb'))
 
 def send_result(message_data, config):
     #TEST TF MODEL
+    filename = message_data['Filename']
+    print("sampe sini nih")
+    print(filename)
 
     (instansibaru, judulbaru) = dokbaru.pdfparser(filename)
     (instansilama, judullama) = doklama.pdfparser(filename)
 
-    level_final = ceklvl()
+    level_final = ceklvl(filename)
 
     pred_result = model.predict([level_final])    
     #TEST TF MODEL

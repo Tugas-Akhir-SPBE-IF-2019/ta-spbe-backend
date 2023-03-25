@@ -19,15 +19,55 @@ func NewAssessment(db *sql.DB) *Assessment {
 	return &Assessment{db: db}
 }
 
-const assessmentFindAllQuery = `SELECT ia.id, a.institution_name, ia.status, ia.created_at
-	FROM assessments a
-	RIGHT JOIN indicator_assessments ia
-	ON ia.assessment_id = a.id`
+const assessmentFindAllQuery = `SELECT a.id, a.institution_name, a.status, a.created_at
+	FROM assessments a `
 
-func (s *Assessment) FindAll(ctx context.Context) ([]*store.AssessmentDetail, error) {
+func (s *Assessment) FindAll(ctx context.Context, queryInstitution string, status int, startDate string, endDate string) ([]*store.AssessmentDetail, error) {
 	assessmentList := []*store.AssessmentDetail{}
+	var queryKeys []string
+	var queryParams []interface{}
 
-	rows, err := s.db.QueryContext(ctx, assessmentFindAllQuery)
+	query := assessmentFindAllQuery
+	if queryInstitution != "" {
+		queryKeys = append(queryKeys, "Institution")
+		queryParams = append(queryParams, queryInstitution)
+	}
+
+	if status != -1 {
+		queryKeys = append(queryKeys, "Status")
+		queryParams = append(queryParams, status)
+	}
+
+	if startDate != "" {
+		queryKeys = append(queryKeys, "StartDate")
+		queryParams = append(queryParams, startDate)
+	}
+
+	if endDate != "" {
+		queryKeys = append(queryKeys, "EndDate")
+		queryParams = append(queryParams, endDate)
+	}
+
+	for index, key := range queryKeys {
+		if index == 0 {
+			query = query + "WHERE "
+		} else {
+			query = query + "AND "
+		}
+
+		switch key {
+		case "Institution":
+			query = query + fmt.Sprintf(`a.institution_name ILIKE '%%' || $%d || '%%' `, index+1)
+		case "Status":
+			query = query + fmt.Sprintf(`ia.status = $%d `, index+1)
+		case "StartDate":
+			query = query + fmt.Sprintf(`ia.created_at >= $%d `, index+1)
+		case "EndDate":
+			query = query + fmt.Sprintf(`ia.created_at <= $%d `, index+1)
+		}
+	}
+
+	rows, err := s.db.QueryContext(ctx, query, queryParams...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,16 +90,57 @@ func (s *Assessment) FindAll(ctx context.Context) ([]*store.AssessmentDetail, er
 	return assessmentList, nil
 }
 
-const assessmentFindAllPaginationQuery = `SELECT ia.id, a.institution_name, ia.status, ia.created_at
-	FROM assessments a 
-	RIGHT JOIN indicator_assessments ia
-	ON ia.assessment_id = a.id
-	LIMIT $2 OFFSET $1`
-
-func (r *Assessment) FindAllPagination(ctx context.Context, offset int, limit int) ([]*store.AssessmentDetail, error) {
+func (r *Assessment) FindAllPagination(ctx context.Context, offset int, limit int, queryInstitution string, status int, startDate string, endDate string) ([]*store.AssessmentDetail, error) {
 	assessmentList := []*store.AssessmentDetail{}
+	var queryKeys []string
+	var queryParams []interface{}
 
-	rows, err := r.db.QueryContext(ctx, assessmentFindAllPaginationQuery, offset, limit)
+	queryParams = append(queryParams, offset, limit)
+
+	query := assessmentFindAllQuery
+	if queryInstitution != "" {
+		queryKeys = append(queryKeys, "Institution")
+		queryParams = append(queryParams, queryInstitution)
+	}
+
+	if status != -1 {
+		queryKeys = append(queryKeys, "Status")
+		queryParams = append(queryParams, status)
+	}
+
+	if startDate != "" {
+		queryKeys = append(queryKeys, "StartDate")
+		queryParams = append(queryParams, startDate)
+	}
+
+	if endDate != "" {
+		queryKeys = append(queryKeys, "EndDate")
+		queryParams = append(queryParams, endDate)
+	}
+
+	for index, key := range queryKeys {
+		if index == 0 {
+			query = query + "WHERE "
+		} else {
+			query = query + "AND "
+		}
+
+		// +3 is used because $1 and $2 are already used for pagination
+		switch key {
+		case "Institution":
+			query = query + fmt.Sprintf(`a.institution_name ILIKE '%%' || $%d || '%%' `, index+3)
+		case "Status":
+			query = query + fmt.Sprintf(`ia.status = $%d `, index+3)
+		case "StartDate":
+			query = query + fmt.Sprintf(`ia.created_at >= $%d `, index+3)
+		case "EndDate":
+			query = query + fmt.Sprintf(`ia.created_at <= $%d `, index+3)
+		}
+	}
+
+	query = query + `LIMIT $2 OFFSET $1 `
+
+	rows, err := r.db.QueryContext(ctx, query, queryParams...)
 	if err != nil {
 		return nil, err
 	}
@@ -119,17 +200,20 @@ func (s *Assessment) InsertUploadDocument(ctx context.Context, assessmentUploadD
 		return fmt.Errorf("failed to begin insert upload document tx: %w", err)
 	}
 	defer tx.Rollback()
-	assessmentId := uuid.NewString()
-	assessmentCreatedAt := time.Now().UTC()
 
-	assessmentInsertStmt, err := s.db.PrepareContext(ctx, assessmentInsertQuery)
-	_, err = tx.StmtContext(ctx, assessmentInsertStmt).ExecContext(ctx,
-		assessmentId, assessmentUploadDetail.UserId, store.AssessmentStatus(store.IN_PROGRESS), assessmentUploadDetail.AssessmentDetail.InstitutionName, assessmentCreatedAt)
-	if err != nil {
-		return fmt.Errorf("failed to insert assessment: %w", err)
+	assessmentCreatedAt := time.Now().UTC()
+	if assessmentUploadDetail.AssessmentDetail.Id == "" {
+		assessmentId := uuid.NewString()
+
+		assessmentInsertStmt, err := s.db.PrepareContext(ctx, assessmentInsertQuery)
+		_, err = tx.StmtContext(ctx, assessmentInsertStmt).ExecContext(ctx,
+			assessmentId, assessmentUploadDetail.UserId, store.AssessmentStatus(store.IN_PROGRESS), assessmentUploadDetail.AssessmentDetail.InstitutionName, assessmentCreatedAt)
+		if err != nil {
+			return fmt.Errorf("failed to insert assessment: %w", err)
+		}
+		assessmentUploadDetail.AssessmentDetail.Id = assessmentId
+		assessmentUploadDetail.AssessmentDetail.SubmittedDate = assessmentCreatedAt
 	}
-	assessmentUploadDetail.AssessmentDetail.Id = assessmentId
-	assessmentUploadDetail.AssessmentDetail.SubmittedDate = assessmentCreatedAt
 
 	var indicatorId string
 	getIndicatorIdByIndicatorNumberStmt, err := s.db.PrepareContext(ctx, getIndicatorIdByIndicatorNumberQuery)
@@ -142,7 +226,7 @@ func (s *Assessment) InsertUploadDocument(ctx context.Context, assessmentUploadD
 	indicatorAssessmentId := uuid.NewString()
 	indicatorAssessmentUploadDocumentInsertStmt, err := s.db.PrepareContext(ctx, indicatorAssessmentUploadDocumentInsertQuery)
 	_, err = tx.StmtContext(ctx, indicatorAssessmentUploadDocumentInsertStmt).ExecContext(ctx,
-		indicatorAssessmentId, indicatorId, assessmentId, store.AssessmentStatus(store.IN_PROGRESS), 0, assessmentCreatedAt)
+		indicatorAssessmentId, indicatorId, assessmentUploadDetail.AssessmentDetail.Id, store.AssessmentStatus(store.IN_PROGRESS), 0, assessmentCreatedAt)
 	if err != nil {
 		return fmt.Errorf("failed to insert indicator assessment: %w", err)
 	}
