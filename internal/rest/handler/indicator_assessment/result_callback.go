@@ -36,13 +36,10 @@ func (handler *indicatorAssessmentHandler) ResultCallback(w http.ResponseWriter,
 	req := IndicatorAssessmentResultCallbackRequest{}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		log.Println("kena ini sih")
-		log.Println(r.Body)
-		log.Println(err.Error())
+
 		response.Error(w, apierror.BadRequestError(err.Error()))
 		return
 	}
-	log.Println("lolos bos")
 
 	result := store.IndicatorAssessmentResultDetail{
 		AssessmentId:          req.AssessmentId,
@@ -60,6 +57,35 @@ func (handler *indicatorAssessmentHandler) ResultCallback(w http.ResponseWriter,
 		log.Println(err.Error())
 		response.Error(w, apierror.InternalServerError())
 		return
+	}
+
+	resultList, err := handler.indicatorAssessmentStore.FindIndicatorAssessmentResultByAssessmentId(ctx, req.AssessmentId)
+	if err != nil {
+		log.Println(err.Error())
+		response.Error(w, apierror.InternalServerError())
+		return
+	}
+
+	// Check if all result have already been completed
+	// WIP 
+	// Still buggy because of concurrency problem
+	isCompleted := true
+	for _, res := range resultList {
+		if res.AssessmentStatus != int(store.AssessmentStatus(store.COMPLETED)) {
+			isCompleted = false
+			break
+		}
+	}
+
+	// Update assesssment status
+	if isCompleted {
+		// Still using hacks because of concurrency problem when getting the result
+		err := handler.assessmentStore.UpdateStatus(ctx, req.AssessmentId, store.AssessmentStatus(store.COMPLETED))
+		if err != nil {
+			log.Println(err.Error())
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
 	}
 
 	user, err := handler.userStore.FindOneByID(ctx, req.UserId)

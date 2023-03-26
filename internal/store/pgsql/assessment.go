@@ -194,6 +194,14 @@ const supportDataDocumentUploadInsertQuery = `INSERT into
 	)
 `
 
+const insertStatusHistoryQuery = `INSERT into
+	assessment_status_histories(
+		id, assessment_id, status, created_at
+	) values(
+		$1, $2, $3, $4
+	)
+`
+
 func (s *Assessment) InsertUploadDocument(ctx context.Context, assessmentUploadDetail *store.AssessmentUploadDetail) error {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
@@ -211,6 +219,17 @@ func (s *Assessment) InsertUploadDocument(ctx context.Context, assessmentUploadD
 		if err != nil {
 			return fmt.Errorf("failed to insert assessment: %w", err)
 		}
+
+		// Insert Status History
+		statusHistoryId := uuid.NewString()
+		insertStatusHistoryStmt, err := s.db.PrepareContext(ctx, insertStatusHistoryQuery)
+		_, err = tx.StmtContext(ctx, insertStatusHistoryStmt).ExecContext(ctx,
+			statusHistoryId, assessmentId, store.AssessmentStatus(store.IN_PROGRESS), assessmentCreatedAt,
+		)
+		if err != nil {
+			return fmt.Errorf("failed to insert assessment status history: %w", err)
+		}
+
 		assessmentUploadDetail.AssessmentDetail.Id = assessmentId
 		assessmentUploadDetail.AssessmentDetail.SubmittedDate = assessmentCreatedAt
 	}
@@ -258,3 +277,68 @@ func (s *Assessment) InsertUploadDocument(ctx context.Context, assessmentUploadD
 
 	return nil
 }
+
+const updateAssessmentStatusQuery = `UPDATE assessments
+	SET status = $2, updated_at = $3
+	WHERE id = $1
+`
+
+func (s *Assessment) UpdateStatus(ctx context.Context, assessmentId string, status store.AssessmentStatus) error {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to commit update assessment result tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	updatedAt := time.Now().UTC()
+	updateAssessmentStatusStmt, err := s.db.PrepareContext(ctx, updateAssessmentStatusQuery)
+	_, err = tx.StmtContext(ctx, updateAssessmentStatusStmt).ExecContext(ctx, assessmentId,
+		store.AssessmentStatus(store.COMPLETED), updatedAt)
+	if err != nil {
+		return fmt.Errorf("failed to update assessment: %w", err)
+	}
+
+	// Insert Status History
+	statusHistoryId := uuid.NewString()
+	insertStatusHistoryStmt, err := s.db.PrepareContext(ctx, insertStatusHistoryQuery)
+	_, err = tx.StmtContext(ctx, insertStatusHistoryStmt).ExecContext(ctx,
+		statusHistoryId, assessmentId, store.AssessmentStatus(store.COMPLETED), updatedAt,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to insert assessment status history: %w", err)
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit update assessment status tx: %w", err)
+	}
+	return nil
+}
+
+const findAllStatusHistoryQueryById = `SELECT ash.status, ash.created_at  
+	FROM assessment_status_histories ash 
+	WHERE ash.assessment_id = $1
+`
+func (s *Assessment) FindAllStatusHistoryById(ctx context.Context, assessmentId string) ([]*store.AssessmentStatusHistoryDetail, error) {
+	assessmentStatusHistoryList := []*store.AssessmentStatusHistoryDetail{}
+
+	rows, err := s.db.QueryContext(ctx, findAllStatusHistoryQueryById, assessmentId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		assessmentStatusHistory := &store.AssessmentStatusHistoryDetail{}
+		err := rows.Scan(
+			&assessmentStatusHistory.Status,
+			&assessmentStatusHistory.FinishedDate,
+		)
+		if err != nil {
+			return nil, err
+		}
+		assessmentStatusHistoryList = append(assessmentStatusHistoryList, assessmentStatusHistory)
+	}
+
+	return assessmentStatusHistoryList, nil
+}
+

@@ -60,7 +60,7 @@ func New(
 	userStore := storepgsql.NewUser(sqlDB)
 	institutionStore := storepgsql.NewInstitution(sqlDB)
 
-	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, indicatorAssessmentStore, userStore, smtpMailer, whatsAppClient)
+	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, assessmentStore, indicatorAssessmentStore, userStore, smtpMailer, whatsAppClient)
 	authHandler := authhandler.NewAuthHandler(sqlDB, userStore, cfg.OAuth, jwt)
 	assessmentHandler := assessmenthandler.NewAssessmentHandler(sqlDB, assessmentStore, cfg.API, userStore, smtpMailer, fileSystemClient, jsonClient, messageQueue, whatsAppClient)
 	institutionHandler := institutionhandler.NewInstitutionHandler(institutionStore)
@@ -78,6 +78,7 @@ func New(
 		r.Use(middleware.JWTAuth(jwt, cfg.DevSettings))
 		r.Get("/", assessmentHandler.GetSPBEAssessmentList)
 		r.Get("/{id}", indicatorAssessmentHandler.GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList)
+		r.Get("/{id}/histories", assessmentHandler.GetSPBEAssessmentStatusHistory)
 		r.Patch("/{id}/validate", indicatorAssessmentHandler.ValidateIndicatorAssessmentResult)
 		r.Post("/documents/upload", assessmentHandler.UploadSPBEDocument)
 

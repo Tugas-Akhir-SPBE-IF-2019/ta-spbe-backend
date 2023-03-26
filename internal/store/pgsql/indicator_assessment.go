@@ -208,10 +208,6 @@ func (s *IndicatorAssessment) ValidateAssessmentResult(ctx context.Context, resu
 	return nil
 }
 
-const updateAssessmentStatusQuery = `UPDATE assessments
-	SET status = $2, updated_at = $3
-	WHERE id = $1
-`
 const updateIndicatorAssessmentResultQuery = `UPDATE indicator_assessments
 	SET status = $2, level = $3, explanation = $4, updated_at = $5
 	WHERE id = $1
@@ -232,12 +228,12 @@ func (s *IndicatorAssessment) UpdateAssessmentResult(ctx context.Context, result
 	defer tx.Rollback()
 
 	updatedAt := time.Now().UTC()
-	updateAssessmentStatusStmt, err := s.db.PrepareContext(ctx, updateAssessmentStatusQuery)
-	_, err = tx.StmtContext(ctx, updateAssessmentStatusStmt).ExecContext(ctx, resultDetail.AssessmentId,
-		store.AssessmentStatus(store.COMPLETED), updatedAt)
-	if err != nil {
-		return fmt.Errorf("failed to update assessment: %w", err)
-	}
+	// updateAssessmentStatusStmt, err := s.db.PrepareContext(ctx, updateAssessmentStatusQuery)
+	// _, err = tx.StmtContext(ctx, updateAssessmentStatusStmt).ExecContext(ctx, resultDetail.AssessmentId,
+	// 	store.AssessmentStatus(store.COMPLETED), updatedAt)
+	// if err != nil {
+	// 	return fmt.Errorf("failed to update assessment: %w", err)
+	// }
 
 	updateIndicatorAssessmentResultStmt, err := s.db.PrepareContext(ctx, updateIndicatorAssessmentResultQuery)
 	_, err = tx.StmtContext(ctx, updateIndicatorAssessmentResultStmt).ExecContext(ctx,

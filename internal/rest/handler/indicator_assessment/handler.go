@@ -18,15 +18,17 @@ type IndicatorAssessmentHandler interface {
 
 type indicatorAssessmentHandler struct {
 	db                       *sql.DB
+	assessmentStore          store.Assessment
 	indicatorAssessmentStore store.IndicatorAssessment
 	userStore                store.User
 	smtpMailer               smtpmailer.Client
 	waClient                 whatsapp.Client
 }
 
-func NewIndicatorAssessmentHandler(db *sql.DB, indicatorAssessmentStore store.IndicatorAssessment, userStore store.User, smtpMailer smtpmailer.Client, waClient whatsapp.Client) IndicatorAssessmentHandler {
+func NewIndicatorAssessmentHandler(db *sql.DB, assessmentStore store.Assessment, indicatorAssessmentStore store.IndicatorAssessment, userStore store.User, smtpMailer smtpmailer.Client, waClient whatsapp.Client) IndicatorAssessmentHandler {
 	return &indicatorAssessmentHandler{
 		db:                       db,
+		assessmentStore:          assessmentStore,
 		indicatorAssessmentStore: indicatorAssessmentStore,
 		userStore:                userStore,
 		smtpMailer:               smtpMailer,
