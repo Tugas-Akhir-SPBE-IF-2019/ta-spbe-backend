@@ -8,6 +8,7 @@ import (
 	assessmenthandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/assessment"
 	authhandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/auth"
 	indicatorassessmenthandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/indicator_assessment"
+	institutionhandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/institution"
 
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/middleware"
 	storepgsql "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store/pgsql"
@@ -57,10 +58,13 @@ func New(
 	assessmentStore := storepgsql.NewAssessment(sqlDB)
 	indicatorAssessmentStore := storepgsql.NewIndicatorAssessment(sqlDB)
 	userStore := storepgsql.NewUser(sqlDB)
+	institutionStore := storepgsql.NewInstitution(sqlDB)
 
 	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, indicatorAssessmentStore, userStore, smtpMailer, whatsAppClient)
 	authHandler := authhandler.NewAuthHandler(sqlDB, userStore, cfg.OAuth, jwt)
 	assessmentHandler := assessmenthandler.NewAssessmentHandler(sqlDB, assessmentStore, cfg.API, userStore, smtpMailer, fileSystemClient, jsonClient, messageQueue, whatsAppClient)
+	institutionHandler := institutionhandler.NewInstitutionHandler(institutionStore)
+
 	r.Route("/auth", func(r chi.Router) {
 		r.Get("/", token.HandleMain)
 		r.Post("/google", authHandler.Google)
@@ -69,6 +73,7 @@ func New(
 
 	r.Get("/metrics", promHandler.ServeHTTP)
 	r.Get("/assessments/index", indicatorAssessmentHandler.GetIndicatorAssessmentIndexList)
+	r.Get("/institutions", institutionHandler.GetInstitutionList)
 	r.Route("/assessments", func(r chi.Router) {
 		r.Use(middleware.JWTAuth(jwt, cfg.DevSettings))
 		r.Get("/", assessmentHandler.GetSPBEAssessmentList)

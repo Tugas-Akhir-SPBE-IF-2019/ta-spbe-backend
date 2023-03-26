@@ -145,12 +145,5 @@ func (handler *assessmentHandler) GetSPBEAssessmentList(w http.ResponseWriter, r
 	resp.TotalPages = int(math.Ceil(float64(totalItems) / float64(req.limit)))
 	resp.Items = items
 
-	log.Println("status")
-	log.Println(req.status)
-	log.Println("start_date")
-	log.Println(req.startDate.UTC())
-	log.Println("end_date")
-	log.Println(req.endDate.UTC())
-
 	response.Respond(w, http.StatusOK, resp)
 }
