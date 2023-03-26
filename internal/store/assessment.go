@@ -45,10 +45,16 @@ type AssessmentStatusHistoryDetail struct {
 	FinishedDate time.Time
 }
 
+type AssessmentDocumentDetail struct {
+	Name string
+	Url  string
+}
+
 type Assessment interface {
 	FindAll(ctx context.Context, queryInstitution string, status int, startDate string, endDate string) ([]*AssessmentDetail, error)
 	FindAllPagination(ctx context.Context, offset int, limit int, queryInstitution string, status int, startDate string, endDate string) ([]*AssessmentDetail, error)
 	InsertUploadDocument(ctx context.Context, assessmentUploadDetail *AssessmentUploadDetail) error
 	UpdateStatus(ctx context.Context, assessmentId string, status AssessmentStatus) error
 	FindAllStatusHistoryById(ctx context.Context, assessmentId string) ([]*AssessmentStatusHistoryDetail, error)
+	FindAllDocumentsById(ctx context.Context, assessmentId string) ([]*AssessmentDocumentDetail, error)
 }

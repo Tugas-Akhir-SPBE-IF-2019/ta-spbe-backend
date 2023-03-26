@@ -317,7 +317,9 @@ func (s *Assessment) UpdateStatus(ctx context.Context, assessmentId string, stat
 const findAllStatusHistoryQueryById = `SELECT ash.status, ash.created_at  
 	FROM assessment_status_histories ash 
 	WHERE ash.assessment_id = $1
+	ORDER BY ash.status ASC
 `
+
 func (s *Assessment) FindAllStatusHistoryById(ctx context.Context, assessmentId string) ([]*store.AssessmentStatusHistoryDetail, error) {
 	assessmentStatusHistoryList := []*store.AssessmentStatusHistoryDetail{}
 
@@ -342,3 +344,31 @@ func (s *Assessment) FindAllStatusHistoryById(ctx context.Context, assessmentId 
 	return assessmentStatusHistoryList, nil
 }
 
+const findAllDocumentsByIdQuery = `SELECT sdd.document_original_name, sdd.document_url 
+	FROM support_data_documents sdd
+	WHERE sdd.assessment_id = $1
+`
+
+func (s *Assessment) FindAllDocumentsById(ctx context.Context, assessmentId string) ([]*store.AssessmentDocumentDetail, error) {
+	assessmentDocumentList := []*store.AssessmentDocumentDetail{}
+
+	rows, err := s.db.QueryContext(ctx, findAllDocumentsByIdQuery, assessmentId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		assessmentDocument := &store.AssessmentDocumentDetail{}
+		err := rows.Scan(
+			&assessmentDocument.Name,
+			&assessmentDocument.Url,
+		)
+		if err != nil {
+			return nil, err
+		}
+		assessmentDocumentList = append(assessmentDocumentList, assessmentDocument)
+	}
+
+	return assessmentDocumentList, nil
+}
