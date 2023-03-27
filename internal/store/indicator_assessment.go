@@ -7,7 +7,7 @@ import (
 
 type IndicatorAssessmentDetail struct {
 	InstitutionName string
-	SpbeIndex       int
+	SpbeIndex       float64
 	SubmittedDate   time.Time
 }
 
@@ -39,8 +39,8 @@ type IndicatorAssessmentResultFeedback struct {
 }
 
 type IndicatorAssessment interface {
-	FindAll(ctx context.Context) ([]*IndicatorAssessmentDetail, error)
-	FindAllPagination(ctx context.Context, offset int, limit int) ([]*IndicatorAssessmentDetail, error)
+	FindAll(ctx context.Context, queryInstitution string, startDate string, endDate string, indexMin float64, indexMax float64) ([]*IndicatorAssessmentDetail, error)
+	FindAllPagination(ctx context.Context, offset int, limit int, queryInstitution string, startDate string, endDate string, indexMin float64, indexMax float64) ([]*IndicatorAssessmentDetail, error)
 	FindIndicatorAssessmentResultById(ctx context.Context, id string) (IndicatorAssessmentResultDetail, error)
 	FindIndicatorAssessmentResultByAssessmentId(ctx context.Context, id string) ([]*IndicatorAssessmentResultDetail, error)
 	ValidateAssessmentResult(ctx context.Context, resultCorrect bool, indicatorAssessmentResult *IndicatorAssessmentResultDetail) error

@@ -59,11 +59,11 @@ func (s *Assessment) FindAll(ctx context.Context, queryInstitution string, statu
 		case "Institution":
 			query = query + fmt.Sprintf(`a.institution_name ILIKE '%%' || $%d || '%%' `, index+1)
 		case "Status":
-			query = query + fmt.Sprintf(`ia.status = $%d `, index+1)
+			query = query + fmt.Sprintf(`a.status = $%d `, index+1)
 		case "StartDate":
-			query = query + fmt.Sprintf(`ia.created_at >= $%d `, index+1)
+			query = query + fmt.Sprintf(`a.created_at >= $%d `, index+1)
 		case "EndDate":
-			query = query + fmt.Sprintf(`ia.created_at <= $%d `, index+1)
+			query = query + fmt.Sprintf(`a.created_at <= $%d `, index+1)
 		}
 	}
 
@@ -130,15 +130,15 @@ func (r *Assessment) FindAllPagination(ctx context.Context, offset int, limit in
 		case "Institution":
 			query = query + fmt.Sprintf(`a.institution_name ILIKE '%%' || $%d || '%%' `, index+3)
 		case "Status":
-			query = query + fmt.Sprintf(`ia.status = $%d `, index+3)
+			query = query + fmt.Sprintf(`a.status = $%d `, index+3)
 		case "StartDate":
-			query = query + fmt.Sprintf(`ia.created_at >= $%d `, index+3)
+			query = query + fmt.Sprintf(`a.created_at >= $%d `, index+3)
 		case "EndDate":
-			query = query + fmt.Sprintf(`ia.created_at <= $%d `, index+3)
+			query = query + fmt.Sprintf(`a.created_at <= $%d `, index+3)
 		}
 	}
 
-	query = query + `LIMIT $2 OFFSET $1 `
+	query = query + `ORDER BY a.created_at DESC LIMIT $2 OFFSET $1 `
 
 	rows, err := r.db.QueryContext(ctx, query, queryParams...)
 	if err != nil {

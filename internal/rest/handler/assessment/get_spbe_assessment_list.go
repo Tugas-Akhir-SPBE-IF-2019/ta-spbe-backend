@@ -72,6 +72,13 @@ func (r *GetAssessmentListRequest) validate() *apierror.FieldError {
 		if err != nil {
 			fieldErr = fieldErr.WithField("end_date", "end_date must be in the format of YYYY-MM-DD!")
 		}
+		dayInt, _ := strconv.Atoi(r.endDateStr[8:10])
+		dayInt++
+		if dayInt < 10 {
+			r.endDateStr = r.endDateStr[0:8] + "0" + strconv.Itoa(dayInt)
+		} else {
+			r.endDateStr = r.endDateStr[0:8] + strconv.Itoa(dayInt)
+		}
 	}
 
 	if len(fieldErr.Fields) != 0 {

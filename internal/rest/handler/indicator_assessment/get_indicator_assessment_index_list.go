@@ -14,10 +14,19 @@ import (
 )
 
 type GetIndicatorAssessmentIndexListRequest struct {
-	pageStr  string
-	limitStr string
-	page     int
-	limit    int
+	institution  string
+	startDateStr string
+	startDate    time.Time
+	endDateStr   string
+	endDate      time.Time
+	indexMinStr  string
+	indexMin     float64
+	indexMaxStr  string
+	indexMax     float64
+	pageStr      string
+	limitStr     string
+	page         int
+	limit        int
 }
 
 func (r *GetIndicatorAssessmentIndexListRequest) validate() *apierror.FieldError {
@@ -44,6 +53,45 @@ func (r *GetIndicatorAssessmentIndexListRequest) validate() *apierror.FieldError
 		fieldErr = fieldErr.WithField("limit", "limit must be a positive integer")
 	}
 
+	if r.startDateStr != "" {
+		r.startDate, err = time.Parse(time.DateOnly, r.startDateStr)
+		if err != nil {
+			fieldErr = fieldErr.WithField("start_date", "start_date must be in the format of YYYY-MM-DD!")
+		}
+	}
+
+	if r.endDateStr != "" {
+		r.endDate, err = time.Parse(time.DateOnly, r.endDateStr)
+		if err != nil {
+			fieldErr = fieldErr.WithField("end_date", "end_date must be in the format of YYYY-MM-DD!")
+		}
+		dayInt, _ := strconv.Atoi(r.endDateStr[8:10])
+		dayInt++
+		if dayInt < 10 {
+			r.endDateStr = r.endDateStr[0:8] + "0" + strconv.Itoa(dayInt)
+		} else {
+			r.endDateStr = r.endDateStr[0:8] + strconv.Itoa(dayInt)
+		}
+	}
+
+	if r.indexMinStr != "" {
+		r.indexMin, err = strconv.ParseFloat(r.indexMinStr, 64)
+		if err != nil {
+			fieldErr = fieldErr.WithField("index_min", "index_min must be a number!")
+		}
+	} else {
+		r.indexMin = -99999 // Hardcoded minimum value
+	}
+
+	if r.indexMaxStr != "" {
+		r.indexMax, err = strconv.ParseFloat(r.indexMaxStr, 64)
+		if err != nil {
+			fieldErr = fieldErr.WithField("index_max", "index_max must be a number!")
+		}
+	} else {
+		r.indexMax = 99999 // Hardcoded maximum value
+	}
+
 	if len(fieldErr.Fields) != 0 {
 		return &fieldErr
 	}
@@ -59,7 +107,7 @@ type IndicatorAssessmentListResponse struct {
 
 type IndicatorAssessmentItem struct {
 	InstitutionName string    `json:"institution_name"`
-	SpbeIndex       int       `json:"spbe_index"`
+	SpbeIndex       float64   `json:"spbe_index"`
 	SubmittedDate   time.Time `json:"submitted_date"`
 }
 
@@ -67,8 +115,13 @@ func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentIndexList(w htt
 	ctx := r.Context()
 
 	req := GetIndicatorAssessmentIndexListRequest{
-		pageStr:  r.URL.Query().Get("page"),
-		limitStr: r.URL.Query().Get("limit"),
+		pageStr:      r.URL.Query().Get("page"),
+		limitStr:     r.URL.Query().Get("limit"),
+		institution:  r.URL.Query().Get("institution"),
+		startDateStr: r.URL.Query().Get("start_date"),
+		endDateStr:   r.URL.Query().Get("end_date"),
+		indexMinStr:  r.URL.Query().Get("index_min"),
+		indexMaxStr:  r.URL.Query().Get("index_max"),
 	}
 
 	fieldErr := req.validate()
@@ -77,7 +130,7 @@ func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentIndexList(w htt
 		return
 	}
 
-	indicatorAssessmentIndexListAll, err := handler.indicatorAssessmentStore.FindAll(ctx)
+	indicatorAssessmentIndexListAll, err := handler.indicatorAssessmentStore.FindAll(ctx, req.institution, req.startDateStr, req.endDateStr, req.indexMin, req.indexMax)
 	if err != nil {
 		log.Println(err)
 		response.Error(w, apierror.InternalServerError())
@@ -86,7 +139,7 @@ func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentIndexList(w htt
 	totalItems := len(indicatorAssessmentIndexListAll)
 
 	offset := req.limit * (req.page - 1)
-	indicatorAssessmentIndexList, err := handler.indicatorAssessmentStore.FindAllPagination(ctx, offset, req.limit)
+	indicatorAssessmentIndexList, err := handler.indicatorAssessmentStore.FindAllPagination(ctx, offset, req.limit, req.institution, req.startDateStr, req.endDateStr, req.indexMin, req.indexMax)
 	if err != nil {
 		log.Println(err)
 		response.Error(w, apierror.InternalServerError())

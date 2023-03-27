@@ -18,16 +18,53 @@ func NewIndicatorAssessment(db *sql.DB) *IndicatorAssessment {
 	return &IndicatorAssessment{db: db}
 }
 
-const indicatorAssessmentFindAllQuery = `SELECT a.institution_name, ia.level, ia.created_at
-		FROM indicator_assessments ia
-		LEFT JOIN assessments a
+const indicatorAssessmentFindAllQuery = `SELECT a.institution_name, AVG(Cast(ia.level AS FLOAT)), a.created_at 
+		FROM assessments a
+		LEFT JOIN indicator_assessments ia 
 		ON ia.assessment_id = a.id
-		WHERE ia.level IS NOT NULL`
+		WHERE ia.level IS NOT NULL `
 
-func (s *IndicatorAssessment) FindAll(ctx context.Context) ([]*store.IndicatorAssessmentDetail, error) {
+func (s *IndicatorAssessment) FindAll(ctx context.Context, queryInstitution string, startDate string, endDate string, indexMin float64, indexMax float64) ([]*store.IndicatorAssessmentDetail, error) {
 	indicatorAssessmentList := []*store.IndicatorAssessmentDetail{}
 
-	rows, err := s.db.QueryContext(ctx, indicatorAssessmentFindAllQuery)
+	var queryKeys []string
+	var queryParams []interface{}
+
+	queryParams = append(queryParams, indexMin, indexMax)
+
+	query := indicatorAssessmentFindAllQuery
+	if queryInstitution != "" {
+		queryKeys = append(queryKeys, "Institution")
+		queryParams = append(queryParams, queryInstitution)
+	}
+
+	if startDate != "" {
+		queryKeys = append(queryKeys, "StartDate")
+		queryParams = append(queryParams, startDate)
+	}
+
+	if endDate != "" {
+		queryKeys = append(queryKeys, "EndDate")
+		queryParams = append(queryParams, endDate)
+	}
+
+	for index, key := range queryKeys {
+		query = query + "AND "
+
+		// +3 is used because $1 and $2 are already used for index
+		switch key {
+		case "Institution":
+			query = query + fmt.Sprintf(`a.institution_name ILIKE '%%' || $%d || '%%' `, index+3)
+		case "StartDate":
+			query = query + fmt.Sprintf(`a.created_at >= $%d `, index+3)
+		case "EndDate":
+			query = query + fmt.Sprintf(`a.created_at <= $%d `, index+3)
+		}
+	}
+
+	query = query + `GROUP BY a.institution_name, a.created_at HAVING AVG(ia.level) >= $1 and AVG(ia.level) <= $2 ORDER BY a.created_at desc `
+
+	rows, err := s.db.QueryContext(ctx, query, queryParams...)
 	if err != nil {
 		return nil, err
 	}
@@ -49,17 +86,47 @@ func (s *IndicatorAssessment) FindAll(ctx context.Context) ([]*store.IndicatorAs
 	return indicatorAssessmentList, nil
 }
 
-const indicatorAssessmentFindAllPaginationQuery = `SELECT a.institution_name, ia.level, ia.created_at
-		FROM indicator_assessments ia
-		LEFT JOIN assessments a
-		ON ia.assessment_id = a.id
-		WHERE ia.level IS NOT NULL
-		LIMIT $2 OFFSET $1`
-
-func (s *IndicatorAssessment) FindAllPagination(ctx context.Context, offset int, limit int) ([]*store.IndicatorAssessmentDetail, error) {
+func (s *IndicatorAssessment) FindAllPagination(ctx context.Context, offset int, limit int, queryInstitution string, startDate string, endDate string, indexMin float64, indexMax float64) ([]*store.IndicatorAssessmentDetail, error) {
 	indicatorAssessmentList := []*store.IndicatorAssessmentDetail{}
 
-	rows, err := s.db.QueryContext(ctx, indicatorAssessmentFindAllPaginationQuery, offset, limit)
+	var queryKeys []string
+	var queryParams []interface{}
+
+	queryParams = append(queryParams, offset, limit, indexMin, indexMax)
+
+	query := indicatorAssessmentFindAllQuery
+	if queryInstitution != "" {
+		queryKeys = append(queryKeys, "Institution")
+		queryParams = append(queryParams, queryInstitution)
+	}
+
+	if startDate != "" {
+		queryKeys = append(queryKeys, "StartDate")
+		queryParams = append(queryParams, startDate)
+	}
+
+	if endDate != "" {
+		queryKeys = append(queryKeys, "EndDate")
+		queryParams = append(queryParams, endDate)
+	}
+
+	for index, key := range queryKeys {
+		query = query + "AND "
+
+		// +5 is used because $1 and $2 are already used for pagination and $3 and $4 are used for index
+		switch key {
+		case "Institution":
+			query = query + fmt.Sprintf(`a.institution_name ILIKE '%%' || $%d || '%%' `, index+5)
+		case "StartDate":
+			query = query + fmt.Sprintf(`a.created_at >= $%d `, index+5)
+		case "EndDate":
+			query = query + fmt.Sprintf(`a.created_at <= $%d `, index+5)
+		}
+	}
+
+	query = query + `GROUP BY a.institution_name, a.created_at HAVING AVG(ia.level) >= $3 and AVG(ia.level) <= $4 ORDER BY a.created_at DESC LIMIT $2 OFFSET $1 `
+
+	rows, err := s.db.QueryContext(ctx, query, queryParams...)
 	if err != nil {
 		return nil, err
 	}
@@ -121,7 +188,8 @@ const indicatorAssessmentResultFindByAssessmentIdQuery = `SELECT ia.id, a.instit
 		ON ia.id = sdd.indicator_assessment_id
 		LEFT JOIN support_data_document_proofs sddp
 		ON ia.id = sddp.indicator_assessment_id
-		WHERE a.id = $1`
+		WHERE a.id = $1
+		ORDER BY i.indicator_number ASC `
 
 func (s *IndicatorAssessment) FindIndicatorAssessmentResultByAssessmentId(ctx context.Context, id string) ([]*store.IndicatorAssessmentResultDetail, error) {
 	assessmentResultList := []*store.IndicatorAssessmentResultDetail{}
