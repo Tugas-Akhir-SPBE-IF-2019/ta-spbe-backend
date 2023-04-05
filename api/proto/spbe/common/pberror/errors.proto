@@ -9,7 +9,7 @@ import "google/protobuf/timestamp.proto";
 import "openapiv3/annotations.proto";
 
 option optimize_for = SPEED;
-option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/common/pberror;pberror";
+option go_package = "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/api/gen/go/spbe/common/pberror;pberror";
 option java_multiple_files = true;
 option java_outer_classname = "PbError";
 option java_package = "com.bfi.common.pberror";

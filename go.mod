@@ -3,7 +3,6 @@ module github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend
 go 1.20
 
 require (
-	github.com/bfi-finance/bfi-protobuf v0.0.0-20230317073158-63176a58db6a
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/cors v1.2.1
 	github.com/golang-jwt/jwt/v4 v4.1.0

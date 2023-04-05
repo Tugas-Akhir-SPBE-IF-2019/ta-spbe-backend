@@ -7,7 +7,7 @@ package bfi.bravorabbitmq.loglevelchanger;
 import "spbe/common/amqpmessage/header.proto";
 
 option optimize_for = SPEED;
-option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravorabbitmq/loglevelchanger;loglevelchanger";
+option go_package = "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/api/gen/go/spbe/bravorabbitmq/loglevelchanger;loglevelchanger";
 option java_multiple_files = true;
 option java_outer_classname = "LogLevelChanger";
 option java_package = "com.bfi.bravorabbitmq.loglevelchanger";

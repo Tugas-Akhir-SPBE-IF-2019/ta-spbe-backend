@@ -5,7 +5,7 @@ syntax = "proto3";
 package bfi.common.amqpmessage;
 
 option optimize_for = SPEED;
-option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/common/amqpmessage;amqpmessage";
+option go_package = "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/api/gen/go/spbe/common/amqpmessage;amqpmessage";
 option java_multiple_files = true;
 option java_outer_classname = "AMQPMessage";
 option java_package = "com.bfi.common.amqpmessage";

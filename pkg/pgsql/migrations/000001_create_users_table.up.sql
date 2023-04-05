@@ -3,6 +3,9 @@ CREATE TABLE IF NOT EXISTS users(
   email TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
   role TEXT NOT NULL,
+  contact_number TEXT,
+  linkedin_profile TEXT,
+  address TEXT,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE
 );

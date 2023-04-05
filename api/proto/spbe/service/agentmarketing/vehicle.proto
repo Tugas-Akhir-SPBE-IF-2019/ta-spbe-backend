@@ -10,7 +10,7 @@ import "google/api/field_behavior.proto";
 import "openapiv3/annotations.proto";
 
 option optimize_for = SPEED;
-option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/bravoservice/agentmarketing;agentmarketing";
+option go_package = "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/api/gen/go/spbe/bravoservice/agentmarketing;agentmarketing";
 option java_multiple_files = true;
 option java_outer_classname = "AgentMarketingVehicle";
 option java_package = "com.bfi.bravoservice.agentmarketing";

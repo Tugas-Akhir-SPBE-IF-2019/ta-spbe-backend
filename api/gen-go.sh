@@ -51,5 +51,5 @@ done
 # MOVE TO IMPORTABLE GO
 rm -Rfv ./gen/go
 mkdir -p ./gen/go
-mv "${outBaseDir}"/github.com/bfi-finance/bfi-protobuf/gen/go/bfi ./gen/go
+mv "${outBaseDir}"/github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/api/gen/go/spbe ./gen/go
 rm -Rfv "${outBaseDir}"

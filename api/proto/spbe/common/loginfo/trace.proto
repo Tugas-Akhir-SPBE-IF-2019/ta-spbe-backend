@@ -7,7 +7,7 @@ package bfi.common.loginfo;
 import "openapiv3/annotations.proto";
 
 option optimize_for = SPEED;
-option go_package = "github.com/bfi-finance/bfi-protobuf/gen/go/bfi/common/loginfo;loginfo";
+option go_package = "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/api/gen/go/spbe/common/loginfo;loginfo";
 option java_multiple_files = true;
 option java_outer_classname = "TraceInfo";
 option java_package = "com.bfi.common.loginfo";
