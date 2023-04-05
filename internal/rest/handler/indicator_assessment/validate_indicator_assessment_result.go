@@ -13,9 +13,10 @@ import (
 )
 
 type ValidateIndicatorAssessmentResultRequest struct {
-	ResultCorrect bool   `json:"result_correct"`
-	CorrectLevel  int    `json:"correct_level"`
-	Explanation   string `json:"explanation"`
+	IndicatorNumber int    `json:"indicator_number"`
+	ResultCorrect   bool   `json:"result_correct"`
+	CorrectLevel    int    `json:"correct_level"`
+	Explanation     string `json:"explanation"`
 }
 
 type ValidateIndicatorAssessmentResultResponse struct {
@@ -24,35 +25,42 @@ type ValidateIndicatorAssessmentResultResponse struct {
 
 func (handler *indicatorAssessmentHandler) ValidateIndicatorAssessmentResult(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	req := ValidateIndicatorAssessmentResultRequest{}
-	indicatorAssessmentId := chi.URLParam(r, "id")
+	reqList := []ValidateIndicatorAssessmentResultRequest{}
+	assessmentId := chi.URLParam(r, "id")
 
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&reqList); err != nil {
 		response.Error(w, apierror.BadRequestError(err.Error()))
 		return
 	}
 
-	indicatorAssessmentResult, err := handler.indicatorAssessmentStore.FindIndicatorAssessmentResultById(ctx, indicatorAssessmentId)
+	indicatorAssessmentResultList, err := handler.indicatorAssessmentStore.FindIndicatorAssessmentResultByAssessmentId(ctx, assessmentId)
 	if err != nil {
 		response.Error(w, apierror.NotFoundError("indicator assessment not found"))
 		return
 	}
 
-	if indicatorAssessmentResult.AssessmentStatus == int(store.AssessmentStatus(store.IN_PROGRESS)) {
-		response.Error(w, apierror.BadRequestError("indicator assessment result is still in progress"))
-		return
-	}
+	for _, req := range reqList {
+		for _, indicatorAssessmentResult := range indicatorAssessmentResultList {
+			if req.IndicatorNumber == indicatorAssessmentResult.Result.IndicatorNumber {
+				if indicatorAssessmentResult.AssessmentStatus == int(store.AssessmentStatus(store.IN_PROGRESS)) {
+					response.Error(w, apierror.BadRequestError("indicator assessment result is still in progress"))
+					return
+				}
 
-	if !req.ResultCorrect {
-		indicatorAssessmentResult.ResultFeedback.Level = req.CorrectLevel
-		indicatorAssessmentResult.ResultFeedback.Feedback = req.Explanation
-	}
+				if !req.ResultCorrect {
+					indicatorAssessmentResult.ResultFeedback.Level = req.CorrectLevel
+					indicatorAssessmentResult.ResultFeedback.Feedback = req.Explanation
+				}
 
-	err = handler.indicatorAssessmentStore.ValidateAssessmentResult(ctx, req.ResultCorrect, &indicatorAssessmentResult)
-	if err != nil {
-		log.Println(err.Error())
-		response.Error(w, apierror.InternalServerError())
-		return
+				err = handler.indicatorAssessmentStore.ValidateAssessmentResult(ctx, req.ResultCorrect, indicatorAssessmentResult)
+				if err != nil {
+					log.Println(err.Error())
+					response.Error(w, apierror.InternalServerError())
+					return
+				}
+				break
+			}
+		}
 	}
 
 	resp := ValidateIndicatorAssessmentResultResponse{
