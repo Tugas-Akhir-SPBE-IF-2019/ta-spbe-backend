@@ -9,7 +9,8 @@ import (
 )
 
 type Config struct {
-	Secret string `toml:"secret"`
+	Secret  string `toml:"secret"`
+	ExpTime int    `toml:"exp_time"`
 }
 
 type JWT interface {
@@ -57,7 +58,7 @@ func (j *jwtImpl) signToken(claim *JWTClaim) (string, error) {
 
 func (j *jwtImpl) CreateAccessToken(claim JWTClaim) (*JWTToken, error) {
 	now := time.Now()
-	expAt := now.Add(30 * time.Minute)
+	expAt := now.Add(time.Duration(j.cfg.ExpTime) * time.Minute)
 	exp := expAt.Unix()
 	iat := now.Unix()
 

@@ -124,7 +124,7 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 		return
 	}
 
-	userCred, ok := r.Context().Value(userCtx.UserCtxKey).(userCtx.UserCtx)
+	userCred, ok := ctx.Value(userCtx.UserCtxKey).(userCtx.UserCtx)
 	if !ok {
 		response.Error(w, apierror.InternalServerError())
 		return
@@ -208,7 +208,7 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 			InstitutionName: req.institutionName,
 		},
 		SupportDataDocumentInfoList: supportDataDocumentInfoList,
-		UserId: userCred.ID,
+		UserId:                      userCred.ID,
 	}
 	for _, indicatorNumber := range req.indicatorNumbers {
 		assessmentUploadDetail.IndicatorAssessmentInfo.IndicatorNumber = indicatorNumber

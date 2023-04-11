@@ -14,12 +14,36 @@ const (
 )
 
 type UserData struct {
-	ID        string
-	Name      string
-	Email     string
-	Role      string
-	CreatedAt time.Time
-	UpdatedAt sql.NullTime
+	ID                 string
+	Name               string
+	Email              string
+	Role               string
+	ContactNumber      string
+	LinkedinProfile    string
+	Address            string
+	ProfilePictureLink string
+	CreatedAt          time.Time
+	UpdatedAt          sql.NullTime
+}
+
+type UserEvaluationData struct {
+	ID              string
+	UserID          string
+	Role            string
+	InstitutionID   int
+	InstitutionName string
+	EvaluationYear  int
+	CreatedAt       time.Time
+	UpdatedAt       sql.NullTime
+}
+
+type UserJobData struct {
+	ID         string
+	UserID     string
+	Role       string
+	Company    string
+	JoinedDate int
+	CreatedAt  time.Time
 }
 
 type User interface {
@@ -28,4 +52,9 @@ type User interface {
 	FindEmailAndPassword(ctx context.Context, email string) (*UserData, error)
 	FindAdmin(ctx context.Context, email string) (*UserData, error)
 	Insert(ctx context.Context, user *UserData) error
+	FindEvaluationDataByUserID(ctx context.Context, id string) ([]*UserEvaluationData, error)
+	FindJobDataByUserID(ctx context.Context, id string) ([]*UserJobData, error)
+	InsertEvaluationData(ctx context.Context, evaluationData *UserEvaluationData) error
+	InsertJobData(ctx context.Context, jobData *UserJobData) error
+	UpdateByID(ctx context.Context, user *UserData) error
 }

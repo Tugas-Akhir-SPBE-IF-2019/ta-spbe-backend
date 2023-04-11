@@ -9,6 +9,7 @@ import (
 	authhandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/auth"
 	indicatorassessmenthandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/indicator_assessment"
 	institutionhandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/institution"
+	userhandler "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/user"
 
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/middleware"
 	storepgsql "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store/pgsql"
@@ -64,11 +65,13 @@ func New(
 	authHandler := authhandler.NewAuthHandler(sqlDB, userStore, cfg.OAuth, jwt)
 	assessmentHandler := assessmenthandler.NewAssessmentHandler(sqlDB, assessmentStore, cfg.API, userStore, smtpMailer, fileSystemClient, jsonClient, messageQueue, whatsAppClient)
 	institutionHandler := institutionhandler.NewInstitutionHandler(institutionStore)
+	userHandler := userhandler.NewUserHandler(sqlDB, userStore)
 
 	r.Route("/auth", func(r chi.Router) {
 		r.Get("/", token.HandleMain)
 		r.Post("/google", authHandler.Google)
 		r.Get("/google/callback", authHandler.GoogleCallback)
+		r.Post("/google/validate", authHandler.GoogleValidate)
 	})
 
 	r.Get("/metrics", promHandler.ServeHTTP)
@@ -83,6 +86,17 @@ func New(
 		r.Patch("/{id}/validate", indicatorAssessmentHandler.ValidateIndicatorAssessmentResult)
 		r.Post("/documents/upload", assessmentHandler.UploadSPBEDocument)
 
+	})
+
+	r.Route("/users", func(r chi.Router) {
+		r.Use(middleware.JWTAuth(jwt, cfg.DevSettings))
+		r.Get("/profile", userHandler.GetUserProfile)
+		r.Get("/evaluation", userHandler.GetUserEvaluationData)
+		r.Get("/job", userHandler.GetUserJobData)
+
+		r.Post("/evaluation", userHandler.AddUserEvaluationData)
+		r.Post("/job", userHandler.AddUserJobData)
+		r.Post("/profile", userHandler.UpdateUserProfile)
 	})
 
 	r.Post("/assessments/result/callback", indicatorAssessmentHandler.ResultCallback)

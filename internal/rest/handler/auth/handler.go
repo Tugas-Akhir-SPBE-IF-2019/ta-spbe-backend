@@ -12,6 +12,7 @@ import (
 type AuthHandler interface {
 	Google(w http.ResponseWriter, r *http.Request)
 	GoogleCallback(w http.ResponseWriter, r *http.Request)
+	GoogleValidate(w http.ResponseWriter, r *http.Request)
 }
 
 type authHandler struct {
