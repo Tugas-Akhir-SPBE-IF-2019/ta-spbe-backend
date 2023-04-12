@@ -46,17 +46,17 @@ type UploadProducerMessage struct {
 	IndicatorAssessmentId string
 	Filename              string
 	Timestamp             string
+	IndicatorNumber       string
 }
 
 func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldError {
-	var err error
 	fieldErr := apierror.NewFieldError()
 
 	if err := r.ParseMultipartForm(MAX_UPLOAD_SIZE); err != nil {
 		fieldErr = fieldErr.WithField("supporting_document", "the uploaded file is too big! The maximum allowed size is 1MB")
 	}
 
-	fhs := r.MultipartForm.File["supporting_document"]
+	fhs := r.MultipartForm.File["supporting_document[]"]
 	for _, fh := range fhs {
 		req.supportingDocumenFileHeaderList = append(req.supportingDocumenFileHeaderList, fh)
 	}
@@ -64,10 +64,10 @@ func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldE
 		fieldErr = fieldErr.WithField("supporting_document", "supporting document is missing")
 	}
 
-	req.supportingDocumentFile, req.supportingDocumentFileHeader, err = r.FormFile("supporting_document")
-	if err != nil {
-		fieldErr = fieldErr.WithField("supporting_document", "supporting document is missing")
-	}
+	// req.supportingDocumentFile, req.supportingDocumentFileHeader, err = r.FormFile("supporting_document")
+	// if err != nil {
+	// 	fieldErr = fieldErr.WithField("supporting_document", "supporting document is missing")
+	// }
 
 	req.institutionName = strings.TrimSpace(req.institutionName)
 	if req.institutionName == "" {
@@ -229,6 +229,7 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 			IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
 			Filename:              assessmentUploadDetail.SupportDataDocumentInfoList[0].DocumentName, // WIP need to be updated later
 			Timestamp:             time.Now().UTC().String(),
+			IndicatorNumber:       strconv.Itoa(indicatorNumber),
 		}
 
 		producerPayload, err := handler.jsonClient.Marshal(msg)
