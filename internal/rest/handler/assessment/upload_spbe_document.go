@@ -116,7 +116,7 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 	}
 
 	r.ParseForm()
-	req.indicatorNumbersStr = r.Form["indicator_number"]
+	req.indicatorNumbersStr = r.Form["indicator_number[]"]
 
 	fieldErr := req.validate(r)
 	if fieldErr != nil {
