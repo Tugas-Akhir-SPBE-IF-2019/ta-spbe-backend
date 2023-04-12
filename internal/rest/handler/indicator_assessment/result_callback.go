@@ -11,15 +11,16 @@ import (
 	apierror "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/error"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/response"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store"
+	"github.com/google/uuid"
 
 	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"google.golang.org/protobuf/proto"
 )
 
 type ProofItem struct {
-	Text           string   `json:"text"`
-	PictureUrlList []string `json:"picture_url_list"`
-	PageList       []int    `json:"page_list"`
+	Text                string   `json:"text"`
+	PictureUrlList      []string `json:"picture_url_list"`
+	DocumentPageUrlList []string `json:"document_page_url_list"`
 }
 
 type IndicatorAssessmentResultCallbackRequest struct {
@@ -63,6 +64,21 @@ func (handler *indicatorAssessmentHandler) ResultCallback(w http.ResponseWriter,
 		log.Println(err.Error())
 		response.Error(w, apierror.InternalServerError())
 		return
+	}
+
+	for idx, pictureUrl := range req.Proof.PictureUrlList {
+		proof := store.IndicatorAssessmentProofData{
+			ID:                    uuid.NewString(),
+			IndicatorAssessmentID: req.IndicatorAssessmentId,
+			ImageURL:              fmt.Sprintf("http://%s/static/%s", handler.apiCfg.Host, pictureUrl),
+			DocumentURL:           fmt.Sprintf("http://%s/static/%s", handler.apiCfg.Host, req.Proof.DocumentPageUrlList[idx]),
+		}
+		err := handler.indicatorAssessmentStore.InsertProofData(ctx, &proof)
+		if err != nil {
+			log.Println(err.Error())
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
 	}
 
 	resultList, err := handler.indicatorAssessmentStore.FindIndicatorAssessmentResultByAssessmentId(ctx, req.AssessmentId)

@@ -328,12 +328,17 @@ def highlight(filename, searchstr, action):
     page_with_matches = list(dict.fromkeys(page_with_matches))
     pdfDoc = fitz.open(filename)
     proof_pic_files = []
+    clean_filenames = []
     for page in (page_with_matches):
         pix = pdfDoc[page - 1].get_pixmap()
         pic_filename = f"{filename}-page-{page}.png"
         pix.save(pic_filename)
-        proof_pic_files.append(pic_filename)
-    return proof_pic_files, page_with_matches
+
+        clean_filename = filename.split("/")[-1]
+        clean_pic_filename = f"{clean_filename}-page-{page}.png"
+        proof_pic_files.append(clean_pic_filename)
+        clean_filenames.append(clean_filename+f"#page={page}")
+    return proof_pic_files, clean_filenames
 
 # filename = 'F2201-287-Indikator_01_+_Indikator1_Perbup_81_tahun_2021.pdf'
 # test = "domain Arsitektur Proses Bisnis, b. domain Arsitektur data dan informasi, c. domain Arsitektur Infrastruktur SPBE, d. domain Arsitektur Aplikasi SPBE, e. domain Arsitektur Keamanan SPBE, f. domain Arsitektur Layanan SPBE, (7)  Untuk  menyelaraskan  Arsitektur  SPBE  Pemerintah Daerah  dengan  Arsitektur  SPBE  Nasional,  Bupati berkoordinasi  dan  dapat  melakukan  konsultasi  dengan menteri yang menyelenggarakan urusan pemerintahan di bidang aparatur Negara"

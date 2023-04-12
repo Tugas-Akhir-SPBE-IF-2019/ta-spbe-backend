@@ -46,6 +46,20 @@ func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentResultGetIndica
 
 	result := make([]IndicatorAssessmentResultItem, len(indicatorAssessmentList))
 	for idx, indicatorAssessment := range indicatorAssessmentList {
+		indicatorAssessmentProofList, err := handler.indicatorAssessmentStore.FindProofDataByIndicatorAssessmentId(ctx, indicatorAssessment.IndicatorAssessmentId)
+		if err != nil {
+			response.Error(w, apierror.NotFoundError("indicator assessment proof not found"))
+			return
+		}
+
+		photoProofList := make([]PhotoProofItem, len(indicatorAssessmentProofList))
+		for idx, indicatorAssessmentProof := range indicatorAssessmentProofList {
+			photoProofList[idx] = PhotoProofItem{
+				PhotoLink:    indicatorAssessmentProof.ImageURL,
+				DocumentLink: indicatorAssessmentProof.DocumentURL,
+			}
+		}
+
 		resultItem := IndicatorAssessmentResultItem{
 			Domain:              indicatorAssessment.Result.Domain,
 			Aspect:              indicatorAssessment.Result.Aspect,
@@ -55,20 +69,7 @@ func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentResultGetIndica
 			SupportDocument:     indicatorAssessment.Result.SupportDocument,
 			SupportDocumentName: indicatorAssessment.Result.SupportDocumentName,
 			Proof:               indicatorAssessment.Result.Proof,
-			PhotoProof: []PhotoProofItem{
-				{
-					PhotoLink:    "http://localhost/static/messageImage_1681272188415.jpg",
-					DocumentLink: "http://localhost/static/messageImage_1681272188415.pdf#page=10",
-				},
-				{
-					PhotoLink:    "http://localhost/static/messageImage_1681272188415.jpg",
-					DocumentLink: "http://localhost/static/messageImage_1681272188415.pdf#page=10",
-				},
-				{
-					PhotoLink:    "http://localhost/static/messageImage_1681272188415.jpg",
-					DocumentLink: "http://localhost/static/messageImage_1681272188415.pdf#page=10",
-				},
-			},
+			PhotoProof:          photoProofList,
 		}
 		result[idx] = resultItem
 	}

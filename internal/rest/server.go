@@ -61,7 +61,7 @@ func New(
 	userStore := storepgsql.NewUser(sqlDB)
 	institutionStore := storepgsql.NewInstitution(sqlDB)
 
-	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, assessmentStore, indicatorAssessmentStore, userStore, smtpMailer, whatsAppClient)
+	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, assessmentStore, indicatorAssessmentStore, userStore, smtpMailer, whatsAppClient, cfg.API)
 	authHandler := authhandler.NewAuthHandler(sqlDB, userStore, cfg.OAuth, jwt)
 	assessmentHandler := assessmenthandler.NewAssessmentHandler(sqlDB, assessmentStore, cfg.API, userStore, smtpMailer, fileSystemClient, jsonClient, messageQueue, whatsAppClient)
 	institutionHandler := institutionhandler.NewInstitutionHandler(institutionStore)

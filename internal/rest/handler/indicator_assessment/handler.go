@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/config"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/smtpmailer"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/pkg/whatsapp"
@@ -23,9 +24,10 @@ type indicatorAssessmentHandler struct {
 	userStore                store.User
 	smtpMailer               smtpmailer.Client
 	waClient                 whatsapp.Client
+	apiCfg                   config.API
 }
 
-func NewIndicatorAssessmentHandler(db *sql.DB, assessmentStore store.Assessment, indicatorAssessmentStore store.IndicatorAssessment, userStore store.User, smtpMailer smtpmailer.Client, waClient whatsapp.Client) IndicatorAssessmentHandler {
+func NewIndicatorAssessmentHandler(db *sql.DB, assessmentStore store.Assessment, indicatorAssessmentStore store.IndicatorAssessment, userStore store.User, smtpMailer smtpmailer.Client, waClient whatsapp.Client, apiCfg config.API) IndicatorAssessmentHandler {
 	return &indicatorAssessmentHandler{
 		db:                       db,
 		assessmentStore:          assessmentStore,
@@ -33,5 +35,6 @@ func NewIndicatorAssessmentHandler(db *sql.DB, assessmentStore store.Assessment,
 		userStore:                userStore,
 		smtpMailer:               smtpMailer,
 		waClient:                 waClient,
+		apiCfg: apiCfg,
 	}
 }

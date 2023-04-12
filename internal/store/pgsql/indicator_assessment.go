@@ -326,3 +326,68 @@ func (s *IndicatorAssessment) UpdateAssessmentResult(ctx context.Context, result
 
 	return nil
 }
+
+const indicatorAssessmentProofInsert = `INSERT INTO
+indicator_assessment_proofs(
+	id, indicator_assessment_id, image_url, document_url, created_at
+) values(
+	$1, $2, $3, $4, $5	
+)
+`
+
+func (s *IndicatorAssessment) InsertProofData(ctx context.Context, proofData *store.IndicatorAssessmentProofData) error {
+	insertStmt, err := s.db.PrepareContext(ctx, indicatorAssessmentProofInsert)
+	if err != nil {
+		return err
+	}
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	createdAt := time.Now().UTC()
+	_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
+		proofData.ID, proofData.IndicatorAssessmentID, proofData.ImageURL, proofData.DocumentURL, createdAt,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to insert: %w", err)
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit: %w", err)
+	}
+	proofData.CreatedAt = createdAt
+
+	return nil
+
+}
+
+const proofDataFindAllByIndicatorAssessmentIdQuery = `SELECT iap.id, iap.indicator_assessment_id, iap.image_url, iap.document_url, iap.created_at
+	FROM indicator_assessment_proofs iap
+	WHERE iap.indicator_assessment_id = $1
+`
+
+func (s *IndicatorAssessment) FindProofDataByIndicatorAssessmentId(ctx context.Context, id string) ([]*store.IndicatorAssessmentProofData, error) {
+	proofResultList := []*store.IndicatorAssessmentProofData{}
+
+	rows, err := s.db.QueryContext(ctx, proofDataFindAllByIndicatorAssessmentIdQuery, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		proofResult := &store.IndicatorAssessmentProofData{}
+		err := rows.Scan(
+			&proofResult.ID, &proofResult.IndicatorAssessmentID,
+			&proofResult.ImageURL, &proofResult.DocumentURL, &proofResult.CreatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		proofResultList = append(proofResultList, proofResult)
+	}
+
+	return proofResultList, nil
+}

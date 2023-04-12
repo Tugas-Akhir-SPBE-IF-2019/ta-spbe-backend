@@ -45,6 +45,7 @@ type UploadProducerMessage struct {
 	AssessmentId          string
 	IndicatorAssessmentId string
 	Filename              string
+	OriginalFilename      string
 	Timestamp             string
 	IndicatorNumber       string
 }

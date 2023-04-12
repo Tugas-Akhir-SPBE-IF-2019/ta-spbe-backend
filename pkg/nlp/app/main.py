@@ -64,7 +64,7 @@ def send_result(message_data, config):
         "proof": {
             "text": text_proof,
             "picture_url_list": proof_pic_files,
-            "page_list": proof_pages
+            "document_page_url_list": proof_pages
         }
     }
     requests.post(url = callback_endpoint, json = payload)  
