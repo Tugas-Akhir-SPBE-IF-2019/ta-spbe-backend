@@ -271,13 +271,51 @@ const updateUser = `UPDATE users SET
 	contact_number = COALESCE($4, contact_number),
 	linkedin_profile = COALESCE($5, linkedin_profile),
 	address = COALESCE($6, address),
-	profile_picture_link = COALESCE($7, profile_picture_link),
-	updated_at = $8
+	updated_at = $7
 	WHERE id = $1
 `
 
 func (s *User) UpdateByID(ctx context.Context, user *store.UserData) error {
 	updateStmt, err := s.db.PrepareContext(ctx, updateUser)
+	if err != nil {
+		return err
+	}
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	updatedAt := time.Now().UTC()
+	_, err = tx.StmtContext(ctx, updateStmt).ExecContext(ctx,
+		user.ID, user.Email, user.Name,
+		user.ContactNumber, user.LinkedinProfile,
+		user.Address, updatedAt,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to update: %w", err)
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit: %w", err)
+	}
+
+	return nil
+}
+
+const updateUserWithPhoto = `UPDATE users SET
+	email = COALESCE($2, email),
+	name = COALESCE($3, name),
+	contact_number = COALESCE($4, contact_number),
+	linkedin_profile = COALESCE($5, linkedin_profile),
+	address = COALESCE($6, address),
+	profile_picture_link = COALESCE($7, profile_picture_link),
+	updated_at = $8
+	WHERE id = $1
+`
+
+func (s *User) UpdateWithPhotoByID(ctx context.Context, user *store.UserData) error {
+	updateStmt, err := s.db.PrepareContext(ctx, updateUserWithPhoto)
 	if err != nil {
 		return err
 	}

@@ -65,7 +65,7 @@ func New(
 	authHandler := authhandler.NewAuthHandler(sqlDB, userStore, cfg.OAuth, jwt)
 	assessmentHandler := assessmenthandler.NewAssessmentHandler(sqlDB, assessmentStore, cfg.API, userStore, smtpMailer, fileSystemClient, jsonClient, messageQueue, whatsAppClient)
 	institutionHandler := institutionhandler.NewInstitutionHandler(institutionStore)
-	userHandler := userhandler.NewUserHandler(sqlDB, userStore)
+	userHandler := userhandler.NewUserHandler(cfg.API, sqlDB, userStore, fileSystemClient)
 
 	r.Route("/auth", func(r chi.Router) {
 		r.Get("/", token.HandleMain)
@@ -96,7 +96,7 @@ func New(
 
 		r.Post("/evaluation", userHandler.AddUserEvaluationData)
 		r.Post("/job", userHandler.AddUserJobData)
-		r.Post("/profile", userHandler.UpdateUserProfile)
+		r.Put("/profile", userHandler.UpdateUserProfile)
 	})
 
 	r.Post("/assessments/result/callback", indicatorAssessmentHandler.ResultCallback)

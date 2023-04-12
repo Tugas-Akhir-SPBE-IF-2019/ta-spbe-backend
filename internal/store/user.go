@@ -57,4 +57,5 @@ type User interface {
 	InsertEvaluationData(ctx context.Context, evaluationData *UserEvaluationData) error
 	InsertJobData(ctx context.Context, jobData *UserJobData) error
 	UpdateByID(ctx context.Context, user *UserData) error
+	UpdateWithPhotoByID(ctx context.Context, user *UserData) error
 }
