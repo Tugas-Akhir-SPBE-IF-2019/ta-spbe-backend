@@ -48,6 +48,8 @@ type UploadProducerMessage struct {
 	OriginalFilename      string
 	Timestamp             string
 	IndicatorNumber       string
+	IndicatorDetail       string
+	InstitutionName       string
 }
 
 func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldError {
@@ -220,6 +222,13 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 			return
 		}
 
+		indicatorData, err := handler.indicatoreAssessmentStore.FindIndicatorDetailByIndicatorNumber(ctx, indicatorNumber)
+		if err != nil {
+			log.Println(err)
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+
 		topic := "SPBE_Assessment"
 		msg := UploadProducerMessage{
 			Name:                  assessmentUploadDetail.AssessmentDetail.InstitutionName,
@@ -229,8 +238,11 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 			AssessmentId:          assessmentUploadDetail.AssessmentDetail.Id,
 			IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
 			Filename:              assessmentUploadDetail.SupportDataDocumentInfoList[0].DocumentName, // WIP need to be updated later
+			OriginalFilename:      supportDataDocumentInfoList[0].OriginalDocumentName,
 			Timestamp:             time.Now().UTC().String(),
 			IndicatorNumber:       strconv.Itoa(indicatorNumber),
+			IndicatorDetail:       indicatorData.Detail,
+			InstitutionName:       req.institutionName,
 		}
 
 		producerPayload, err := handler.jsonClient.Marshal(msg)

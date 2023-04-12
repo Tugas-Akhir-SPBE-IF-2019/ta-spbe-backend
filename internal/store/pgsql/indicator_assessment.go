@@ -391,3 +391,21 @@ func (s *IndicatorAssessment) FindProofDataByIndicatorAssessmentId(ctx context.C
 
 	return proofResultList, nil
 }
+
+const indicatorDetailFindByIndicatorNumberQuery = `SELECT i.id, i.indicator_number, i.aspect, i.domain, i.detail, i.created_at
+FROM indicators i
+WHERE i.indicator_number = $1`
+
+func (s *IndicatorAssessment) FindIndicatorDetailByIndicatorNumber(ctx context.Context, indicatorNumber int) (store.IndicatorData, error) {
+	indicatorDetail := store.IndicatorData{}
+
+	row := s.db.QueryRowContext(ctx, indicatorDetailFindByIndicatorNumberQuery, indicatorNumber)
+	err := row.Scan(
+		&indicatorDetail.ID, &indicatorDetail.IndicatorNumber, &indicatorDetail.Aspect, &indicatorDetail.Domain, &indicatorDetail.Detail, &indicatorDetail.CreatedAt,
+	)
+	if err != nil {
+		return indicatorDetail, err
+	}
+
+	return indicatorDetail, nil
+}

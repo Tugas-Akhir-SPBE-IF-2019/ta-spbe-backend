@@ -63,7 +63,7 @@ func New(
 
 	indicatorAssessmentHandler := indicatorassessmenthandler.NewIndicatorAssessmentHandler(sqlDB, assessmentStore, indicatorAssessmentStore, userStore, smtpMailer, whatsAppClient, cfg.API)
 	authHandler := authhandler.NewAuthHandler(sqlDB, userStore, cfg.OAuth, jwt)
-	assessmentHandler := assessmenthandler.NewAssessmentHandler(sqlDB, assessmentStore, cfg.API, userStore, smtpMailer, fileSystemClient, jsonClient, messageQueue, whatsAppClient)
+	assessmentHandler := assessmenthandler.NewAssessmentHandler(sqlDB, assessmentStore, indicatorAssessmentStore, cfg.API, userStore, smtpMailer, fileSystemClient, jsonClient, messageQueue, whatsAppClient)
 	institutionHandler := institutionhandler.NewInstitutionHandler(institutionStore)
 	userHandler := userhandler.NewUserHandler(cfg.API, sqlDB, userStore, fileSystemClient)
 

@@ -338,7 +338,7 @@ def highlight(filename, searchstr, action):
         clean_pic_filename = f"{clean_filename}-page-{page}.png"
         proof_pic_files.append(clean_pic_filename)
         clean_filenames.append(clean_filename+f"#page={page}")
-    return proof_pic_files, clean_filenames
+    return proof_pic_files, clean_filenames, page_with_matches
 
 # filename = 'F2201-287-Indikator_01_+_Indikator1_Perbup_81_tahun_2021.pdf'
 # test = "domain Arsitektur Proses Bisnis, b. domain Arsitektur data dan informasi, c. domain Arsitektur Infrastruktur SPBE, d. domain Arsitektur Aplikasi SPBE, e. domain Arsitektur Keamanan SPBE, f. domain Arsitektur Layanan SPBE, (7)  Untuk  menyelaraskan  Arsitektur  SPBE  Pemerintah Daerah  dengan  Arsitektur  SPBE  Nasional,  Bupati berkoordinasi  dan  dapat  melakukan  konsultasi  dengan menteri yang menyelenggarakan urusan pemerintahan di bidang aparatur Negara"

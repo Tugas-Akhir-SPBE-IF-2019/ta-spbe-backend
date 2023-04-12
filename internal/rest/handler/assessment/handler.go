@@ -24,6 +24,7 @@ type assessmentHandler struct {
 	apiCfg           config.API
 	db               *sql.DB
 	assessmentStore  store.Assessment
+	indicatoreAssessmentStore store.IndicatorAssessment
 	userStore        store.User
 	smtpMailer       smtpmailer.Client
 	filesystemClient filesystem.Client
@@ -32,11 +33,12 @@ type assessmentHandler struct {
 	waClient         whatsapp.Client
 }
 
-func NewAssessmentHandler(db *sql.DB, assessmentStore store.Assessment, apiCfg config.API, userStore store.User, smtpMailer smtpmailer.Client, filesystemClient filesystem.Client, jsonClient jsonmanipulator.Client, messageQueue messagequeue.Client, waClient whatsapp.Client) AssessmentHandler {
+func NewAssessmentHandler(db *sql.DB, assessmentStore store.Assessment, indicatorAssessmentStore store.IndicatorAssessment,apiCfg config.API, userStore store.User, smtpMailer smtpmailer.Client, filesystemClient filesystem.Client, jsonClient jsonmanipulator.Client, messageQueue messagequeue.Client, waClient whatsapp.Client) AssessmentHandler {
 	return &assessmentHandler{
 		apiCfg:           apiCfg,
 		db:               db,
 		assessmentStore:  assessmentStore,
+		indicatoreAssessmentStore: indicatorAssessmentStore,
 		userStore:        userStore,
 		smtpMailer:       smtpMailer,
 		filesystemClient: filesystemClient,

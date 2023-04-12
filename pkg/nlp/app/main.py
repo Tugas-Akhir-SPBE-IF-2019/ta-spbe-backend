@@ -22,11 +22,14 @@ import nsq, ast, toml, logging, requests, threading
 
 def send_result(message_data, config):
     filename = "./src/static/" + message_data['Filename']
+    original_filename = message_data['OriginalFilename']
 
     (instansibaru, judulbaru) = dokbaru.pdfparser(filename)
     (instansilama, judullama) = doklama.pdfparser(filename)
 
     indicator_number = int(message_data['IndicatorNumber'])
+    indicator_detail = (message_data['IndicatorDetail'])
+    institution_name = (message_data['InstitutionName'])
     
     text_proof = ""
     if indicator_number == 1:
@@ -50,7 +53,20 @@ def send_result(message_data, config):
     elif indicator_number == 10:
         text_proof = indikator10.ceklvl(filename)
     
-    proof_pic_files, proof_pages = highlight_pdf.highlight(filename, text_proof, 'Highlight')
+    proof_pic_files, proof_pages, page_with_matches = highlight_pdf.highlight(filename, text_proof, 'Highlight')
+
+    page_text = ""
+    for idx, page in enumerate(page_with_matches):
+        if idx == 0:
+            page_text += str(page)
+        elif idx < len(proof_pages) - 1:
+            page_text += f", {page}"
+        else:
+            if idx == 1:
+                page_text += f" dan {page}"
+            else:
+                page_text += f", dan {page}"
+    explanation_text = f"Verifikasi dan validasi telah dilakukan terhadap penjelasan dan data dukung pada Indikator {indicator_number} {indicator_detail} pada {institution_name}, dimana tercantum dalam {judulbaru}, yaitu pada halaman {page_text} sesuai data dukung  {original_filename}"
 
     callback_endpoint = 'http://' + config['server']['host'] + '/assessments/result/callback'
     payload = {
@@ -59,7 +75,7 @@ def send_result(message_data, config):
         "recipient_number": message_data['RecipientNumber'],
         "indicator_assessment_id": message_data['IndicatorAssessmentId'],
         "level": 5,
-        "explanation": "berdasarkan data dukung yang diberikan, level yang sesuai adalah level 5",
+        "explanation": explanation_text,
         "support_data_document_id": message_data['Content'],
         "proof": {
             "text": text_proof,

@@ -47,6 +47,16 @@ type IndicatorAssessmentProofData struct {
 	UpdatedAt             time.Time
 }
 
+type IndicatorData struct {
+	ID              string
+	IndicatorNumber int
+	Aspect          string
+	Domain          string
+	Detail          string
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
+}
+
 type IndicatorAssessment interface {
 	FindAll(ctx context.Context, queryInstitution string, startDate string, endDate string, indexMin float64, indexMax float64) ([]*IndicatorAssessmentDetail, error)
 	FindAllPagination(ctx context.Context, offset int, limit int, queryInstitution string, startDate string, endDate string, indexMin float64, indexMax float64) ([]*IndicatorAssessmentDetail, error)
@@ -55,5 +65,7 @@ type IndicatorAssessment interface {
 	ValidateAssessmentResult(ctx context.Context, resultCorrect bool, indicatorAssessmentResult *IndicatorAssessmentResultDetail) error
 	UpdateAssessmentResult(ctx context.Context, resultDetail *IndicatorAssessmentResultDetail) error
 	InsertProofData(ctx context.Context, proofData *IndicatorAssessmentProofData) error
-	FindProofDataByIndicatorAssessmentId(ctx context.Context, id string) ([]*IndicatorAssessmentProofData, error )
+	FindProofDataByIndicatorAssessmentId(ctx context.Context, id string) ([]*IndicatorAssessmentProofData, error)
+	FindIndicatorDetailByIndicatorNumber(ctx context.Context, indicatorNumber int) (IndicatorData, error)
+
 }
