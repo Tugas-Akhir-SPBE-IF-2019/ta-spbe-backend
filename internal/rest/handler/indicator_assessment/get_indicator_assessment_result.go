@@ -10,16 +10,22 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+type PhotoProofItem struct {
+	PhotoLink    string `json:"photo_link"`
+	DocumentLink string `json:"document_link"`
+}
+
 type IndicatorAssessmentResultItem struct {
-	Domain              string `json:"domain"`
-	Aspect              string `json:"aspect"`
-	IndicatorNumber     int    `json:"indicator_number"`
-	Level               int    `json:"level"`
-	Explanation         string `json:"explanation"`
-	SupportDocument     string `json:"support_document"`
-	SupportDocumentName string `json:"support_document_name"`
-	OldDocument         string `json:"old_document"`
-	Proof               string `json:"proof"`
+	Domain              string           `json:"domain"`
+	Aspect              string           `json:"aspect"`
+	IndicatorNumber     int              `json:"indicator_number"`
+	Level               int              `json:"level"`
+	Explanation         string           `json:"explanation"`
+	SupportDocument     string           `json:"support_document"`
+	SupportDocumentName string           `json:"support_document_name"`
+	OldDocument         string           `json:"old_document"`
+	Proof               string           `json:"proof"`
+	PhotoProof          []PhotoProofItem `json:"photo_proof"`
 }
 
 type IndicatorAssessmentResultResponse struct {
@@ -49,6 +55,20 @@ func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentResultGetIndica
 			SupportDocument:     indicatorAssessment.Result.SupportDocument,
 			SupportDocumentName: indicatorAssessment.Result.SupportDocumentName,
 			Proof:               indicatorAssessment.Result.Proof,
+			PhotoProof: []PhotoProofItem{
+				{
+					PhotoLink:    "http://localhost/static/messageImage_1681272188415.jpg",
+					DocumentLink: "http://localhost/static/messageImage_1681272188415.pdf#page=10",
+				},
+				{
+					PhotoLink:    "http://localhost/static/messageImage_1681272188415.jpg",
+					DocumentLink: "http://localhost/static/messageImage_1681272188415.pdf#page=10",
+				},
+				{
+					PhotoLink:    "http://localhost/static/messageImage_1681272188415.jpg",
+					DocumentLink: "http://localhost/static/messageImage_1681272188415.pdf#page=10",
+				},
+			},
 		}
 		result[idx] = resultItem
 	}
