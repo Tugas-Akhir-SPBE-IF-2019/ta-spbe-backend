@@ -16,15 +16,21 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+type ProofItem struct {
+	Text           string   `json:"text"`
+	PictureUrlList []string `json:"picture_url_list"`
+	PageList       []int    `json:"page_list"`
+}
+
 type IndicatorAssessmentResultCallbackRequest struct {
-	UserId                string `json:"user_id"`
-	AssessmentId          string `json:"assessment_id"`
-	IndicatorAssessmentId string `json:"indicator_assessment_id"`
-	Level                 int    `json:"level"`
-	RecipientNumber       string `json:"recipient_number"`
-	Explanation           string `json:"explanation"`
-	SupportDataDocumentId string `json:"support_data_document_id"`
-	Proof                 string `json:"proof"`
+	UserId                string    `json:"user_id"`
+	AssessmentId          string    `json:"assessment_id"`
+	IndicatorAssessmentId string    `json:"indicator_assessment_id"`
+	Level                 int       `json:"level"`
+	RecipientNumber       string    `json:"recipient_number"`
+	Explanation           string    `json:"explanation"`
+	SupportDataDocumentId string    `json:"support_data_document_id"`
+	Proof                 ProofItem `json:"proof"`
 }
 
 type ValidateIndicatorAssessmentResultResponseS struct {
@@ -48,7 +54,7 @@ func (handler *indicatorAssessmentHandler) ResultCallback(w http.ResponseWriter,
 			Level:           req.Level,
 			Explanation:     req.Explanation,
 			SupportDocument: req.SupportDataDocumentId,
-			Proof:           req.Proof,
+			Proof:           req.Proof.Text,
 		},
 	}
 
@@ -67,7 +73,7 @@ func (handler *indicatorAssessmentHandler) ResultCallback(w http.ResponseWriter,
 	}
 
 	// Check if all result have already been completed
-	// WIP 
+	// WIP
 	// Still buggy because of concurrency problem
 	isCompleted := true
 	for _, res := range resultList {

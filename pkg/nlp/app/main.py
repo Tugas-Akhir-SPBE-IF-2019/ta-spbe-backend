@@ -14,6 +14,7 @@ import text_finding.indikator06 as indikator06
 import text_finding.indikator07 as indikator07
 import text_finding.indikator08 as indikator08
 import text_finding.indikator10 as indikator10
+import text_finding.highlight_pdf as highlight_pdf
 
 
 import nsq, ast, toml, logging, requests, threading
@@ -48,6 +49,8 @@ def send_result(message_data, config):
         text_proof = "Not implemented yet"
     elif indicator_number == 10:
         text_proof = indikator10.ceklvl(filename)
+    
+    proof_pic_files, proof_pages = highlight_pdf.highlight(filename, text_proof, 'Highlight')
 
     callback_endpoint = 'http://' + config['server']['host'] + '/assessments/result/callback'
     payload = {
@@ -58,8 +61,11 @@ def send_result(message_data, config):
         "level": 5,
         "explanation": "berdasarkan data dukung yang diberikan, level yang sesuai adalah level 5",
         "support_data_document_id": message_data['Content'],
-        "proof": text_proof
-        
+        "proof": {
+            "text": text_proof,
+            "picture_url_list": proof_pic_files,
+            "page_list": proof_pages
+        }
     }
     requests.post(url = callback_endpoint, json = payload)  
 

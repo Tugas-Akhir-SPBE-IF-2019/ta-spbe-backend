@@ -8,7 +8,7 @@ COPY ./model.pckl /app
 WORKDIR /app
 
 RUN --mount=type=cache,target=/root/.cache/pip pip3 install --upgrade pip &&\
-    pip3 install -r requirements.txt
+    pip3 install --default-timeout=100 -r requirements.txt
 
 # RUN pip3 install -r requirements.txt
 

@@ -16,7 +16,7 @@ func NewInstitution(db *sql.DB) *Institution {
 	return &Institution{db: db}
 }
 
-const institutionFindAllQuery = `SELECT i.name, ic.category
+const institutionFindAllQuery = `SELECT i.id, i.name, ic.category
 		FROM institution i
 		LEFT JOIN institution_category ic 
 		ON i.category = ic.id `
@@ -54,6 +54,7 @@ func (s *Institution) FindAll(ctx context.Context, institutionName string) ([]*s
 	for rows.Next() {
 		institution := &store.InstitutionDetail{}
 		err := rows.Scan(
+			&institution.ID,
 			&institution.Name,
 			&institution.Category,
 		)
@@ -104,6 +105,7 @@ func (s *Institution) FindAllPagination(ctx context.Context, offset int, limit i
 	for rows.Next() {
 		institution := &store.InstitutionDetail{}
 		err := rows.Scan(
+			&institution.ID,
 			&institution.Name,
 			&institution.Category,
 		)

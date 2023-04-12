@@ -3,6 +3,7 @@ package store
 import "context"
 
 type InstitutionDetail struct {
+	ID       int
 	Name     string
 	Category string
 }

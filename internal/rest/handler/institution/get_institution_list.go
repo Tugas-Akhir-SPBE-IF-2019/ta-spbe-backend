@@ -52,6 +52,7 @@ func (r *GetInstitutionListRequest) validate() *apierror.FieldError {
 }
 
 type InstitutionItem struct {
+	ID       int    `json:"id"`
 	Name     string `json:"institution_name"`
 	Category string `json:"institution_category"`
 }
@@ -100,6 +101,7 @@ func (handler *institutionHandler) GetInstitutionList(w http.ResponseWriter, r *
 	items := make([]InstitutionItem, itemsCount)
 	for idx, item := range institutionList {
 		items[idx] = InstitutionItem{
+			ID:       item.ID,
 			Name:     item.Name,
 			Category: item.Category,
 		}
