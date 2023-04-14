@@ -14,7 +14,7 @@ type GetUserProfileResponse struct {
 	ContactNumber      string `json:"contact_number"`
 	Email              string `json:"email"`
 	LinkedinProfile    string `json:"linkedin_profile"`
-	HouseAddress       string `json:"house_address"`
+	HouseAddress       string `json:"address"`
 	ProfilePictureLink string `json:"profile_picture_link"`
 }
 
