@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"time"
 
 	apierror "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/error"
 	userCtx "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/context"
@@ -35,6 +34,10 @@ type UploadSpbeDocumentRequest struct {
 	supportingDocumenFileHeaderList []*multipart.FileHeader
 	oldDocumentFile                 multipart.File
 	oldDocumentFileHeader           *multipart.FileHeader
+	oldDocumentFileHeaderList       []*multipart.FileHeader
+	meetingMinutesFile              multipart.File
+	meetingMinutesFileHeader        *multipart.FileHeader
+	meetingMinutestFileHeaderList   []*multipart.FileHeader
 }
 
 type UploadProducerMessage struct {
@@ -67,10 +70,15 @@ func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldE
 		fieldErr = fieldErr.WithField("supporting_document", "supporting document is missing")
 	}
 
-	// req.supportingDocumentFile, req.supportingDocumentFileHeader, err = r.FormFile("supporting_document")
-	// if err != nil {
-	// 	fieldErr = fieldErr.WithField("supporting_document", "supporting document is missing")
-	// }
+	fhs = r.MultipartForm.File["old_document[]"]
+	for _, fh := range fhs {
+		req.oldDocumentFileHeaderList = append(req.oldDocumentFileHeaderList, fh)
+	}
+
+	fhs = r.MultipartForm.File["meeting_minutes[]"]
+	for _, fh := range fhs {
+		req.meetingMinutestFileHeaderList = append(req.meetingMinutestFileHeaderList, fh)
+	}
 
 	req.institutionName = strings.TrimSpace(req.institutionName)
 	if req.institutionName == "" {
@@ -85,11 +93,6 @@ func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldE
 		req.indicatorNumbers = append(req.indicatorNumbers, indicatorNumber)
 	}
 
-	// FOR TESTING PURPOSE
-	if req.phoneNumberStr == "" {
-		req.phoneNumberStr = "6285157017311"
-	}
-
 	if len(fieldErr.Fields) != 0 {
 		return &fieldErr
 	}
@@ -100,6 +103,7 @@ func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldE
 type DocumentInfo struct {
 	Name string `json:"name"`
 	Url  string `json:"url"`
+	Type string `json:"type"`
 }
 
 type UploadSpbeDocumentResponse struct {
@@ -114,8 +118,7 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)
 	req := UploadSpbeDocumentRequest{
 		institutionName: r.FormValue("institution_name"),
-		// indicatorNumberStr: r.FormValue("indicator_number"),
-		phoneNumberStr: r.FormValue("phone_number"),
+		phoneNumberStr:  r.FormValue("phone_number"),
 	}
 
 	r.ParseForm()
@@ -172,93 +175,177 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 			DocumentName:         supportingDocument,
 			DocumentUrl:          supportingDocumentUrl,
 			OriginalDocumentName: originalDocumentName,
+			Type:                 store.NEW_DOCUMENT,
 		})
 		documentInfoList = append(documentInfoList, DocumentInfo{
 			Name: originalDocumentName,
+			Type: string(store.NEW_DOCUMENT),
 			Url:  supportingDocumentUrl,
 		})
 
 	}
-	// defer req.supportingDocumentFile.Close()
 
-	// uniqueId := uuid.New()
-	// filename := strings.Replace(uniqueId.String(), "-", "", -1)
-	// fileExt := filepath.Ext(req.supportingDocumentFileHeader.Filename)
-	// originalDocumentName := req.supportingDocumentFileHeader.Filename
-	// supportingDocument := fmt.Sprintf("%s%s", filename, fileExt)
-	// supportingDocumentUrl := fmt.Sprintf("http://%s/static/%s", handler.apiCfg.Host, supportingDocument)
+	for _, supportingDocumenFileHeader := range req.oldDocumentFileHeaderList {
+		supportingDocumentFile, err := supportingDocumenFileHeader.Open()
+		if err != nil {
+			log.Println(err.Error())
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+		defer supportingDocumentFile.Close()
 
-	// var dst *os.File
-	// dst, err := handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
-	// if err != nil {
-	// 	log.Println(err.Error())
+		uniqueId := uuid.New()
+		filename := strings.Replace(uniqueId.String(), "-", "", -1)
+		fileExt := filepath.Ext(supportingDocumenFileHeader.Filename)
+		originalDocumentName := supportingDocumenFileHeader.Filename
+		supportingDocument := fmt.Sprintf("%s%s", filename, fileExt)
+		supportingDocumentUrl := fmt.Sprintf("http://%s/static/%s", handler.apiCfg.Host, supportingDocument)
 
-	// 	os.MkdirAll("./static/supporting-documents", os.ModePerm)
-	// 	dst, _ = handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
-	// }
-	// defer dst.Close()
+		var dst *os.File
+		dst, err = handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
+		if err != nil {
+			log.Println(err.Error())
 
-	// _, err = handler.filesystemClient.Copy(dst, req.supportingDocumentFile)
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// 	response.Error(w, apierror.InternalServerError())
-	// 	return
-	// }
+			os.MkdirAll("./static/supporting-documents", os.ModePerm)
+			dst, _ = handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
+		}
+		defer dst.Close()
 
-	// var assessmentUploadDetail store.AssessmentUploadDetail
+		_, err = handler.filesystemClient.Copy(dst, supportingDocumentFile)
+		if err != nil {
+			log.Println(err.Error())
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+
+		supportDataDocumentInfoList = append(supportDataDocumentInfoList, store.SupportDataDocumentInfo{
+			DocumentName:         supportingDocument,
+			DocumentUrl:          supportingDocumentUrl,
+			OriginalDocumentName: originalDocumentName,
+			Type:                 store.OLD_DOCUMENT,
+		})
+		documentInfoList = append(documentInfoList, DocumentInfo{
+			Name: originalDocumentName,
+			Type: string(store.OLD_DOCUMENT),
+			Url:  supportingDocumentUrl,
+		})
+
+	}
+
+	for _, supportingDocumenFileHeader := range req.meetingMinutestFileHeaderList {
+		supportingDocumentFile, err := supportingDocumenFileHeader.Open()
+		if err != nil {
+			log.Println(err.Error())
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+		defer supportingDocumentFile.Close()
+
+		uniqueId := uuid.New()
+		filename := strings.Replace(uniqueId.String(), "-", "", -1)
+		fileExt := filepath.Ext(supportingDocumenFileHeader.Filename)
+		originalDocumentName := supportingDocumenFileHeader.Filename
+		supportingDocument := fmt.Sprintf("%s%s", filename, fileExt)
+		supportingDocumentUrl := fmt.Sprintf("http://%s/static/%s", handler.apiCfg.Host, supportingDocument)
+
+		var dst *os.File
+		dst, err = handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
+		if err != nil {
+			log.Println(err.Error())
+
+			os.MkdirAll("./static/supporting-documents", os.ModePerm)
+			dst, _ = handler.filesystemClient.Create(fmt.Sprintf("./static/supporting-documents/%s", supportingDocument))
+		}
+		defer dst.Close()
+
+		_, err = handler.filesystemClient.Copy(dst, supportingDocumentFile)
+		if err != nil {
+			log.Println(err.Error())
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+
+		supportDataDocumentInfoList = append(supportDataDocumentInfoList, store.SupportDataDocumentInfo{
+			DocumentName:         supportingDocument,
+			DocumentUrl:          supportingDocumentUrl,
+			OriginalDocumentName: originalDocumentName,
+			Type:                 store.MEETING_MINUTES,
+		})
+		documentInfoList = append(documentInfoList, DocumentInfo{
+			Name: originalDocumentName,
+			Type: string(store.MEETING_MINUTES),
+			Url:  supportingDocumentUrl,
+		})
+
+	}
+
+	indicatorAssessmentInfoList := make([]store.IndicatorAssessmentInfo, len(req.indicatorNumbers))
+	for idx, indicatorNumber := range req.indicatorNumbers {
+		indicatorAssessmentInfoList[idx] = store.IndicatorAssessmentInfo{
+			IndicatorNumber: indicatorNumber,
+		}
+	}
 	assessmentUploadDetail := store.AssessmentUploadDetail{
 		AssessmentDetail: store.AssessmentDetail{
 			InstitutionName: req.institutionName,
 		},
+		IndicatorAssessmentInfoList: indicatorAssessmentInfoList,
 		SupportDataDocumentInfoList: supportDataDocumentInfoList,
 		UserId:                      userCred.ID,
 	}
-	for _, indicatorNumber := range req.indicatorNumbers {
-		assessmentUploadDetail.IndicatorAssessmentInfo.IndicatorNumber = indicatorNumber
-		err := handler.assessmentStore.InsertUploadDocument(ctx, &assessmentUploadDetail)
-		if err != nil {
-			log.Println(err)
-			response.Error(w, apierror.InternalServerError())
-			return
-		}
 
-		indicatorData, err := handler.indicatoreAssessmentStore.FindIndicatorDetailByIndicatorNumber(ctx, indicatorNumber)
-		if err != nil {
-			log.Println(err)
-			response.Error(w, apierror.InternalServerError())
-			return
-		}
-
-		topic := "SPBE_Assessment"
-		msg := UploadProducerMessage{
-			Name:                  assessmentUploadDetail.AssessmentDetail.InstitutionName,
-			Content:               assessmentUploadDetail.SupportDataDocumentInfoList[0].Id, // WIP need to be updated later
-			UserId:                userCred.ID,
-			RecipientNumber:       req.phoneNumberStr,
-			AssessmentId:          assessmentUploadDetail.AssessmentDetail.Id,
-			IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
-			Filename:              assessmentUploadDetail.SupportDataDocumentInfoList[0].DocumentName, // WIP need to be updated later
-			OriginalFilename:      supportDataDocumentInfoList[0].OriginalDocumentName,
-			Timestamp:             time.Now().UTC().String(),
-			IndicatorNumber:       strconv.Itoa(indicatorNumber),
-			IndicatorDetail:       indicatorData.Detail,
-			InstitutionName:       req.institutionName,
-		}
-
-		producerPayload, err := handler.jsonClient.Marshal(msg)
-		if err != nil {
-			log.Println(err)
-			response.Error(w, apierror.InternalServerError())
-			return
-		}
-
-		err = handler.messageQueue.Produce(topic, producerPayload)
-		if err != nil {
-			log.Println(err)
-			response.Error(w, apierror.InternalServerError())
-			return
-		}
+	err := handler.assessmentStore.InsertUploadDocument(ctx, &assessmentUploadDetail)
+	if err != nil {
+		log.Println(err)
+		response.Error(w, apierror.InternalServerError())
+		return
 	}
+	// for _, indicatorNumber := range req.indicatorNumbers {
+	// 	assessmentUploadDetail.IndicatorAssessmentInfo.IndicatorNumber = indicatorNumber
+	// 	err := handler.assessmentStore.InsertUploadDocument(ctx, &assessmentUploadDetail)
+	// 	if err != nil {
+	// 		log.Println(err)
+	// 		response.Error(w, apierror.InternalServerError())
+	// 		return
+	// 	}
+
+	// 	indicatorData, err := handler.indicatoreAssessmentStore.FindIndicatorDetailByIndicatorNumber(ctx, indicatorNumber)
+	// 	if err != nil {
+	// 		log.Println(err)
+	// 		response.Error(w, apierror.InternalServerError())
+	// 		return
+	// 	}
+
+	// 	topic := "SPBE_Assessment"
+	// 	msg := UploadProducerMessage{
+	// 		Name:                  assessmentUploadDetail.AssessmentDetail.InstitutionName,
+	// 		Content:               assessmentUploadDetail.SupportDataDocumentInfoList[0].Id, // WIP need to be updated later
+	// 		UserId:                userCred.ID,
+	// 		RecipientNumber:       req.phoneNumberStr,
+	// 		AssessmentId:          assessmentUploadDetail.AssessmentDetail.Id,
+	// 		IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
+	// 		Filename:              assessmentUploadDetail.SupportDataDocumentInfoList[0].DocumentName, // WIP need to be updated later
+	// 		OriginalFilename:      supportDataDocumentInfoList[0].OriginalDocumentName,
+	// 		Timestamp:             time.Now().UTC().String(),
+	// 		IndicatorNumber:       strconv.Itoa(indicatorNumber),
+	// 		IndicatorDetail:       indicatorData.Detail,
+	// 		InstitutionName:       req.institutionName,
+	// 	}
+
+	// 	producerPayload, err := handler.jsonClient.Marshal(msg)
+	// 	if err != nil {
+	// 		log.Println(err)
+	// 		response.Error(w, apierror.InternalServerError())
+	// 		return
+	// 	}
+
+	// 	err = handler.messageQueue.Produce(topic, producerPayload)
+	// 	if err != nil {
+	// 		log.Println(err)
+	// 		response.Error(w, apierror.InternalServerError())
+	// 		return
+	// 	}
+	// }
 
 	user, err := handler.userStore.FindOneByID(ctx, userCred.ID)
 	if err != nil {

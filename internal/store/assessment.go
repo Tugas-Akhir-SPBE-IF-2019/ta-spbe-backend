@@ -6,11 +6,15 @@ import (
 )
 
 type AssessmentStatus int
+type SupportDocumentType string
 
 const (
-	IN_PROGRESS = AssessmentStatus(1)
-	COMPLETED   = AssessmentStatus(2)
-	VALIDATED   = AssessmentStatus(3)
+	IN_PROGRESS     = AssessmentStatus(1)
+	COMPLETED       = AssessmentStatus(2)
+	VALIDATED       = AssessmentStatus(3)
+	NEW_DOCUMENT    = SupportDocumentType("NEW_DOCUMENT")
+	OLD_DOCUMENT    = SupportDocumentType("OLD_DOCUMENT")
+	MEETING_MINUTES = SupportDocumentType("MEETING_MINUTES")
 )
 
 type AssessmentDetail struct {
@@ -31,11 +35,13 @@ type SupportDataDocumentInfo struct {
 	DocumentName         string
 	DocumentUrl          string
 	OriginalDocumentName string
+	Type                 SupportDocumentType
 }
 
 type AssessmentUploadDetail struct {
 	AssessmentDetail            AssessmentDetail
 	IndicatorAssessmentInfo     IndicatorAssessmentInfo
+	IndicatorAssessmentInfoList []IndicatorAssessmentInfo
 	SupportDataDocumentInfoList []SupportDataDocumentInfo
 	UserId                      string
 }

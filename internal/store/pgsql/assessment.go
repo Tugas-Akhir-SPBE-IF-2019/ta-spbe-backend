@@ -188,7 +188,7 @@ const indicatorAssessmentUploadDocumentInsertQuery = `INSERT into
 const supportDataDocumentUploadInsert = "supportDataDocumentUploadInsert"
 const supportDataDocumentUploadInsertQuery = `INSERT into
 	support_data_documents(
-		id, assessment_id, indicator_assessment_id, document_name, document_url, document_original_name, created_at
+		id, assessment_id, document_name, document_url, document_original_name, type, created_at
 	) values(
 		$1, $2, $3, $4, $5, $6, $7
 	)
@@ -235,35 +235,34 @@ func (s *Assessment) InsertUploadDocument(ctx context.Context, assessmentUploadD
 	}
 
 	var indicatorId string
-	getIndicatorIdByIndicatorNumberStmt, err := s.db.PrepareContext(ctx, getIndicatorIdByIndicatorNumberQuery)
-	row := tx.StmtContext(ctx, getIndicatorIdByIndicatorNumberStmt).QueryRowContext(ctx, assessmentUploadDetail.IndicatorAssessmentInfo.IndicatorNumber)
-	err = row.Scan(&indicatorId)
-	if err != nil {
-		return fmt.Errorf("failed to get indicator id: %w", err)
-	}
+	for idx, indicatorAssessmentInfo := range assessmentUploadDetail.IndicatorAssessmentInfoList {
+		getIndicatorIdByIndicatorNumberStmt, err := s.db.PrepareContext(ctx, getIndicatorIdByIndicatorNumberQuery)
+		row := tx.StmtContext(ctx, getIndicatorIdByIndicatorNumberStmt).QueryRowContext(ctx, indicatorAssessmentInfo.IndicatorNumber)
+		err = row.Scan(&indicatorId)
+		if err != nil {
+			return fmt.Errorf("failed to get indicator id: %w", err)
+		}
 
-	indicatorAssessmentId := uuid.NewString()
-	indicatorAssessmentUploadDocumentInsertStmt, err := s.db.PrepareContext(ctx, indicatorAssessmentUploadDocumentInsertQuery)
-	_, err = tx.StmtContext(ctx, indicatorAssessmentUploadDocumentInsertStmt).ExecContext(ctx,
-		indicatorAssessmentId, indicatorId, assessmentUploadDetail.AssessmentDetail.Id, store.AssessmentStatus(store.IN_PROGRESS), 0, assessmentCreatedAt)
-	if err != nil {
-		return fmt.Errorf("failed to insert indicator assessment: %w", err)
+		indicatorAssessmentId := uuid.NewString()
+		indicatorAssessmentUploadDocumentInsertStmt, err := s.db.PrepareContext(ctx, indicatorAssessmentUploadDocumentInsertQuery)
+		_, err = tx.StmtContext(ctx, indicatorAssessmentUploadDocumentInsertStmt).ExecContext(ctx,
+			indicatorAssessmentId, indicatorId, assessmentUploadDetail.AssessmentDetail.Id, store.AssessmentStatus(store.IN_PROGRESS), 0, assessmentCreatedAt)
+		if err != nil {
+			return fmt.Errorf("failed to insert indicator assessment: %w", err)
+		}
+		assessmentUploadDetail.IndicatorAssessmentInfoList[idx].Id = indicatorAssessmentId
 	}
-	assessmentUploadDetail.IndicatorAssessmentInfo.Id = indicatorAssessmentId
 
 	supportDataDocumentUploadInsertStmt, err := s.db.PrepareContext(ctx, supportDataDocumentUploadInsertQuery)
 
-	// WIP
-	// The current implementation will make a new entry for each indicator number
-	// The intended behavior should be just make the document have foreign key to assessment, not indicator assessment
-	// This mean that indicator_assessment_id need to be deleted in the future
 	for idx, supportDataDocumentInfo := range assessmentUploadDetail.SupportDataDocumentInfoList {
 		supportDataDocumentId := uuid.NewString()
 		_, err = tx.StmtContext(ctx, supportDataDocumentUploadInsertStmt).ExecContext(ctx,
-			supportDataDocumentId, assessmentUploadDetail.AssessmentDetail.Id, indicatorAssessmentId,
+			supportDataDocumentId, assessmentUploadDetail.AssessmentDetail.Id,
 			supportDataDocumentInfo.DocumentName,
 			supportDataDocumentInfo.DocumentUrl,
 			supportDataDocumentInfo.OriginalDocumentName,
+			supportDataDocumentInfo.Type,
 			assessmentCreatedAt)
 		if err != nil {
 			return fmt.Errorf("failed to insert support data document: %w", err)
