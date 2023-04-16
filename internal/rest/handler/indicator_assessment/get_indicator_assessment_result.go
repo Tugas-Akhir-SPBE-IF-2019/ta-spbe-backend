@@ -10,22 +10,22 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-type PhotoProofItem struct {
-	PhotoLink    string `json:"photo_link"`
-	DocumentLink string `json:"document_link"`
+type SupportDocumentProofInfo struct {
+	Name                 string `json:"name"`
+	URL                  string `json:"document_url"`
+	Type                 string `json:"type"`
+	Proof                string `json:"proof"`
+	ImageURL             string `json:"proof_image_url"`
+	ProofPageDocumentURL string `json:"proof_page_document_url"`
 }
 
 type IndicatorAssessmentResultItem struct {
-	Domain              string           `json:"domain"`
-	Aspect              string           `json:"aspect"`
-	IndicatorNumber     int              `json:"indicator_number"`
-	Level               int              `json:"level"`
-	Explanation         string           `json:"explanation"`
-	SupportDocument     string           `json:"support_document"`
-	SupportDocumentName string           `json:"support_document_name"`
-	OldDocument         string           `json:"old_document"`
-	Proof               string           `json:"proof"`
-	PhotoProof          []PhotoProofItem `json:"photo_proof"`
+	Domain                   string                     `json:"domain"`
+	Aspect                   string                     `json:"aspect"`
+	IndicatorNumber          int                        `json:"indicator_number"`
+	Level                    int                        `json:"level"`
+	Explanation              string                     `json:"explanation"`
+	SupportDocumentProofList []SupportDocumentProofInfo `json:"support_document_proof"`
 }
 
 type IndicatorAssessmentResultResponse struct {
@@ -46,31 +46,28 @@ func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentResultGetIndica
 
 	result := make([]IndicatorAssessmentResultItem, len(indicatorAssessmentList))
 	for idx, indicatorAssessment := range indicatorAssessmentList {
-		indicatorAssessmentProofList, err := handler.indicatorAssessmentStore.FindProofDataByIndicatorAssessmentId(ctx, indicatorAssessment.IndicatorAssessmentId)
-		if err != nil {
-			response.Error(w, apierror.NotFoundError("indicator assessment proof not found"))
-			return
-		}
-
-		photoProofList := make([]PhotoProofItem, len(indicatorAssessmentProofList))
-		for idx, indicatorAssessmentProof := range indicatorAssessmentProofList {
-			photoProofList[idx] = PhotoProofItem{
-				PhotoLink:    indicatorAssessmentProof.ImageURL,
-				DocumentLink: indicatorAssessmentProof.DocumentURL,
-			}
-		}
-
 		resultItem := IndicatorAssessmentResultItem{
-			Domain:              indicatorAssessment.Result.Domain,
-			Aspect:              indicatorAssessment.Result.Aspect,
-			IndicatorNumber:     indicatorAssessment.Result.IndicatorNumber,
-			Level:               indicatorAssessment.Result.Level,
-			Explanation:         indicatorAssessment.Result.Explanation,
-			SupportDocument:     indicatorAssessment.Result.SupportDocument,
-			SupportDocumentName: indicatorAssessment.Result.SupportDocumentName,
-			Proof:               indicatorAssessment.Result.Proof,
-			PhotoProof:          photoProofList,
+			Domain:          indicatorAssessment.Result.Domain,
+			Aspect:          indicatorAssessment.Result.Aspect,
+			IndicatorNumber: indicatorAssessment.Result.IndicatorNumber,
+			Level:           indicatorAssessment.Result.Level,
+			Explanation:     indicatorAssessment.Result.Explanation,
 		}
+
+		supportDocumentProofList := make([]SupportDocumentProofInfo, len(indicatorAssessment.Result.SupportDocumentList))
+		for index, supportDocumentItem := range indicatorAssessment.Result.SupportDocumentList {
+			supportDocumentProof := SupportDocumentProofInfo{
+				Name:                 supportDocumentItem.Name,
+				URL:                  supportDocumentItem.URL,
+				Type:                 supportDocumentItem.Type,
+				Proof:                supportDocumentItem.Proof,
+				ImageURL:             supportDocumentItem.ImageURL,
+				ProofPageDocumentURL: supportDocumentItem.SpecificPageDocumentURL,
+			}
+			supportDocumentProofList[index] = supportDocumentProof
+		}
+
+		resultItem.SupportDocumentProofList = supportDocumentProofList
 		result[idx] = resultItem
 	}
 	resp := IndicatorAssessmentResultResponse{

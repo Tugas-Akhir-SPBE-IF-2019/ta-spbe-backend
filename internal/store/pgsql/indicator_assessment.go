@@ -178,18 +178,21 @@ func (s *IndicatorAssessment) FindIndicatorAssessmentResultById(ctx context.Cont
 }
 
 const indicatorAssessmentResultFindByAssessmentIdQuery = `SELECT ia.id, a.institution_name, ia.created_at, ia.status, i.domain, i.aspect, i.indicator_number, 
-		ia.level, sdd.document_url, sdd.document_original_name, COALESCE(ia.explanation, ''),  COALESCE(sddp.proof, '')
+		ia.level, COALESCE(ia.explanation, '')
 		FROM indicator_assessments ia
 		LEFT JOIN assessments a
 		ON ia.assessment_id = a.id
 		LEFT JOIN indicators i
 		ON ia.indicator_id = i.id
-		LEFT JOIN support_data_documents sdd
-		ON ia.id = sdd.indicator_assessment_id
-		LEFT JOIN support_data_document_proofs sddp
-		ON ia.id = sddp.indicator_assessment_id
 		WHERE a.id = $1
 		ORDER BY i.indicator_number ASC `
+
+const findSupportDocumentProofByIndicatorAssessmentIdQuery = `SELECT sdd.document_original_name, sdd.document_url, sdd.type, sddp.proof, sddp.image_url, sddp.specific_page_document_url
+	FROM support_data_document_proofs sddp
+	LEFT JOIN support_data_documents sdd
+	ON sddp.support_data_document_id = sdd.id
+	WHERE sddp.indicator_assessment_id = $1
+	ORDER BY sdd.type ASC `
 
 func (s *IndicatorAssessment) FindIndicatorAssessmentResultByAssessmentId(ctx context.Context, id string) ([]*store.IndicatorAssessmentResultDetail, error) {
 	assessmentResultList := []*store.IndicatorAssessmentResultDetail{}
@@ -204,13 +207,32 @@ func (s *IndicatorAssessment) FindIndicatorAssessmentResultByAssessmentId(ctx co
 		assessmentResult := &store.IndicatorAssessmentResultDetail{}
 		err := rows.Scan(&assessmentResult.IndicatorAssessmentId, &assessmentResult.InstitutionName, &assessmentResult.SubmittedDate,
 			&assessmentResult.AssessmentStatus, &assessmentResult.Result.Domain, &assessmentResult.Result.Aspect,
-			&assessmentResult.Result.IndicatorNumber, &assessmentResult.Result.Level, &assessmentResult.Result.SupportDocument,
-			&assessmentResult.Result.SupportDocumentName, &assessmentResult.Result.Explanation, &assessmentResult.Result.Proof,
+			&assessmentResult.Result.IndicatorNumber, &assessmentResult.Result.Level,
+			&assessmentResult.Result.Explanation,
 		)
 		if err != nil {
 			return nil, err
 		}
 		assessmentResultList = append(assessmentResultList, assessmentResult)
+	}
+
+	for idx, assessmentResult := range assessmentResultList {
+		rows, err := s.db.QueryContext(ctx, findSupportDocumentProofByIndicatorAssessmentIdQuery, assessmentResult.IndicatorAssessmentId)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			supportDocumentProof := store.IndicatorAssessmentSupportDocumentInfo{}
+			err := rows.Scan(&supportDocumentProof.Name, &supportDocumentProof.URL, &supportDocumentProof.Type, &supportDocumentProof.Proof,
+				&supportDocumentProof.ImageURL, &supportDocumentProof.SpecificPageDocumentURL)
+			if err != nil {
+				return nil, err
+			}
+
+			assessmentResultList[idx].Result.SupportDocumentList = append(assessmentResultList[idx].Result.SupportDocumentList, supportDocumentProof)
+		}
 	}
 
 	return assessmentResultList, nil

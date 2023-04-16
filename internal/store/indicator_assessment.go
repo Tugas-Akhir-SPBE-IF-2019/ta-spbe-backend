@@ -11,6 +11,15 @@ type IndicatorAssessmentDetail struct {
 	SubmittedDate   time.Time
 }
 
+type IndicatorAssessmentSupportDocumentInfo struct {
+	Name                    string
+	URL                     string
+	Type                    string
+	Proof                   string
+	ImageURL                string
+	SpecificPageDocumentURL string
+}
+
 type IndicatorAssessmentResultInfo struct {
 	Domain              string
 	Aspect              string
@@ -19,6 +28,7 @@ type IndicatorAssessmentResultInfo struct {
 	Explanation         string
 	SupportDocument     string
 	SupportDocumentName string
+	SupportDocumentList []IndicatorAssessmentSupportDocumentInfo
 	OldDocument         string
 	Proof               string
 }
@@ -67,5 +77,4 @@ type IndicatorAssessment interface {
 	InsertProofData(ctx context.Context, proofData *IndicatorAssessmentProofData) error
 	FindProofDataByIndicatorAssessmentId(ctx context.Context, id string) ([]*IndicatorAssessmentProofData, error)
 	FindIndicatorDetailByIndicatorNumber(ctx context.Context, indicatorNumber int) (IndicatorData, error)
-
 }

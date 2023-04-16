@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS indicator_assessments(
 INSERT INTO indicator_assessments (id, indicator_id,assessment_id, status, level, explanation, created_at)
 VALUES
   ('ecd52961-fa4e-43ba-a6df-a4c97849d899', 'dcd52961-fa4e-43ba-a6df-a4c97849d899','acd52961-fa4e-43ba-a6df-a4c97849d899', 2, 4, 'Berdasarkan hasil penilaian, maka hasilnya adalah level 4','2019-01-23T12:54:18.610Z'),
-  ('ecd52961-fa4e-43ba-a6df-a4c97849d898', 'dcd52961-fa4e-43ba-a6df-a4c97849d898','acd52961-fa4e-43ba-a6df-a4c97849d899', 1, 0, NULL, '2019-01-23T12:54:18.610Z'),
+  ('ecd52961-fa4e-43ba-a6df-a4c97849d898', 'dcd52961-fa4e-43ba-a6df-a4c97849d898','acd52961-fa4e-43ba-a6df-a4c97849d899', 2, 3, 'Dokumen yang diunggah merupakan bukti untuk level 3', '2019-01-23T12:54:18.610Z'),
   ('ecd52961-fa4e-43ba-a6df-a4c97849d897', 'dcd52961-fa4e-43ba-a6df-a4c97849d898','acd52961-fa4e-43ba-a6df-a4c97849d898', 3, 2, 'Dokumen yang dikumpulkan termasuk ke dalam level 2', '2019-01-23T12:54:18.610Z');
