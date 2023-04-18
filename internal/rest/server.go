@@ -83,6 +83,7 @@ func New(
 		r.Get("/{id}", indicatorAssessmentHandler.GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList)
 		r.Get("/{id}/histories", assessmentHandler.GetSPBEAssessmentStatusHistory)
 		r.Get("/{id}/documents", assessmentHandler.GetSPBEAssessmentDocumentList)
+		r.Get("/{id}/download", assessmentHandler.DownloadSupportDocuments)
 		r.Patch("/{id}/validate", indicatorAssessmentHandler.ValidateIndicatorAssessmentResult)
 		r.Post("/documents/upload", assessmentHandler.UploadSPBEDocument)
 

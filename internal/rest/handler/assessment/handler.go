@@ -19,6 +19,7 @@ type AssessmentHandler interface {
 	GetSPBEAssessmentStatusHistory(w http.ResponseWriter, r *http.Request)
 	GetSPBEAssessmentDocumentList(w http.ResponseWriter, r *http.Request)
 	ResultCallback(w http.ResponseWriter, r *http.Request)
+	DownloadSupportDocuments(w http.ResponseWriter, r *http.Request)
 }
 
 type assessmentHandler struct {
