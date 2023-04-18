@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	apierror "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/error"
 	userCtx "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/context"
@@ -40,19 +41,29 @@ type UploadSpbeDocumentRequest struct {
 	meetingMinutestFileHeaderList   []*multipart.FileHeader
 }
 
+type IndicatorAssessmentProducerItem struct {
+	Id     string `json:"id"`
+	Number int    `json:"number"`
+	Detail string `json:"detail"`
+}
+
+type SupportDocumentProducerItem struct {
+	Name         string `json:"name"`
+	OriginalName string `json:"original_name"`
+	Type         string `json:"type"`
+}
+
 type UploadProducerMessage struct {
-	Name                  string
-	Content               string
-	UserId                string
-	RecipientNumber       string
-	AssessmentId          string
-	IndicatorAssessmentId string
-	Filename              string
-	OriginalFilename      string
-	Timestamp             string
-	IndicatorNumber       string
-	IndicatorDetail       string
-	InstitutionName       string
+	Name                    string                            `json:"name"`
+	Content                 string                            `json:"content"`
+	UserId                  string                            `json:"user_id"`
+	RecipientNumber         string                            `json:"recipient_number"`
+	AssessmentId            string                            `json:"assessment_id"`
+	IndicatorAssessmentList []IndicatorAssessmentProducerItem `json:"indicator_assessment_list"`
+	SupportDocumentList     []SupportDocumentProducerItem     `json:"support_document_list"`
+	IndicatorDetail         string                            `json:"indicator_detail"`
+	InstitutionName         string                            `json:"institution_name"`
+	Timestamp               string                            `json:"timestamp"`
 }
 
 func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldError {
@@ -138,6 +149,7 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 
 	var documentInfoList []DocumentInfo
 	var supportDataDocumentInfoList []store.SupportDataDocumentInfo
+	var supportDocumentProducerItemList []SupportDocumentProducerItem
 	for _, supportingDocumenFileHeader := range req.supportingDocumenFileHeaderList {
 		supportingDocumentFile, err := supportingDocumenFileHeader.Open()
 		if err != nil {
@@ -176,6 +188,11 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 			DocumentUrl:          supportingDocumentUrl,
 			OriginalDocumentName: originalDocumentName,
 			Type:                 store.NEW_DOCUMENT,
+		})
+		supportDocumentProducerItemList = append(supportDocumentProducerItemList, SupportDocumentProducerItem{
+			Name:         supportingDocument,
+			OriginalName: originalDocumentName,
+			Type:         string(store.NEW_DOCUMENT),
 		})
 		documentInfoList = append(documentInfoList, DocumentInfo{
 			Name: originalDocumentName,
@@ -224,6 +241,11 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 			OriginalDocumentName: originalDocumentName,
 			Type:                 store.OLD_DOCUMENT,
 		})
+		supportDocumentProducerItemList = append(supportDocumentProducerItemList, SupportDocumentProducerItem{
+			Name:         supportingDocument,
+			OriginalName: originalDocumentName,
+			Type:         string(store.OLD_DOCUMENT),
+		})
 		documentInfoList = append(documentInfoList, DocumentInfo{
 			Name: originalDocumentName,
 			Type: string(store.OLD_DOCUMENT),
@@ -271,6 +293,11 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 			OriginalDocumentName: originalDocumentName,
 			Type:                 store.MEETING_MINUTES,
 		})
+		supportDocumentProducerItemList = append(supportDocumentProducerItemList, SupportDocumentProducerItem{
+			Name:         supportingDocument,
+			OriginalName: originalDocumentName,
+			Type:         string(store.MEETING_MINUTES),
+		})
 		documentInfoList = append(documentInfoList, DocumentInfo{
 			Name: originalDocumentName,
 			Type: string(store.MEETING_MINUTES),
@@ -300,51 +327,49 @@ func (handler *assessmentHandler) UploadSPBEDocument(w http.ResponseWriter, r *h
 		response.Error(w, apierror.InternalServerError())
 		return
 	}
-	// for _, indicatorNumber := range req.indicatorNumbers {
-	// 	assessmentUploadDetail.IndicatorAssessmentInfo.IndicatorNumber = indicatorNumber
-	// 	err := handler.assessmentStore.InsertUploadDocument(ctx, &assessmentUploadDetail)
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 		response.Error(w, apierror.InternalServerError())
-	// 		return
-	// 	}
 
-	// 	indicatorData, err := handler.indicatoreAssessmentStore.FindIndicatorDetailByIndicatorNumber(ctx, indicatorNumber)
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 		response.Error(w, apierror.InternalServerError())
-	// 		return
-	// 	}
+	indicatorAssessmentProducerItemList := make([]IndicatorAssessmentProducerItem, len(assessmentUploadDetail.IndicatorAssessmentInfoList))
+	for idx, indicatorAssessmentInfo := range assessmentUploadDetail.IndicatorAssessmentInfoList {
+		indicatorData, err := handler.indicatoreAssessmentStore.FindIndicatorDetailByIndicatorNumber(ctx, indicatorAssessmentInfo.IndicatorNumber)
+		if err != nil {
+			log.Println(err)
+			response.Error(w, apierror.InternalServerError())
+			return
+		}
+		indicatorAssessmentProducerItem := IndicatorAssessmentProducerItem{
+			Id:     indicatorAssessmentInfo.Id,
+			Number: indicatorAssessmentInfo.IndicatorNumber,
+			Detail: indicatorData.Detail,
+		}
+		indicatorAssessmentProducerItemList[idx] = indicatorAssessmentProducerItem
+	}
 
-	// 	topic := "SPBE_Assessment"
-	// 	msg := UploadProducerMessage{
-	// 		Name:                  assessmentUploadDetail.AssessmentDetail.InstitutionName,
-	// 		Content:               assessmentUploadDetail.SupportDataDocumentInfoList[0].Id, // WIP need to be updated later
-	// 		UserId:                userCred.ID,
-	// 		RecipientNumber:       req.phoneNumberStr,
-	// 		AssessmentId:          assessmentUploadDetail.AssessmentDetail.Id,
-	// 		IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
-	// 		Filename:              assessmentUploadDetail.SupportDataDocumentInfoList[0].DocumentName, // WIP need to be updated later
-	// 		OriginalFilename:      supportDataDocumentInfoList[0].OriginalDocumentName,
-	// 		Timestamp:             time.Now().UTC().String(),
-	// 		IndicatorNumber:       strconv.Itoa(indicatorNumber),
-	// 		IndicatorDetail:       indicatorData.Detail,
-	// 		InstitutionName:       req.institutionName,
-	// 	}
+	topic := "SPBE_Assessment"
+	msg := UploadProducerMessage{
+		Name:                    assessmentUploadDetail.AssessmentDetail.InstitutionName,
+		Content:                 assessmentUploadDetail.SupportDataDocumentInfoList[0].Id, // WIP need to be updated later
+		UserId:                  userCred.ID,
+		RecipientNumber:         req.phoneNumberStr,
+		AssessmentId:            assessmentUploadDetail.AssessmentDetail.Id,
+		InstitutionName:         req.institutionName,
+		IndicatorAssessmentList: indicatorAssessmentProducerItemList,
+		SupportDocumentList:     supportDocumentProducerItemList,
+		Timestamp:               time.Now().UTC().String(),
+	}
 
-	// 	producerPayload, err := handler.jsonClient.Marshal(msg)
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 		response.Error(w, apierror.InternalServerError())
-	// 		return
-	// 	}
+	producerPayload, err := handler.jsonClient.Marshal(msg)
+	if err != nil {
+		log.Println(err)
+		response.Error(w, apierror.InternalServerError())
+		return
+	}
 
-	// 	err = handler.messageQueue.Produce(topic, producerPayload)
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 		response.Error(w, apierror.InternalServerError())
-	// 		return
-	// 	}
+	err = handler.messageQueue.Produce(topic, producerPayload)
+	if err != nil {
+		log.Println(err)
+		response.Error(w, apierror.InternalServerError())
+		return
+	}
 	// }
 
 	user, err := handler.userStore.FindOneByID(ctx, userCred.ID)

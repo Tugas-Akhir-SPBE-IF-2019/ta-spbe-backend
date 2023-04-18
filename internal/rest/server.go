@@ -65,7 +65,7 @@ func New(
 	authHandler := authhandler.NewAuthHandler(sqlDB, userStore, cfg.OAuth, jwt)
 	assessmentHandler := assessmenthandler.NewAssessmentHandler(sqlDB, assessmentStore, indicatorAssessmentStore, cfg.API, userStore, smtpMailer, fileSystemClient, jsonClient, messageQueue, whatsAppClient)
 	institutionHandler := institutionhandler.NewInstitutionHandler(institutionStore)
-	userHandler := userhandler.NewUserHandler(cfg.API, sqlDB, userStore, fileSystemClient)
+	userHandler := userhandler.NewUserHandler(cfg.API, sqlDB, userStore, institutionStore, fileSystemClient, smtpMailer)
 
 	r.Route("/auth", func(r chi.Router) {
 		r.Get("/", token.HandleMain)
@@ -93,13 +93,20 @@ func New(
 		r.Get("/profile", userHandler.GetUserProfile)
 		r.Get("/evaluation", userHandler.GetUserEvaluationData)
 		r.Get("/job", userHandler.GetUserJobData)
+		r.Get("/institution", userHandler.GetUserCurrentInstitutionData)
+
+		r.Get("/institution/{id}/approve", userHandler.VerifyUserCurrentInstitutionData)
+		r.Get("/institution/{id}/reject", userHandler.RejectUserCurrentInstitutionData)
 
 		r.Post("/evaluation", userHandler.AddUserEvaluationData)
 		r.Post("/job", userHandler.AddUserJobData)
+		r.Post("/institution", userHandler.AddUserInstitutionData)
 		r.Put("/profile", userHandler.UpdateUserProfile)
+
+		r.Delete("/institution/{id}", userHandler.DeleteUserCurrentInstitutionData)
 	})
 
-	r.Post("/assessments/result/callback", indicatorAssessmentHandler.ResultCallback)
+	r.Post("/assessments/result/callback", assessmentHandler.ResultCallback)
 
 	// STATIC FILE SERVE (FOR DEVELOPMENT PURPOSE ONLY)
 	fs := http.FileServer(http.Dir("static/supporting-documents"))

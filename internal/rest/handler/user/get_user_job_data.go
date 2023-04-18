@@ -11,6 +11,7 @@ import (
 )
 
 type UserJobDataItem struct {
+	ID         string    `json:"id"`
 	Role       string    `json:"role"`
 	Company    string    `json:"company"`
 	JoinedYear int       `json:"joined_year"`
@@ -37,12 +38,13 @@ func (handler *userHandler) GetUserJobData(w http.ResponseWriter, r *http.Reques
 	}
 
 	items := make([]UserJobDataItem, len(userJobDataList))
-	for idx, userJobDataList := range userJobDataList {
+	for idx, userJobData := range userJobDataList {
 		item := UserJobDataItem{
-			Role:       userJobDataList.Role,
-			Company:    userJobDataList.Company,
-			JoinedYear: userJobDataList.JoinedDate,
-			CreatedAt:  userJobDataList.CreatedAt,
+			ID:         userJobData.ID,
+			Role:       userJobData.Role,
+			Company:    userJobData.Company,
+			JoinedYear: userJobData.JoinedDate,
+			CreatedAt:  userJobData.CreatedAt,
 		}
 		items[idx] = item
 	}

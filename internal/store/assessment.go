@@ -47,19 +47,51 @@ type AssessmentUploadDetail struct {
 }
 
 type AssessmentStatusHistoryDetail struct {
-	Status       AssessmentStatus
-	FinishedDate time.Time
+	Status                      AssessmentStatus
+	SupportDataDocumentInfoList []SupportDataDocumentInfo
+	FinishedDate                time.Time
 }
 
 type AssessmentDocumentDetail struct {
+	Id   string
 	Name string
 	Url  string
+	Type SupportDocumentType
+}
+
+type IndicatorAssessmentUpdateResultDetail struct {
+	ID            string
+	Number        int
+	Detail        string
+	DocumentProof []DocumentProofAssessmentUpdateResultDetail
+	Result        IndicatorResultAssessmentUpdateResultDetail
+}
+
+type DocumentProofAssessmentUpdateResultDetail struct {
+	Name                    string
+	OriginalName            string
+	Type                    string
+	Text                    string
+	Title                   string
+	PictureFileList         []string
+	SpecificPageDocumentURL []string
+	DocumentPageList        []int
+}
+
+type IndicatorResultAssessmentUpdateResultDetail struct {
+	Level       int
+	Explanation string
+}
+
+type AssessmenUpdateResultDetail struct {
+	IndicatorAssessmentList []IndicatorAssessmentUpdateResultDetail
 }
 
 type Assessment interface {
 	FindAll(ctx context.Context, queryInstitution string, status int, startDate string, endDate string) ([]*AssessmentDetail, error)
 	FindAllPagination(ctx context.Context, offset int, limit int, queryInstitution string, status int, startDate string, endDate string) ([]*AssessmentDetail, error)
 	InsertUploadDocument(ctx context.Context, assessmentUploadDetail *AssessmentUploadDetail) error
+	UpdateAssessmentResult(ctx context.Context, resultDetail *AssessmenUpdateResultDetail) error
 	UpdateStatus(ctx context.Context, assessmentId string, status AssessmentStatus) error
 	FindAllStatusHistoryById(ctx context.Context, assessmentId string) ([]*AssessmentStatusHistoryDetail, error)
 	FindAllDocumentsById(ctx context.Context, assessmentId string) ([]*AssessmentDocumentDetail, error)

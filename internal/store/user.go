@@ -46,6 +46,16 @@ type UserJobData struct {
 	CreatedAt  time.Time
 }
 
+type UserCurrentInstitutionData struct {
+	ID              string
+	UserID          string
+	InstitutionID   int
+	InstitutionName string
+	Role            string
+	Status          string
+	CreatedAt       time.Time
+}
+
 type User interface {
 	FindOneByEmail(ctx context.Context, email string) (*UserData, error)
 	FindOneByID(ctx context.Context, id string) (*UserData, error)
@@ -54,8 +64,12 @@ type User interface {
 	Insert(ctx context.Context, user *UserData) error
 	FindEvaluationDataByUserID(ctx context.Context, id string) ([]*UserEvaluationData, error)
 	FindJobDataByUserID(ctx context.Context, id string) ([]*UserJobData, error)
+	FindCurrentInstitutionDataByUserID(ctx context.Context, id string) ([]*UserCurrentInstitutionData, error)
 	InsertEvaluationData(ctx context.Context, evaluationData *UserEvaluationData) error
 	InsertJobData(ctx context.Context, jobData *UserJobData) error
+	InsertCurrentInstitutionData(ctx context.Context, institutionData *UserCurrentInstitutionData) error
+	DeleteCurrentInstitutionByID(ctx context.Context, id string) error
 	UpdateByID(ctx context.Context, user *UserData) error
 	UpdateWithPhotoByID(ctx context.Context, user *UserData) error
+	VerifyInstitutionData(ctx context.Context, id string) error
 }

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/store"
+	"github.com/google/uuid"
 )
 
 type User struct {
@@ -136,6 +137,7 @@ const userEvaluationFindByUserID = `SELECT ued.id, ued.user_id, ued.role, ued.in
 	LEFT JOIN institution i
 	ON ued.institution_id = i.id 
 	WHERE ued.user_id = $1
+	ORDER by ued.created_at ASC
 `
 
 func (s *User) FindEvaluationDataByUserID(ctx context.Context, id string) ([]*store.UserEvaluationData, error) {
@@ -166,6 +168,7 @@ func (s *User) FindEvaluationDataByUserID(ctx context.Context, id string) ([]*st
 const userJobFindByUserID = `SELECT ujd.id, ujd.user_id, ujd.role, ujd.company, ujd.joined_date, ujd.created_at
 	FROM user_job_data ujd
 	WHERE ujd.user_id = $1
+	ORDER by ujd.created_at ASC
 `
 
 func (s *User) FindJobDataByUserID(ctx context.Context, id string) ([]*store.UserJobData, error) {
@@ -201,30 +204,58 @@ user_evaluation_data(
 )
 `
 
+const userEvaluationUpdate = `UPDATE user_evaluation_data
+	SET role = $2, institution_id = $3, evaluation_year = $4
+	WHERE id = $1
+`
+
 func (s *User) InsertEvaluationData(ctx context.Context, userEvaluationData *store.UserEvaluationData) error {
-	insertStmt, err := s.db.PrepareContext(ctx, userEvaluationInsert)
-	if err != nil {
-		return err
+	var insertStmt *sql.Stmt
+	var err error
+
+	if userEvaluationData.ID == "" {
+		insertStmt, err = s.db.PrepareContext(ctx, userEvaluationInsert)
+		if err != nil {
+			return err
+		}
+	} else {
+		insertStmt, err = s.db.PrepareContext(ctx, userEvaluationUpdate)
+		if err != nil {
+			return err
+		}
 	}
+
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("failed to begin tx: %w", err)
 	}
 	defer tx.Rollback()
 
-	createdAt := time.Now().UTC()
-	_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
-		userEvaluationData.ID, userEvaluationData.UserID, userEvaluationData.Role,
-		userEvaluationData.InstitutionID, userEvaluationData.EvaluationYear, createdAt,
-	)
-	if err != nil {
-		return fmt.Errorf("failed to insert: %w", err)
+	if userEvaluationData.ID == "" {
+		userEvaluationID := uuid.NewString()
+		createdAt := time.Now().UTC()
+		_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
+			userEvaluationID, userEvaluationData.UserID, userEvaluationData.Role,
+			userEvaluationData.InstitutionID, userEvaluationData.EvaluationYear, createdAt,
+		)
+		if err != nil {
+			return fmt.Errorf("failed to insert: %w", err)
+		}
+		userEvaluationData.ID = userEvaluationID
+		userEvaluationData.CreatedAt = createdAt
+	} else {
+		_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
+			userEvaluationData.ID, userEvaluationData.Role,
+			userEvaluationData.InstitutionID, userEvaluationData.EvaluationYear,
+		)
+		if err != nil {
+			return fmt.Errorf("failed to insert: %w", err)
+		}
 	}
 
 	if err = tx.Commit(); err != nil {
 		return fmt.Errorf("failed to commit: %w", err)
 	}
-	userEvaluationData.CreatedAt = createdAt
 
 	return nil
 }
@@ -237,30 +268,58 @@ user_job_data(
 )
 `
 
+const userJobUpdate = `UPDATE user_job_data
+	SET	role = $2, company = $3, joined_date = $4
+	WHERE id = $1
+`
+
 func (s *User) InsertJobData(ctx context.Context, userJobData *store.UserJobData) error {
-	insertStmt, err := s.db.PrepareContext(ctx, userJobInsert)
-	if err != nil {
-		return err
+	var insertStmt *sql.Stmt
+	var err error
+
+	if userJobData.ID == "" {
+		insertStmt, err = s.db.PrepareContext(ctx, userJobInsert)
+		if err != nil {
+			return err
+		}
+	} else {
+		insertStmt, err = s.db.PrepareContext(ctx, userJobUpdate)
+		if err != nil {
+			return err
+		}
 	}
+
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("failed to begin tx: %w", err)
 	}
 	defer tx.Rollback()
 
-	createdAt := time.Now().UTC()
-	_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
-		userJobData.ID, userJobData.UserID, userJobData.Role,
-		userJobData.Company, userJobData.JoinedDate, createdAt,
-	)
-	if err != nil {
-		return fmt.Errorf("failed to insert: %w", err)
+	if userJobData.ID == "" {
+		userJobID := uuid.NewString()
+		createdAt := time.Now().UTC()
+		_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
+			userJobID, userJobData.UserID, userJobData.Role,
+			userJobData.Company, userJobData.JoinedDate, createdAt,
+		)
+		if err != nil {
+			return fmt.Errorf("failed to insert: %w", err)
+		}
+		userJobData.ID = userJobID
+		userJobData.CreatedAt = createdAt
+	} else {
+		_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
+			userJobData.ID, userJobData.Role,
+			userJobData.Company, userJobData.JoinedDate,
+		)
+		if err != nil {
+			return fmt.Errorf("failed to insert: %w", err)
+		}
 	}
 
 	if err = tx.Commit(); err != nil {
 		return fmt.Errorf("failed to commit: %w", err)
 	}
-	userJobData.CreatedAt = createdAt
 
 	return nil
 }
@@ -333,6 +392,210 @@ func (s *User) UpdateWithPhotoByID(ctx context.Context, user *store.UserData) er
 	)
 	if err != nil {
 		return fmt.Errorf("failed to update: %w", err)
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit: %w", err)
+	}
+
+	return nil
+}
+
+const userCurrentInstitutionFindByUserID = `SELECT uci.id, uci.user_id, COALESCE(uci.institution_id, 0), COALESCE(uci.institution_name, ''), uci.role, uci.status, uci.created_at
+	FROM user_current_institutions uci
+	WHERE uci.user_id = $1
+	ORDER by uci.created_at ASC
+`
+
+func (s *User) FindCurrentInstitutionDataByUserID(ctx context.Context, id string) ([]*store.UserCurrentInstitutionData, error) {
+	userEvaluationList := []*store.UserCurrentInstitutionData{}
+
+	rows, err := s.db.QueryContext(ctx, userCurrentInstitutionFindByUserID, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		userCurrentInstitution := &store.UserCurrentInstitutionData{}
+		err := rows.Scan(
+			&userCurrentInstitution.ID, &userCurrentInstitution.UserID, &userCurrentInstitution.InstitutionID,
+			&userCurrentInstitution.InstitutionName, &userCurrentInstitution.Role,
+			&userCurrentInstitution.Status, &userCurrentInstitution.CreatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		userEvaluationList = append(userEvaluationList, userCurrentInstitution)
+	}
+
+	return userEvaluationList, nil
+}
+
+const userInstitutionInsert = `INSERT INTO
+user_current_institutions(
+	id, user_id, institution_id, institution_name, role, status, created_at
+) values(
+	$1, $2, $3, $4, $5, $6, $7
+)
+`
+
+const userInstitutionWithoutIDInsert = `INSERT INTO
+user_current_institutions(
+	id, user_id, institution_name, role, status, created_at
+) values(
+	$1, $2, $3, $4, $5, $6
+)
+`
+
+const userInstitutionUpdate = `UPDATE user_current_institutions
+	SET institution_id = $2, institution_name = $3, role = $4
+	WHERE id = $1
+`
+
+const userInstitutionWithoutIDUpdate = `UPDATE user_current_institutions
+	SET institution_name = $2, role = $3
+	WHERE id = $1
+`
+
+func (s *User) InsertCurrentInstitutionData(ctx context.Context, institutionData *store.UserCurrentInstitutionData) error {
+	var insertStmt *sql.Stmt
+	var err error
+	var status string
+
+	if institutionData.ID == "" {
+		if institutionData.InstitutionID == 0 {
+			insertStmt, err = s.db.PrepareContext(ctx, userInstitutionWithoutIDInsert)
+			if err != nil {
+				return err
+			}
+			status = "WAITING_FOR_VALIDATION"
+		} else {
+			insertStmt, err = s.db.PrepareContext(ctx, userInstitutionInsert)
+			if err != nil {
+				return err
+			}
+			status = "VALID"
+		}
+	} else {
+		if institutionData.InstitutionID == 0 {
+			insertStmt, err = s.db.PrepareContext(ctx, userInstitutionWithoutIDUpdate)
+			if err != nil {
+				return err
+			}
+		} else {
+			insertStmt, err = s.db.PrepareContext(ctx, userInstitutionUpdate)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	if institutionData.ID == "" {
+		createdAt := time.Now().UTC()
+		institutionDataID := uuid.NewString()
+		if institutionData.InstitutionID == 0 {
+			_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
+				institutionDataID, institutionData.UserID, institutionData.InstitutionName,
+				institutionData.Role, status, createdAt,
+			)
+			if err != nil {
+				return fmt.Errorf("failed to insert: %w", err)
+			}
+		} else {
+			_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
+				institutionDataID, institutionData.UserID, institutionData.InstitutionID,
+				institutionData.InstitutionName, institutionData.Role, status, createdAt,
+			)
+			if err != nil {
+				return fmt.Errorf("failed to insert: %w", err)
+			}
+		}
+		institutionData.ID = institutionDataID
+		institutionData.CreatedAt = createdAt
+	} else {
+		if institutionData.InstitutionID == 0 {
+			_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
+				institutionData.ID, institutionData.InstitutionName,
+				institutionData.Role,
+			)
+			if err != nil {
+				return fmt.Errorf("failed to insert: %w", err)
+			}
+		} else {
+			_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
+				institutionData.ID, institutionData.InstitutionID,
+				institutionData.InstitutionName, institutionData.Role,
+			)
+			if err != nil {
+				return fmt.Errorf("failed to insert: %w", err)
+			}
+		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit: %w", err)
+	}
+
+	return nil
+}
+
+const deleteCurrentInstitutionByIdQuery = `DELETE FROM user_current_institutions
+	WHERE id = $1
+`
+
+func (s *User) DeleteCurrentInstitutionByID(ctx context.Context, id string) error {
+	deleteStmt, err := s.db.PrepareContext(ctx, deleteCurrentInstitutionByIdQuery)
+	if err != nil {
+		return err
+	}
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	_, err = tx.StmtContext(ctx, deleteStmt).ExecContext(ctx,
+		id,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to delete: %w", err)
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit: %w", err)
+	}
+
+	return nil
+}
+
+const verifyCurrentInstitutionByIdQuery = `UPDATE user_current_institutions
+	SET status = 'VALID'
+	WHERE id = $1
+`
+
+func (s *User) VerifyInstitutionData(ctx context.Context, id string) error {
+	deleteStmt, err := s.db.PrepareContext(ctx, verifyCurrentInstitutionByIdQuery)
+	if err != nil {
+		return err
+	}
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	_, err = tx.StmtContext(ctx, deleteStmt).ExecContext(ctx,
+		id,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to verify: %w", err)
 	}
 
 	if err = tx.Commit(); err != nil {

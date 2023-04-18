@@ -63,6 +63,14 @@ func (handler *indicatorAssessmentHandler) ValidateIndicatorAssessmentResult(w h
 		}
 	}
 
+	// TODO need to implement check if status is already validated before
+	err = handler.assessmentStore.UpdateStatus(ctx, assessmentId, store.AssessmentStatus(store.VALIDATED))
+	if err != nil {
+		log.Println(err.Error())
+		response.Error(w, apierror.InternalServerError())
+		return
+	}
+
 	resp := ValidateIndicatorAssessmentResultResponse{
 		Message: "validation success",
 	}

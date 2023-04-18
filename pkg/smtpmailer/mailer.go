@@ -21,11 +21,16 @@ type Config struct {
 
 type Client interface {
 	Send(subject, message []byte, receiver []string, templateName string, items interface{}) error
+	SendSimple(subject, message []byte, receiver []string) error
 }
 
 type mockClient struct{}
 
 func (mc *mockClient) Send(subject, message []byte, receiver []string, templateName string, items interface{}) error {
+	return nil
+}
+
+func (mc *mockClient) SendSimple(subject, message []byte, receiver []string) error {
 	return nil
 }
 
@@ -76,6 +81,15 @@ func (m *SimpleMailer) Send(subject, message []byte, receiver []string, template
 		return nil
 	}
 
+	return smtp.SendMail(fmt.Sprintf("%s:%d", m.Host, m.Port), m.Auth, m.From, receiver, []byte(toSend))
+}
+
+func (m *SimpleMailer) SendSimple(subject, message []byte, receiver []string) error {
+	toSend := "Subject: " + string(subject) + "\n\n" + string(message)
+	if m.Debug {
+		log.Println(toSend)
+		return nil
+	}
 	return smtp.SendMail(fmt.Sprintf("%s:%d", m.Host, m.Port), m.Auth, m.From, receiver, []byte(toSend))
 }
 

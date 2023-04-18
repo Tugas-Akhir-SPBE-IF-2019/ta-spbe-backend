@@ -298,17 +298,17 @@ func (s *IndicatorAssessment) ValidateAssessmentResult(ctx context.Context, resu
 	return nil
 }
 
-const updateIndicatorAssessmentResultQuery = `UPDATE indicator_assessments
-	SET status = $2, level = $3, explanation = $4, updated_at = $5
-	WHERE id = $1
-`
-const insertSupportDataDocumentProofQuery = `INSERT into
-	support_data_document_proofs(
-		id, indicator_assessment_id, support_data_document_id, proof, created_at
-	) values(
-		$1, $2, $3, $4, $5
-	)
-`
+// const updateIndicatorAssessmentResultQuery = `UPDATE indicator_assessments
+// 	SET status = $2, level = $3, explanation = $4, updated_at = $5
+// 	WHERE id = $1
+// `
+// const insertSupportDataDocumentProofQuery = `INSERT into
+// 	support_data_document_proofs(
+// 		id, indicator_assessment_id, support_data_document_id, proof, created_at
+// 	) values(
+// 		$1, $2, $3, $4, $5
+// 	)
+// `
 
 func (s *IndicatorAssessment) UpdateAssessmentResult(ctx context.Context, resultDetail *store.IndicatorAssessmentResultDetail) error {
 	tx, err := s.db.BeginTx(ctx, nil)

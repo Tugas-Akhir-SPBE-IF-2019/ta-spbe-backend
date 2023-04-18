@@ -117,3 +117,54 @@ func (s *Institution) FindAllPagination(ctx context.Context, offset int, limit i
 
 	return institutionList, nil
 }
+
+const institutionFindByInstitutionNameQuery = `SELECT i.id, i.name, i.category
+		FROM institution i
+		WHERE i.name = $1`
+
+func (s *Institution) FindByInstitutionName(ctx context.Context, institutionName string) (*store.InstitutionDetail, error) {
+	institution := &store.InstitutionDetail{}
+
+	row := s.db.QueryRowContext(ctx, institutionFindByInstitutionNameQuery, institutionName)
+	err := row.Scan(
+		&institution.ID, &institution.Name, &institution.Category,
+	)
+	if err != nil {
+		return institution, err
+	}
+
+	return institution, nil
+}
+
+const insertInstitutionQuery = `INSERT INTO
+institution(
+	institution (category, name)
+) values(
+	$1, $2
+)
+`
+
+func (s *Institution) Insert(ctx context.Context, institution *store.InstitutionDetail) error {
+	insertStmt, err := s.db.PrepareContext(ctx, insertInstitutionQuery)
+	if err != nil {
+		return err
+	}
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	_, err = tx.StmtContext(ctx, insertStmt).ExecContext(ctx,
+		1, institution.Name, // category is still hardcoded; need change by making new category e.g USER_GENERATED
+	)
+	if err != nil {
+		return fmt.Errorf("failed to insert: %w", err)
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit: %w", err)
+	}
+
+	return nil
+}

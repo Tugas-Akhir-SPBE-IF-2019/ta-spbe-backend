@@ -292,7 +292,7 @@ func (s *Assessment) UpdateStatus(ctx context.Context, assessmentId string, stat
 	updatedAt := time.Now().UTC()
 	updateAssessmentStatusStmt, err := s.db.PrepareContext(ctx, updateAssessmentStatusQuery)
 	_, err = tx.StmtContext(ctx, updateAssessmentStatusStmt).ExecContext(ctx, assessmentId,
-		store.AssessmentStatus(store.COMPLETED), updatedAt)
+		status, updatedAt)
 	if err != nil {
 		return fmt.Errorf("failed to update assessment: %w", err)
 	}
@@ -301,7 +301,7 @@ func (s *Assessment) UpdateStatus(ctx context.Context, assessmentId string, stat
 	statusHistoryId := uuid.NewString()
 	insertStatusHistoryStmt, err := s.db.PrepareContext(ctx, insertStatusHistoryQuery)
 	_, err = tx.StmtContext(ctx, insertStatusHistoryStmt).ExecContext(ctx,
-		statusHistoryId, assessmentId, store.AssessmentStatus(store.COMPLETED), updatedAt,
+		statusHistoryId, assessmentId, status, updatedAt,
 	)
 	if err != nil {
 		return fmt.Errorf("failed to insert assessment status history: %w", err)
@@ -343,7 +343,7 @@ func (s *Assessment) FindAllStatusHistoryById(ctx context.Context, assessmentId 
 	return assessmentStatusHistoryList, nil
 }
 
-const findAllDocumentsByIdQuery = `SELECT sdd.document_original_name, sdd.document_url 
+const findAllDocumentsByIdQuery = `SELECT sdd.document_original_name, sdd.document_url, sdd.type 
 	FROM support_data_documents sdd
 	WHERE sdd.assessment_id = $1
 `
@@ -362,6 +362,7 @@ func (s *Assessment) FindAllDocumentsById(ctx context.Context, assessmentId stri
 		err := rows.Scan(
 			&assessmentDocument.Name,
 			&assessmentDocument.Url,
+			&assessmentDocument.Type,
 		)
 		if err != nil {
 			return nil, err
@@ -370,4 +371,71 @@ func (s *Assessment) FindAllDocumentsById(ctx context.Context, assessmentId stri
 	}
 
 	return assessmentDocumentList, nil
+}
+
+const updateIndicatorAssessmentResultQuery = `UPDATE indicator_assessments
+	SET status = $2, level = $3, explanation = $4, updated_at = $5
+	WHERE id = $1
+`
+
+const findSupportDataDocumentIdByDocumentName = `SELECT sdd.id
+	FROM support_data_documents sdd
+	WHERE sdd.document_name = $1	
+`
+
+const insertSupportDataDocumentProofQuery = `INSERT into
+	support_data_document_proofs(
+		id, indicator_assessment_id, support_data_document_id, proof, image_url, specific_page_document_url, created_at
+	) values(
+		$1, $2, $3, $4, $5, $6, $7
+	)
+`
+
+func (s *Assessment) UpdateAssessmentResult(ctx context.Context, resultDetail *store.AssessmenUpdateResultDetail) error {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin update assessment result tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	updatedAt := time.Now().UTC()
+	for _, indicatorAssessment := range resultDetail.IndicatorAssessmentList {
+		updateIndicatorAssessmentResultStmt, err := s.db.PrepareContext(ctx, updateIndicatorAssessmentResultQuery)
+		_, err = tx.StmtContext(ctx, updateIndicatorAssessmentResultStmt).ExecContext(ctx,
+			indicatorAssessment.ID, store.AssessmentStatus(store.COMPLETED),
+			indicatorAssessment.Result.Level, indicatorAssessment.Result.Explanation, updatedAt)
+		if err != nil {
+			return fmt.Errorf("failed to update indicator assessment: %w", err)
+		}
+
+		for _, supportDocumentProof := range indicatorAssessment.DocumentProof {
+			var supportDocumentID string
+			row := s.db.QueryRowContext(ctx, findSupportDataDocumentIdByDocumentName, supportDocumentProof.Name)
+			err := row.Scan(
+				&supportDocumentID,
+			)
+			if err != nil {
+				return fmt.Errorf("support data document not found: %w", err)
+			}
+
+			for idx, proofPictureURL := range supportDocumentProof.PictureFileList {
+				supportDataDocumentProofId := uuid.NewString()
+				insertSupportDataDocumentProofStmt, err := s.db.PrepareContext(ctx, insertSupportDataDocumentProofQuery)
+				_, err = tx.StmtContext(ctx, insertSupportDataDocumentProofStmt).ExecContext(ctx,
+					supportDataDocumentProofId, indicatorAssessment.ID, supportDocumentID,
+					supportDocumentProof.Text, proofPictureURL,
+					supportDocumentProof.SpecificPageDocumentURL[idx], updatedAt)
+				if err != nil {
+					return fmt.Errorf("failed to insert support data document proof: %w", err)
+				}
+			}
+
+		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit update assessment result tx: %w", err)
+	}
+
+	return nil
 }

@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 
@@ -106,7 +105,7 @@ func (handler *assessmentHandler) UploadSPBEDocumentV2(w http.ResponseWriter, r 
 	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)
 	req := UploadSpbeDocumentRequest{
 		institutionName: r.FormValue("institution_name"),
-		phoneNumberStr: r.FormValue("phone_number"),
+		phoneNumberStr:  r.FormValue("phone_number"),
 	}
 
 	r.ParseForm()
@@ -201,13 +200,13 @@ func (handler *assessmentHandler) UploadSPBEDocumentV2(w http.ResponseWriter, r 
 			UserId:                userCred.ID,
 			RecipientNumber:       req.phoneNumberStr,
 			AssessmentId:          assessmentUploadDetail.AssessmentDetail.Id,
-			IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
-			Filename:              assessmentUploadDetail.SupportDataDocumentInfoList[0].DocumentName, // WIP need to be updated later
-			OriginalFilename:      supportDataDocumentInfoList[0].OriginalDocumentName,
+			// IndicatorAssessmentId: assessmentUploadDetail.IndicatorAssessmentInfo.Id,
+			// Filename:              assessmentUploadDetail.SupportDataDocumentInfoList[0].DocumentName, // WIP need to be updated later
+			// OriginalFilename:      supportDataDocumentInfoList[0].OriginalDocumentName,
 			Timestamp:             time.Now().UTC().String(),
-			IndicatorNumber:       strconv.Itoa(indicatorNumber),
-			IndicatorDetail:       indicatorData.Detail,
-			InstitutionName:       req.institutionName,
+			// IndicatorNumber:       strconv.Itoa(indicatorNumber),
+			IndicatorDetail: indicatorData.Detail,
+			InstitutionName: req.institutionName,
 		}
 
 		producerPayload, err := handler.jsonClient.Marshal(msg)

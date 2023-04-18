@@ -14,7 +14,6 @@ type IndicatorAssessmentHandler interface {
 	GetIndicatorAssessmentIndexList(w http.ResponseWriter, r *http.Request)
 	GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList(w http.ResponseWriter, r *http.Request)
 	ValidateIndicatorAssessmentResult(w http.ResponseWriter, r *http.Request)
-	ResultCallback(w http.ResponseWriter, r *http.Request)
 }
 
 type indicatorAssessmentHandler struct {
@@ -35,6 +34,6 @@ func NewIndicatorAssessmentHandler(db *sql.DB, assessmentStore store.Assessment,
 		userStore:                userStore,
 		smtpMailer:               smtpMailer,
 		waClient:                 waClient,
-		apiCfg: apiCfg,
+		apiCfg:                   apiCfg,
 	}
 }
