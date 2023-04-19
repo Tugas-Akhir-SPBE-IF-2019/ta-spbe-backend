@@ -15,10 +15,22 @@ import text_finding.indikator07 as indikator07
 import text_finding.indikator08 as indikator08
 import text_finding.indikator10 as indikator10
 import text_finding.highlight_pdf as highlight_pdf
+import text_similarity.preprocess as ts_preprocess
 import random
-
+import pickle
+import pandas as pd
 
 import nsq, ast, toml, logging, requests, threading
+
+# TODO model 2 and 10 are still missing
+model_dt_1 = pickle.load(open('./decision_tree_model/model_dtc_1.pckl', 'rb'))
+model_dt_3 = pickle.load(open('./decision_tree_model/model_dtc_3.pckl', 'rb'))
+model_dt_4 = pickle.load(open('./decision_tree_model/model_dtc_4.pckl', 'rb'))
+model_dt_5 = pickle.load(open('./decision_tree_model/model_dtc_5.pckl', 'rb'))
+model_dt_6 = pickle.load(open('./decision_tree_model/model_dtc_6.pckl', 'rb'))
+model_dt_7 = pickle.load(open('./decision_tree_model/model_dtc_7.pckl', 'rb'))
+model_dt_8 = pickle.load(open('./decision_tree_model/model_dtc_8.pckl', 'rb'))
+model_dt_9 = pickle.load(open('./decision_tree_model/model_dtc_9.pckl', 'rb'))
 
 
 def send_result(message_data, config):
@@ -104,6 +116,7 @@ def send_result(message_data, config):
         document_proof_list = []
         page_text = ""
         explanation_text = ""
+        level = 0 # init value
         for document_proof in proof['document_proof']:
             text_document_proof = document_proof['text']
             # TODO integrate with model; loop all of the old and meeting minutes documents
@@ -133,13 +146,57 @@ def send_result(message_data, config):
             institution_name = message_data['institution_name']
             indicator_detail = proof['indicator_assessment']['detail']
             indicator_number = proof['indicator_assessment']['number']
+
+
+            # TODO placeholder value
+            judul_notulensi_undangan = '[]'
+            isi_notulensi_undangan = '[]'
+            JudulDokumenLama = '[]'
+            TeksDokumenLama = '[]'
+            data_prediction = {
+                'Judul': [judulbaru],
+                'teks': [text_document_proof],
+                'JudulDokumenLama': [JudulDokumenLama],
+                'TeksDokumenLama': [TeksDokumenLama],
+                'JudulNotulensiUndangan': [judul_notulensi_undangan],
+                'IsiNotulensiUndangan': [isi_notulensi_undangan]
+            }
+            df_predict = pd.DataFrame(data_prediction)
+            if indicator_number == 1:
+                logging.warning("prediksi indikator 1")
+                level = ts_preprocess.predict_model(model_dt_1, df_predict)[0]
+            elif indicator_number == 2:
+                logging.warning("prediksi indikator 2")
+            elif indicator_number == 3:
+                logging.warning("prediksi indikator 3")
+                level = ts_preprocess.predict_model(model_dt_3, df_predict)[0]
+            elif indicator_number == 4:
+                logging.warning("prediksi indikator 4")
+                level = ts_preprocess.predict_model(model_dt_4, df_predict)[0]
+            elif indicator_number == 5:
+                logging.warning("prediksi indikator 5")
+                level = ts_preprocess.predict_model(model_dt_5, df_predict)[0]
+            elif indicator_number == 6:
+                logging.warning("prediksi indikator 6")
+                level = ts_preprocess.predict_model(model_dt_6, df_predict)[0]
+            elif indicator_number == 7:
+                logging.warning("prediksi indikator 7")
+                level = ts_preprocess.predict_model(model_dt_7, df_predict)[0]
+            elif indicator_number == 8:
+                logging.warning("prediksi indikator 8")
+                level = ts_preprocess.predict_model(model_dt_8, df_predict)[0]
+            elif indicator_number == 9:
+                logging.warning("prediksi indikator 9")
+                level = ts_preprocess.predict_model(model_dt_9, df_predict)[0]
+            elif indicator_number == 10:
+                logging.warning("prediksi indikator 10")
+
             explanation_text = f"Verifikasi dan validasi telah dilakukan terhadap penjelasan dan data dukung pada Indikator {indicator_number} {indicator_detail} pada {institution_name}, dimana tercantum dalam {judulbaru}, yaitu pada halaman {page_text} sesuai data dukung  {original_filename}"
-        level = random.randint(2,4)
         result_list.append({
             'indicator_assessment': proof['indicator_assessment'],
             'document_proof': proof['document_proof'],
             'result': {
-                'level': level,
+                'level': int(level),
                 'explanation': explanation_text
             }
         })

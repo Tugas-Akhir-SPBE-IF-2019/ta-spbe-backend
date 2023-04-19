@@ -4,6 +4,7 @@ COPY ./app /app/src
 COPY ./requirements.txt /app
 COPY ./config.toml /app
 COPY ./model.pckl /app
+COPY ./app/text_similarity /app
 
 WORKDIR /app
 
