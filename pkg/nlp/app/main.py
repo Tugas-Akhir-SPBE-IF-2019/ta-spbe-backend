@@ -22,16 +22,38 @@ import pandas as pd
 
 import nsq, ast, toml, logging, requests, threading
 
-# TODO model 2 and 10 are still missing
-model_dt_1 = pickle.load(open('./decision_tree_model/model_dtc_1.pckl', 'rb'))
-model_dt_3 = pickle.load(open('./decision_tree_model/model_dtc_3.pckl', 'rb'))
-model_dt_4 = pickle.load(open('./decision_tree_model/model_dtc_4.pckl', 'rb'))
-model_dt_5 = pickle.load(open('./decision_tree_model/model_dtc_5.pckl', 'rb'))
-model_dt_6 = pickle.load(open('./decision_tree_model/model_dtc_6.pckl', 'rb'))
-model_dt_7 = pickle.load(open('./decision_tree_model/model_dtc_7.pckl', 'rb'))
-model_dt_8 = pickle.load(open('./decision_tree_model/model_dtc_8.pckl', 'rb'))
-model_dt_9 = pickle.load(open('./decision_tree_model/model_dtc_9.pckl', 'rb'))
+model_lsa_svm_1 = pickle.load(open('./lsa_svm_model/lsa_model_svm_1.pkl', 'rb'))
+model_lsa_svm_2 = pickle.load(open('./lsa_svm_model/lsa_model_svm_2.pkl', 'rb'))
+model_lsa_svm_3 = pickle.load(open('./lsa_svm_model/lsa_model_svm_3.pkl', 'rb'))
+model_lsa_svm_4 = pickle.load(open('./lsa_svm_model/lsa_model_svm_4.pkl', 'rb'))
+model_lsa_svm_5 = pickle.load(open('./lsa_svm_model/lsa_model_svm_5.pkl', 'rb'))
+model_lsa_svm_6 = pickle.load(open('./lsa_svm_model/lsa_model_svm_6.pkl', 'rb'))
+model_lsa_svm_7 = pickle.load(open('./lsa_svm_model/lsa_model_svm_7.pkl', 'rb'))
+model_lsa_svm_8 = pickle.load(open('./lsa_svm_model/lsa_model_svm_8.pkl', 'rb'))
+model_lsa_svm_9 = pickle.load(open('./lsa_svm_model/lsa_model_svm_9.pkl', 'rb'))
+model_lsa_svm_10 = pickle.load(open('./lsa_svm_model/lsa_model_svm_10.pkl', 'rb'))
 
+model_svm_1 = pickle.load(open('./lsa_svm_model/model_svm_1.pkl', 'rb'))
+model_svm_2 = pickle.load(open('./lsa_svm_model/model_svm_2.pkl', 'rb'))
+model_svm_3 = pickle.load(open('./lsa_svm_model/model_svm_3.pkl', 'rb'))
+model_svm_4 = pickle.load(open('./lsa_svm_model/model_svm_4.pkl', 'rb'))
+model_svm_5 = pickle.load(open('./lsa_svm_model/model_svm_5.pkl', 'rb'))
+model_svm_6 = pickle.load(open('./lsa_svm_model/model_svm_6.pkl', 'rb'))
+model_svm_7 = pickle.load(open('./lsa_svm_model/model_svm_7.pkl', 'rb'))
+model_svm_8 = pickle.load(open('./lsa_svm_model/model_svm_8.pkl', 'rb'))
+model_svm_9 = pickle.load(open('./lsa_svm_model/model_svm_9.pkl', 'rb'))
+model_svm_10 = pickle.load(open('./lsa_svm_model/model_svm_10.pkl', 'rb'))
+
+model_vectorizer_svm_1 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_1.pkl', 'rb'))
+model_vectorizer_svm_2 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_2.pkl', 'rb'))
+model_vectorizer_svm_3 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_3.pkl', 'rb'))
+model_vectorizer_svm_4 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_4.pkl', 'rb'))
+model_vectorizer_svm_5 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_5.pkl', 'rb'))
+model_vectorizer_svm_6 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_6.pkl', 'rb'))
+model_vectorizer_svm_7 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_7.pkl', 'rb'))
+model_vectorizer_svm_8 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_8.pkl', 'rb'))
+model_vectorizer_svm_9 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_9.pkl', 'rb'))
+model_vectorizer_svm_10 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_10.pkl', 'rb'))
 
 def send_result(message_data, config):
     new_document_list = []
@@ -154,6 +176,7 @@ def send_result(message_data, config):
             JudulDokumenLama = '[]'
             TeksDokumenLama = '[]'
             data_prediction = {
+                'indikator': [indicator_number],
                 'Judul': [judulbaru],
                 'teks': [text_document_proof],
                 'JudulDokumenLama': [JudulDokumenLama],
@@ -162,34 +185,38 @@ def send_result(message_data, config):
                 'IsiNotulensiUndangan': [isi_notulensi_undangan]
             }
             df_predict = pd.DataFrame(data_prediction)
-            if indicator_number == 1:
-                logging.warning("prediksi indikator 1")
-                level = ts_preprocess.predict_model(model_dt_1, df_predict)[0]
-            elif indicator_number == 2:
-                logging.warning("prediksi indikator 2")
-            elif indicator_number == 3:
-                logging.warning("prediksi indikator 3")
-                level = ts_preprocess.predict_model(model_dt_3, df_predict)[0]
-            elif indicator_number == 4:
-                logging.warning("prediksi indikator 4")
-                level = ts_preprocess.predict_model(model_dt_4, df_predict)[0]
-            elif indicator_number == 5:
-                logging.warning("prediksi indikator 5")
-                level = ts_preprocess.predict_model(model_dt_5, df_predict)[0]
-            elif indicator_number == 6:
-                logging.warning("prediksi indikator 6")
-                level = ts_preprocess.predict_model(model_dt_6, df_predict)[0]
-            elif indicator_number == 7:
-                logging.warning("prediksi indikator 7")
-                level = ts_preprocess.predict_model(model_dt_7, df_predict)[0]
-            elif indicator_number == 8:
-                logging.warning("prediksi indikator 8")
-                level = ts_preprocess.predict_model(model_dt_8, df_predict)[0]
-            elif indicator_number == 9:
-                logging.warning("prediksi indikator 9")
-                level = ts_preprocess.predict_model(model_dt_9, df_predict)[0]
-            elif indicator_number == 10:
-                logging.warning("prediksi indikator 10")
+            for index, row in df_predict.iterrows():
+                df_per_row = row.to_frame().transpose()
+                if indicator_number == 1:
+                    logging.warning("prediksi indikator 1")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_1 ,model_lsa_svm_1, model_svm_1)[0]
+                elif indicator_number == 2:
+                    logging.warning("prediksi indikator 2")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_2 ,model_lsa_svm_2, model_svm_2)[0]
+                elif indicator_number == 3:
+                    logging.warning("prediksi indikator 3")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_3 ,model_lsa_svm_3, model_svm_3)[0]
+                elif indicator_number == 4:
+                    logging.warning("prediksi indikator 4")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_4 ,model_lsa_svm_4, model_svm_4)[0]
+                elif indicator_number == 5:
+                    logging.warning("prediksi indikator 5")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_5 ,model_lsa_svm_5, model_svm_5)[0]
+                elif indicator_number == 6:
+                    logging.warning("prediksi indikator 6")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_6 ,model_lsa_svm_6, model_svm_6)[0]
+                elif indicator_number == 7:
+                    logging.warning("prediksi indikator 7")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_7 ,model_lsa_svm_7, model_svm_7)[0]
+                elif indicator_number == 8:
+                    logging.warning("prediksi indikator 8")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_8 ,model_lsa_svm_8, model_svm_8)[0]
+                elif indicator_number == 9:
+                    logging.warning("prediksi indikator 9")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_9 ,model_lsa_svm_9, model_svm_9)[0]
+                elif indicator_number == 10:
+                    logging.warning("prediksi indikator 10")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_10 ,model_lsa_svm_10, model_svm_10)[0]
 
             explanation_text = f"Verifikasi dan validasi telah dilakukan terhadap penjelasan dan data dukung pada Indikator {indicator_number} {indicator_detail} pada {institution_name}, dimana tercantum dalam {judulbaru}, yaitu pada halaman {page_text} sesuai data dukung  {original_filename}"
         result_list.append({
