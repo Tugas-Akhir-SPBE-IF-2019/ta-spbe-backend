@@ -8,6 +8,8 @@ services:
     depends_on:
       - db
       - nsqd
+    ports:
+      - "3000:80"
     environment:
       - VIRTUAL_HOST=localhost
       - LETSENCRYPT_HOST=localhost
