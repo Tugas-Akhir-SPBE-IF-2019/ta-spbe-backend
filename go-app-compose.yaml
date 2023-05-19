@@ -11,8 +11,8 @@ services:
     ports:
       - "3000:80"
     volumes:
-      - ./:/src/
-      - ./cmd/rest/main.go:/src/main.go
+      - ./:/usr/bin/
+      - ./cmd/rest/main.go:/usr/bin/main.go
     environment:
       - VIRTUAL_HOST=localhost
       - LETSENCRYPT_HOST=localhost
