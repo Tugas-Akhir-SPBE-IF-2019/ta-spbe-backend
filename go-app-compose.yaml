@@ -10,6 +10,9 @@ services:
       - nsqd
     ports:
       - "3000:80"
+    volumes:
+      - ./:/src/
+      - ./cmd/rest/main.go:/src/main.go
     environment:
       - VIRTUAL_HOST=localhost
       - LETSENCRYPT_HOST=localhost
