@@ -88,8 +88,8 @@ type AssessmenUpdateResultDetail struct {
 }
 
 type Assessment interface {
-	FindAll(ctx context.Context, queryInstitution string, status int, startDate string, endDate string) ([]*AssessmentDetail, error)
-	FindAllPagination(ctx context.Context, offset int, limit int, queryInstitution string, status int, startDate string, endDate string) ([]*AssessmentDetail, error)
+	FindAll(ctx context.Context, userId string, queryInstitution string, status int, startDate string, endDate string) ([]*AssessmentDetail, error)
+	FindAllPagination(ctx context.Context, offset int, limit int, userId string, queryInstitution string, status int, startDate string, endDate string) ([]*AssessmentDetail, error)
 	InsertUploadDocument(ctx context.Context, assessmentUploadDetail *AssessmentUploadDetail) error
 	UpdateAssessmentResult(ctx context.Context, resultDetail *AssessmenUpdateResultDetail) error
 	UpdateStatus(ctx context.Context, assessmentId string, status AssessmentStatus) error

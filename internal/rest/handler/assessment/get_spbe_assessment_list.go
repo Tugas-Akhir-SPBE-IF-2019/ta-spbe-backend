@@ -11,6 +11,7 @@ import (
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/response"
 
 	apierror "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/error"
+	userCtx "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/handler/context"
 )
 
 type GetAssessmentListRequest struct {
@@ -103,6 +104,11 @@ type AssessmentItem struct {
 
 func (handler *assessmentHandler) GetSPBEAssessmentList(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	userCred, ok := ctx.Value(userCtx.UserCtxKey).(userCtx.UserCtx)
+	if !ok {
+		response.Error(w, apierror.InternalServerError())
+		return
+	}
 
 	req := GetAssessmentListRequest{
 		pageStr:      r.URL.Query().Get("page"),
@@ -119,7 +125,7 @@ func (handler *assessmentHandler) GetSPBEAssessmentList(w http.ResponseWriter, r
 		return
 	}
 
-	assessmentListAll, err := handler.assessmentStore.FindAll(ctx, req.institution, req.status, req.startDateStr, req.endDateStr)
+	assessmentListAll, err := handler.assessmentStore.FindAll(ctx, userCred.ID, req.institution, req.status, req.startDateStr, req.endDateStr)
 	if err != nil {
 		log.Println(err)
 
@@ -129,7 +135,7 @@ func (handler *assessmentHandler) GetSPBEAssessmentList(w http.ResponseWriter, r
 	totalItems := len(assessmentListAll)
 
 	offset := req.limit * (req.page - 1)
-	assessmentList, err := handler.assessmentStore.FindAllPagination(ctx, offset, req.limit, req.institution, req.status, req.startDateStr, req.endDateStr)
+	assessmentList, err := handler.assessmentStore.FindAllPagination(ctx, offset, req.limit, userCred.ID, req.institution, req.status, req.startDateStr, req.endDateStr)
 	if err != nil {
 		log.Println(err)
 

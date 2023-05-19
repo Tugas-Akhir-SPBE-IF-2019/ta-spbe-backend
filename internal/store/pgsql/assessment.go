@@ -22,7 +22,7 @@ func NewAssessment(db *sql.DB) *Assessment {
 const assessmentFindAllQuery = `SELECT a.id, a.institution_name, a.status, a.created_at
 	FROM assessments a `
 
-func (s *Assessment) FindAll(ctx context.Context, queryInstitution string, status int, startDate string, endDate string) ([]*store.AssessmentDetail, error) {
+func (s *Assessment) FindAll(ctx context.Context, userId string, queryInstitution string, status int, startDate string, endDate string) ([]*store.AssessmentDetail, error) {
 	assessmentList := []*store.AssessmentDetail{}
 	var queryKeys []string
 	var queryParams []interface{}
@@ -48,6 +48,11 @@ func (s *Assessment) FindAll(ctx context.Context, queryInstitution string, statu
 		queryParams = append(queryParams, endDate)
 	}
 
+	if userId != "" {
+		queryKeys = append(queryKeys, "UserId")
+		queryParams = append(queryParams, userId)
+	}
+
 	for index, key := range queryKeys {
 		if index == 0 {
 			query = query + "WHERE "
@@ -64,6 +69,8 @@ func (s *Assessment) FindAll(ctx context.Context, queryInstitution string, statu
 			query = query + fmt.Sprintf(`a.created_at >= $%d `, index+1)
 		case "EndDate":
 			query = query + fmt.Sprintf(`a.created_at <= $%d `, index+1)
+		case "UserId":
+			query = query + fmt.Sprintf(`a.user_id = $%d `, index+1)
 		}
 	}
 
@@ -90,7 +97,7 @@ func (s *Assessment) FindAll(ctx context.Context, queryInstitution string, statu
 	return assessmentList, nil
 }
 
-func (r *Assessment) FindAllPagination(ctx context.Context, offset int, limit int, queryInstitution string, status int, startDate string, endDate string) ([]*store.AssessmentDetail, error) {
+func (r *Assessment) FindAllPagination(ctx context.Context, offset int, limit int, userId string, queryInstitution string, status int, startDate string, endDate string) ([]*store.AssessmentDetail, error) {
 	assessmentList := []*store.AssessmentDetail{}
 	var queryKeys []string
 	var queryParams []interface{}
@@ -118,6 +125,11 @@ func (r *Assessment) FindAllPagination(ctx context.Context, offset int, limit in
 		queryParams = append(queryParams, endDate)
 	}
 
+	if userId != "" {
+		queryKeys = append(queryKeys, "UserId")
+		queryParams = append(queryParams, userId)
+	}
+
 	for index, key := range queryKeys {
 		if index == 0 {
 			query = query + "WHERE "
@@ -135,6 +147,8 @@ func (r *Assessment) FindAllPagination(ctx context.Context, offset int, limit in
 			query = query + fmt.Sprintf(`a.created_at >= $%d `, index+3)
 		case "EndDate":
 			query = query + fmt.Sprintf(`a.created_at <= $%d `, index+3)
+		case "UserId":
+			query = query + fmt.Sprintf(`a.user_id = $%d `, index+3)
 		}
 	}
 
