@@ -51,3 +51,4 @@ services:
       - "8000:15400"
     volumes:
       - ./pkg/nlp/app/:/app/src
+      - ./static/supporting-documents:/app/src/static
