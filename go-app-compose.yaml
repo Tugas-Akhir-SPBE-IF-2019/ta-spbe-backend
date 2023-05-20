@@ -25,6 +25,8 @@ services:
       POSTGRES_PASSWORD: ta-spbe
     ports:
       - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
   nsqlookupd:
     image: nsqio/nsq
     restart: always
@@ -57,3 +59,5 @@ services:
     volumes:
       - ./pkg/nlp/app/:/app/src
       - ./static/supporting-documents:/app/src/static
+volumes:
+  pgdata:
