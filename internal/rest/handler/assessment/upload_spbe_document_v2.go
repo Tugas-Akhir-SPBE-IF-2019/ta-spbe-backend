@@ -17,7 +17,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// const MAX_UPLOAD_SIZE = 10240 * 10240 // 10MB
+// const MAX_UPLOAD_SIZE = 1024 * 1024 * 10 // 10MB
 
 // type UploadSpbeDocumentRequest struct {
 // 	institutionName                 string
