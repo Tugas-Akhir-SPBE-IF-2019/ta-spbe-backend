@@ -2,8 +2,6 @@
 # input is txt file from preprocess dokumen lama, nama instansi & judul from dokumen lama & baru
 
 import re
-import preprocess_dokbaru as dokbaru
-import preprocess_doklama as doklama
 from .utility import *
 
 

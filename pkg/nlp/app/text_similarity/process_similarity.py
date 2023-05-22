@@ -1,53 +1,53 @@
-import text_finding.preprocess_dokbaru as text_finding_dokbaru
-import text_finding.preprocess_notulen as text_finding_notulen
-import text_finding.indikator01 as indikator01
-import text_finding.indikator02 as indikator02
-import text_finding.indikator03 as indikator03
-import text_finding.indikator04 as indikator04
-import text_finding.indikator05 as indikator05
-import text_finding.indikator06 as indikator06
-import text_finding.indikator07 as indikator07
-import text_finding.indikator08 as indikator08
-import text_finding.indikator09 as indikator09
-import text_finding.indikator10 as indikator10
-import text_finding.highlight_pdf as highlight_pdf
-import text_similarity.preprocess as ts_preprocess
+import app.text_finding.preprocess_dokbaru as text_finding_dokbaru
+import app.text_finding.preprocess_notulen as text_finding_notulen
+import app.text_finding.indikator01 as indikator01
+import app.text_finding.indikator02 as indikator02
+import app.text_finding.indikator03 as indikator03
+import app.text_finding.indikator04 as indikator04
+import app.text_finding.indikator05 as indikator05
+import app.text_finding.indikator06 as indikator06
+import app.text_finding.indikator07 as indikator07
+import app.text_finding.indikator08 as indikator08
+import app.text_finding.indikator09 as indikator09
+import app.text_finding.indikator10 as indikator10
+import app.text_finding.highlight_pdf as highlight_pdf
+import app.text_similarity.preprocess as ts_preprocess
 import pickle
 import pandas as pd
 import logging
 
-model_lsa_svm_1 = pickle.load(open('./lsa_svm_model/lsa_model_svm_1.pkl', 'rb'))
-model_lsa_svm_2 = pickle.load(open('./lsa_svm_model/lsa_model_svm_2.pkl', 'rb'))
-model_lsa_svm_3 = pickle.load(open('./lsa_svm_model/lsa_model_svm_3.pkl', 'rb'))
-model_lsa_svm_4 = pickle.load(open('./lsa_svm_model/lsa_model_svm_4.pkl', 'rb'))
-model_lsa_svm_5 = pickle.load(open('./lsa_svm_model/lsa_model_svm_5.pkl', 'rb'))
-model_lsa_svm_6 = pickle.load(open('./lsa_svm_model/lsa_model_svm_6.pkl', 'rb'))
-model_lsa_svm_7 = pickle.load(open('./lsa_svm_model/lsa_model_svm_7.pkl', 'rb'))
-model_lsa_svm_8 = pickle.load(open('./lsa_svm_model/lsa_model_svm_8.pkl', 'rb'))
-model_lsa_svm_9 = pickle.load(open('./lsa_svm_model/lsa_model_svm_9.pkl', 'rb'))
-model_lsa_svm_10 = pickle.load(open('./lsa_svm_model/lsa_model_svm_10.pkl', 'rb'))
+model_lsa_svm_1 = pickle.load(open('./app/text_similarity/lsa_svm_model/lsa_model_svm_1.pkl', 'rb'))
+model_lsa_svm_2 = pickle.load(open('./app/text_similarity/lsa_svm_model/lsa_model_svm_2.pkl', 'rb'))
+model_lsa_svm_3 = pickle.load(open('./app/text_similarity/lsa_svm_model/lsa_model_svm_3.pkl', 'rb'))
+model_lsa_svm_4 = pickle.load(open('./app/text_similarity/lsa_svm_model/lsa_model_svm_4.pkl', 'rb'))
+model_lsa_svm_5 = pickle.load(open('./app/text_similarity/lsa_svm_model/lsa_model_svm_5.pkl', 'rb'))
+model_lsa_svm_6 = pickle.load(open('./app/text_similarity/lsa_svm_model/lsa_model_svm_6.pkl', 'rb'))
+model_lsa_svm_7 = pickle.load(open('./app/text_similarity/lsa_svm_model/lsa_model_svm_7.pkl', 'rb'))
+model_lsa_svm_8 = pickle.load(open('./app/text_similarity/lsa_svm_model/lsa_model_svm_8.pkl', 'rb'))
+model_lsa_svm_9 = pickle.load(open('./app/text_similarity/lsa_svm_model/lsa_model_svm_9.pkl', 'rb'))
+model_lsa_svm_10 = pickle.load(open('./app/text_similarity/lsa_svm_model/lsa_model_svm_10.pkl', 'rb'))
 
-model_svm_1 = pickle.load(open('./lsa_svm_model/model_svm_1.pkl', 'rb'))
-model_svm_2 = pickle.load(open('./lsa_svm_model/model_svm_2.pkl', 'rb'))
-model_svm_3 = pickle.load(open('./lsa_svm_model/model_svm_3.pkl', 'rb'))
-model_svm_4 = pickle.load(open('./lsa_svm_model/model_svm_4.pkl', 'rb'))
-model_svm_5 = pickle.load(open('./lsa_svm_model/model_svm_5.pkl', 'rb'))
-model_svm_6 = pickle.load(open('./lsa_svm_model/model_svm_6.pkl', 'rb'))
-model_svm_7 = pickle.load(open('./lsa_svm_model/model_svm_7.pkl', 'rb'))
-model_svm_8 = pickle.load(open('./lsa_svm_model/model_svm_8.pkl', 'rb'))
-model_svm_9 = pickle.load(open('./lsa_svm_model/model_svm_9.pkl', 'rb'))
-model_svm_10 = pickle.load(open('./lsa_svm_model/model_svm_10.pkl', 'rb'))
+model_svm_1 = pickle.load(open('./app/text_similarity/lsa_svm_model/model_svm_1.pkl', 'rb'))
+model_svm_2 = pickle.load(open('./app/text_similarity/lsa_svm_model/model_svm_2.pkl', 'rb'))
+model_svm_3 = pickle.load(open('./app/text_similarity/lsa_svm_model/model_svm_3.pkl', 'rb'))
+model_svm_4 = pickle.load(open('./app/text_similarity/lsa_svm_model/model_svm_4.pkl', 'rb'))
+model_svm_5 = pickle.load(open('./app/text_similarity/lsa_svm_model/model_svm_5.pkl', 'rb'))
+model_svm_6 = pickle.load(open('./app/text_similarity/lsa_svm_model/model_svm_6.pkl', 'rb'))
+model_svm_7 = pickle.load(open('./app/text_similarity/lsa_svm_model/model_svm_7.pkl', 'rb'))
+model_svm_8 = pickle.load(open('./app/text_similarity/lsa_svm_model/model_svm_8.pkl', 'rb'))
+model_svm_9 = pickle.load(open('./app/text_similarity/lsa_svm_model/model_svm_9.pkl', 'rb'))
+model_svm_10 = pickle.load(open('./app/text_similarity/lsa_svm_model/model_svm_10.pkl', 'rb'))
 
-model_vectorizer_svm_1 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_1.pkl', 'rb'))
-model_vectorizer_svm_2 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_2.pkl', 'rb'))
-model_vectorizer_svm_3 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_3.pkl', 'rb'))
-model_vectorizer_svm_4 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_4.pkl', 'rb'))
-model_vectorizer_svm_5 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_5.pkl', 'rb'))
-model_vectorizer_svm_6 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_6.pkl', 'rb'))
-model_vectorizer_svm_7 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_7.pkl', 'rb'))
-model_vectorizer_svm_8 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_8.pkl', 'rb'))
-model_vectorizer_svm_9 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_9.pkl', 'rb'))
-model_vectorizer_svm_10 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_10.pkl', 'rb'))
+model_vectorizer_svm_1 = pickle.load(open('./app/text_similarity/lsa_svm_model/vectorizer_model_svm_1.pkl', 'rb'))
+model_vectorizer_svm_2 = pickle.load(open('./app/text_similarity/lsa_svm_model/vectorizer_model_svm_2.pkl', 'rb'))
+model_vectorizer_svm_3 = pickle.load(open('./app/text_similarity/lsa_svm_model/vectorizer_model_svm_3.pkl', 'rb'))
+model_vectorizer_svm_4 = pickle.load(open('./app/text_similarity/lsa_svm_model/vectorizer_model_svm_4.pkl', 'rb'))
+model_vectorizer_svm_5 = pickle.load(open('./app/text_similarity/lsa_svm_model/vectorizer_model_svm_5.pkl', 'rb'))
+model_vectorizer_svm_6 = pickle.load(open('./app/text_similarity/lsa_svm_model/vectorizer_model_svm_6.pkl', 'rb'))
+model_vectorizer_svm_7 = pickle.load(open('./app/text_similarity/lsa_svm_model/vectorizer_model_svm_7.pkl', 'rb'))
+model_vectorizer_svm_8 = pickle.load(open('./app/text_similarity/lsa_svm_model/vectorizer_model_svm_8.pkl', 'rb'))
+model_vectorizer_svm_9 = pickle.load(open('./app/text_similarity/lsa_svm_model/vectorizer_model_svm_9.pkl', 'rb'))
+model_vectorizer_svm_10 = pickle.load(open('./app/text_similarity/lsa_svm_model/vectorizer_model_svm_10.pkl', 'rb'))
 
 def process_similarity(message_data):
     new_document_list = []
@@ -63,7 +63,7 @@ def process_similarity(message_data):
 
     new_document_title_list = []
     for new_document in new_document_list:
-        filename = "./src/static/" + new_document['name']
+        filename = "./app/static/" + new_document['name']
         original_filename = new_document['original_name']
 
         (instansibaru, judulbaru) = text_finding_dokbaru.pdfparser(filename)
@@ -75,7 +75,7 @@ def process_similarity(message_data):
         document_proof_list = []
 
         for idx, new_document in enumerate(new_document_list):
-            filename = "./src/static/" + new_document['name']
+            filename = "./app/static/" + new_document['name']
             text_proof = ""
 
             if indicator_number == 1:
@@ -155,14 +155,14 @@ def process_similarity(message_data):
             meeting_minutes_title_list = []
 
             for old_document in old_document_list:
-                    filename = "./src/static/" + old_document['name']
+                    filename = "./app/static/" + old_document['name']
                     original_filename = old_document['original_name']
                     (instansilama, judullama) = text_finding_dokbaru.pdfparser(filename)
                     old_document_title_list.append(f'"{judullama}"')
 
             for idx, document in enumerate(old_document_list):
                 
-                filename = "./src/static/" + document['name']
+                filename = "./app/static/" + document['name']
                 text_proof = ""
 
                 if indicator_number == 1:
@@ -189,7 +189,7 @@ def process_similarity(message_data):
                     old_document_text_list.append(f'"{text_proof}"')
             
             for meeting_minutes in meeting_minutes_list:
-                    filename = "./src/static/" + meeting_minutes['name']
+                    filename = "./app/static/" + meeting_minutes['name']
                     original_filename = meeting_minutes['original_name']
 
                     #TODO notulen parser still needs to be improved to return both title and content

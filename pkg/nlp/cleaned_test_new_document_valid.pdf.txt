@@ -1,0 +1,2763 @@
+BAB I KETENTUAN UMUM Pasal 1 Dalam Peraturan Bupati ini yang dimaksud dengan: 1.  Daerah adalah Kabupaten Pakpak Bharat
+2.  Pemerintah  Daerah  adalah  Kepala  Daerah  sebagai  unsur  penyelenggara Pemerintah  Daerah  yang  memimpin  pelaksanaan  urusan  Pemerintahan yang menjadi kewenangan daerah otonom
+3.  Bupati adalah Bupati Pakpak Bharat
+4.  Organisasi  Perangkat  Daerah  yang  selanjutnya  disingkat  OPD  adalah  jdih
+pakpakbharatkab
+id organisasi perangkat daerah pada  Pemerintah  Kabupaten Pakpak Bharat yang  bertanggungjawab  kepada  Bupati  dalam  rangka  penyelenggaraan pemerintahan  yang  terdiri  dari  Sekretariat  Daerah,  Sekretariat  DPRD, Dinas  Daerah  dan  Lembaga  Teknis  Daerah,  Kecamatan,  Satuan  Polisi Pamong Praja
+5.  Dinas  Komunikasi  dan  Informatika  adalah  Dinas  Komunikasi  dan Informatika Kabupaten Pakpak Bharat
+6.  Sistem Elektronik adalah serangkaian perangkat dan prosedur elektronik yang berfungsi mempersiapkan, mengumpulkan, mengolah, menganalisis, menyimpan,  menampilkan,  mengumumkan,  mengirimkan  dan/atau menyebarkan informasi elektronik
+7.  Transaksi  Elektronik  adalah  perbuatan  hukum  yang  dilakukan  dengan menggunakan komputer, jaringan  komputer  dan/atau  media  elektronik lainnya
+8.  Sistem  Pemerintahan  Berbasis  Elektronik  yang  selanjutnya  disingkat dengan SPBE adalah penyelenggaraan pemerintahan yang memanfaatkan Teknologi  Informasi  dan  Komunikasi  untuk  memberikan  layanan  kepada pengguna SPBE
+BAB II MAKSUD DAN TUJUAN  Pasal 2 MAKSUD Rencana  Induk  SPBE  sebagaimana  dimaksud  untuk  menyelenggarakan pengelolaan  Sistem  Pemerintahan  Berbasis  Elektronik  di  Lingkungan Pemerintah Kabupaten Pakpak Bharat
+Pasal 3 TUJUAN Rencana  Induk  SPBE  bertujuan  untuk  membuat  pedoman  bagi  Organisasi Perangkat  Daerah  dalam  penyelenggaran  Sistem  Pemerintahan  Berbasis Elektronik di  masing-masing Organisasi  Perangkat Daerah
+BAB III RENCANA INDUK SISTEM PEMERINTAHAN BERBASIS ELEKTRONIK  Pasal 4 Rencana Induk SPBE sebagaimana dimaksud tercantum dalam Lampiran yang merupakan bagian tidak terpisahkan dari Peraturan Bupati ini,terdiri dari : a
+BAB I b
+BAB II c
+BAB III d
+BAB IV e
+BAB V :  PENDAHULUAN :  VISI, MISI, TUJUAN DAN SASARAN SPBE :  ARAH KEBIJAKAN DAN STRATEGI :  PETA RENCANA STRATEGIS :  PENUTUP jdih
+pakpakbharatkab
+id BAB IV PENUTUP Pasal 5 Peraturan Bupati ini mulai berlaku pada tanggal diundangkan
+Agar  setiap  orang  mengetahuinya,  memerintahkan  pengundangan  Peraturan Bupati  ini  dengan  penempatannya  dalam  Berita  Daerah  Kabupaten  Pakpak Bharat
+Ditetapkan di Salak  pada tanggal 2 Oktober 2019         Pj
+BUPATI PAKPAK BHARAT,         ttd  ASREN NASUTION Diundangkan di Salak pada tanggal 3 Oktober 2019 SEKRETARIS DAERAH  KABUPATEN PAKPAK BHARAT,           ttd SAHAT BANUREA BERITA DAERAH KABUPATEN PAKPAK BHARAT TAHUN 2019 NOMOR 34 jdih
+pakpakbharatkab
+id TAHUN 2019 - 2024 Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 1 jdih
+pakpakbharatkab
+id DAFTAR ISI Daftar Isi 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2  Daftar Gambar 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3  Daftar Tabel 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4   BAB I Pendahuan 1.1 Latar Belakang 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5  1.2 Maksud dan Tujuan  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6  1.3 Dasar Hukum 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6  1.4 Kondisi Saat Ini 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7      1.4 Kondisi Yang Diinginkan  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.11    BAB II VISI, MISI, TUJUAN, DAN SASARAN SPBE     2.1 Visi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.15       2.2 Misi 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.15  2.3 Tujuan dan Sasaran 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+15               2.3.1 Tujuan SPBE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.18             2.3.2 Sasaran SPBE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.18  BAB III ARAH KEBIJAKAN DAN STRATEGI 3.1  Arah Kebijakan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.19          3.2 Arah Kebijakan dan Strategi SPBE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.20 BAB IV PETA RENCANA STRATEGIS          4.1 Tahapan Rencana Strategis
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.24  4.2  Inisiatif strategis 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.24  4.2.1  Tata Kelola SPBE 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.25  4.2.2  Layanan SPBE 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.26 4.2.3  Teknologi Informasi dan Komunikasi 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.28 4.2.4  Sumber Daya Manusia SPBE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.31 4.3  Rencana Strategis 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.32  BAB IV PENUTUP Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 2 jdih
+pakpakbharatkab
+id DAFTAR GAMBAR Gambar 1.1  Tampilan Dashbord E- Goverment 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9      Gambar 1.2  Topologi Jaringan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.10 Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 3 jdih
+pakpakbharatkab
+id DAFTAR TABEL Tabel 1.1 Nilai Indeks SPBE  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8  Tabel 4.1 Rencana Strategis SPBE 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+32  Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 4 jdih
+pakpakbharatkab
+id BAB I PENDAHULUAN 1.1  Latar Belakang Salah  satu  misi  pembangunan  nasional  sesuai  dengan  amanat  Undang-  Undang Nomor  17  Tahun  2007  tentang  Rencana  Pembangunan  Jangka  Panjang  (RPJP)  Nasional 2005  -  2025  adalah  mewujudkan  bangsa  yang  berdaya  saing
+Misi  ini  dapat  dilakukan melalui  pembangunan  aparatur  negara  yang  mencakup  kelembagaan,  ketatalaksanaan, pelayanan  publik,  dan  Sumber  Daya  Manusia  (SDM)  aparatur
+Pembangunan  aparatur negara  adalah  mewujudkan  tata  kelola  pemerintahan  yang  baik,  peningkatan  kualitas penyelenggaraan administrasi pemerintahan, dan peningkatan partisipasi masyarakat dalam penyelenggaraan pembangunan
+Kesiapan aparatur negara diperlukan untuk mengantisipasi proses  globalisasi  dan  demokratisasi  agar  pemerintah  melakukan  perubahan  mendasar pada  sistem  dan  mekanisme  pemerintahan,  penyusunan  kebijakan  dan  program pembangunan  yang  membuka  ruang  partisipasi  masyarakat,  dan  pelayanan  publik  yang memenuhi aspek transparansi, akuntabilitas, dan kinerja tinggi
+Peranan  Teknologi  Informasi  dalam  menunjang  sistem  operasional  dan  manajerial pada instansi  pemerintah  dewasa ini  dirasakan  semakin  penting
+Dengan  adanya perkembangan  yang  sangat  signifikan  di  bidang  tersebut  telah  menyebabkan  berbagai perubahan  mendasar  pada  segala  aspek,  informasi  telah  menjadi  komoditi  yang  sangat berharga  dan  menentukan  untuk  mencapai  keberhasilan  jalannya  pemerintahan  dalam  arti yang menyeluruh
+Kemajuan teknologi ini telah menempatkan informasi sebagai salah satu sumber daya yang sangat penting dan perlu untuk dikelola secara baik dan benar
+Sementara itu, revolusi teknologi informasi dan komunikasi (TIK)  memberikan peluang bagi pemerintah  untuk  melakukan  inovasi  pembangunan  aparatur  negara  melalui  penerapan Sistem Pemerintahan Berbasis Elektronik (SPBE) atau e-goverment, yaitu penyelenggaraan pemerintahan  yang  memanfaatkan  TIK  untuk  memberikan  layanan  kepada  instansi pemerintah, Aparatur Sipil Negara, pelaku bisnis, masyarakat dan pihak-pihak lainnya
+SPBE memberi peluang untuk mendorong dan mewujudkan penyelenggaraan pemerintahan yang terbuka,  partisipatif,  inovatif,  dan  akuntabel,  meningkatkan  kolaborasi  antar  instansi pemerintah  dalam  melaksanakan  urusan  dan  tugas  pemerintahan  untuk  mencapai  tujuan bersama, meningkatkan kualitas dan jangkauan pelayanan publik kepada masyarakat luas, dan  menekan  tingkat  penyalahgunaan  kewenangan  dalam  bentuk  kolusi,  korupsi,  dan nepotisme  melalui  penerapan  sistem  pengawasan  dan  pengaduan  masyarakat  berbasis elektronik
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 5 jdih
+pakpakbharatkab
+id Secara  khusus  penerapan  SPBE  merupakan  bagian  dari  area  perubahan  tata laksana  dimana  penerapan  sistem,  proses,  dan  prosedur  kerja  yang  transparan,  efektif, efisien,  dan  terukur  didukung  oleh  penerapan  SPBE
+Di  samping  itu,  secara  umum  SPBE mendukung  semua  area  perubahan  sebagai  upaya  mendasar  dan  menyeluruh  dalam pembangunan aparatur negara yang memanfaatkan TIK sehingga profesionalisme aparatur sipil negara dan tata kelola pemerintahan yang baik dapat diwujudkan
+Pemerintah  menyadari  pentingnya  peran  SPBE  untuk  mendukung  semua  sektor pembangunan
+Upaya  untuk  mendorong  penerapan  SPBE  telah dilakukan  oleh  pemerintah dengan  menerbitkan  peraturan  perundang-undangan  sektoral  yang  mengamanatkan perlunya  penyelenggaraan  sistem  informasi  atau  SPBE
+Terkait  dengan  otonomi  daerah, Undang-Undang  Nomor  23  Tahun  2014  tentang  Pemerintahan  Daerah  sebagaimana  telah beberapa  kali  diubah  terakhir  dengan  Undang-Undang  Nomor  9  Tahun  2015  tentang Perubahan    Kedua  Undang-Undang  Nomor  23  Tahun  2014  tentang  Pemerintahan  Daerah mengatur  kewenangan  pemerintah  pusat  dan  pemerintah  daerah  dalam  pengelolaan  e-government
+Sejauh  ini  Pemerintah  Kabupaten  Pakpak  Bharat  telah  melaksanakan  SPBE secara mandiri
+Untuk  membangun  sinergi  penerapan  SPBE  yang  berkekuatan  hukum  antara Organisasi  Perangkat  Daerah,  Rencana  Induk  SPBE  Kabupaten  Pakpak  Bharat  yang digunakan  sebagai  pedoman  bagi  Instansi  Organisasi  Perangkat  Daerah  untuk  mencapai SPBE  yang  terpadu
+Rencana  Induk  SPBE  Kabupaten  Pakpak  Bharat  disusun  dengan memperhatikan arah kebijakan, strategi, dan inisiatif pada bidang tata kelola SPBE, layanan SPBE, TIK, dan SDM untuk mencapai tujuan strategis SPBE tahun 2019– 2024 1.2  Maksud dan Tujuan Maksud  penyusunan rencana induk   dimaksud  untuk  menyelenggarakan pengelolaan  Sistem  Pemerintahan  Berbasis  Elektronik  di  Lingkungan  Pemerintah Kabupaten Pakpak Bharat
+Adapun tujuan dari penyusunan rencana Induk ini adalah untuk  membuat pedoman bagi Organisasi Perangkat Daerah dalam penyelenggaraan Sistem Pemerintahan Berbasis Elektronik di masing-masing Organisasi Perangkat Daerah
+1.3   Dasar Hukum  Sebagai  landasan  hukum  dalam  pelaksanaan  SPBE  di  Lingkungan  Pemerintah Kabupaten Pakpak Bharat adalah sebagai berikut : Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 6 jdih
+pakpakbharatkab
+id a
+Undang  –  Undang  Nomor    11  Tahun  2008  Tentang  Informasi  dan  Transaksi Elektronik; b
+Undang-Undang Nomor 14 Tahun 2008 tentang Keterbukaan Informasi Publik; c
+Undang-Undang Nomor 23 Tahun 2014 tentang Pemerintahan  Daerah; d
+Peraturan Pemerintah  Nomor 82  Tahun  2012  tentang  Penyelenggaraan Sistem  dan Transasksi Elektronik; e
+Peraturan  Presiden  Nomor  95  Tahun  2018  tentang  Sistem  Pemerintahan  Berbasis Elektronik; f
+Peraturan Menteri Komunikasi dan Informatika Nomor 41/PER/M/KOMINFO/11/2007 tentang Pemduan Umum Tata Kelola Teknologi Informasi dan Komunikasi Nasional; g
+Peraturan  Menteri  Komunikasi  dan  Informatika  Nomor  10  Tahun  2015  tentang  Tata Cara Pendaftaran Sistem Elektronik Instansi Penyelenggara Negara h
+Keputusan Menteri Komunikasi dan Informatika Nomor 57/KEP/M
+KOMINFO/12/2003 tentang  Panduan  Penyusunan  Rencana Induk Pengembangan e-government Lembaga; i
+Peraturan  Daerah  Nomor  1  Tahun  2017  tentang  Penyelenggaraan  Komunikasi  dan Informatika; j
+Peraturan Bupati Nomor 26 Tahun 2017 tentang Rencana Induk Teknologi Informasi dan Komunikasi; k
+Peraturan  Bupati  Nomor  25  Tahun  2019 tentang  Penyelenggaraan  Sistem Pemerintahan  Berbasis  Elektronik  dan  Layanan  Berbasis  Teknologi  Informasi  dan Komunikasi di Lingkungan kabupaten Pakpak Bharat
+1.4   Kondisi Saat Ini Kebijakan  pengembangan  SPBE  di  Lingkungan  Pemerintah  Kabupaten  Pakpak Bharat  telah  dilakukan  dengan  dikeluarkannya  Peraturan  Bupati    Nomor  26  Tahun  2017 tentang  Rencana  Induk  Teknologi  Informasi  dan  Komunikasi  di  Lingkungan  Pemerintah Kabupaten  Pakpak  Bharat  Tahun  2016  -  2021.  Peraturan  Bupati  tersebut  bertujuan  untuk membuat  pedoman  bagi  Organisasi  Perangkat  Daerah  dalam  penyusunan  rencana  kerja pembangunan  daerah  bidang  teknologi  informasi  dan  komunikasi  di  masing-masing organisasi  perangkat  daerah
+Berdasarkan  hasil  Indeks  SPBE  Kabupaten  Pakpak  Bharat Tahun 2018, rata-rata capaian penerapan SPBE mencapai nilai indeks 3,19 (baik)
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 7 jdih
+pakpakbharatkab
+id Tabel 1.1  Nilai Indeks SPBE Deskripsi Nilai Indeks No  Nama Indeks           SPBE 3.19 2.82 1.  Domain Kebijakan SPBE  Kebijakan  Tata  Kelola  SPBE,  Kebijakan Layanan SPBE 2.  Domain Tata Kelola Kelembagaan,  Strategi  &  Perencanaan, 3.14 TIK 3.  Domain Layanan SPBE Administrasi Pemerintah, Pelayanan 3.33 Publik
+Permasalahan  pertama  adalah  belum  optimalnya  Tata  Kelola  SPBE  dari  masing-masing  aplikasi  yang  dibangun  oleh  Organiasi  Perangkat  Daerah  dilihat  dari  penggunaan aplikasi yang sebagian belum memiliki regulasi dari banyak aplikasi yang dibuat oleh OPD
+Hal  ini  ditunjukkan  dengan  hasil  Indikator  penilaian  indeks  kebijakan  internal  tata  kelola SPBE  dari  Indikator  1  s/d  35  masih  banyak  memiliki  indeks  dibawah  4  (empat)
+Permasalahan  kedua  adalah  SPBE  belum  diterapkan  pada  penyelenggaraan  administrasi pemerintahan  dan  pelayanan  publik  secara  menyeluruh  dan  optimal
+Penerapan  SPBE seharusnya  memiliki  pengaruh  yang  kuat  terhadap  peningkatan  kinerja  penyelenggaraan pemerintahan
+Rencana  untuk  mengatasi  permasalahan  penerapan  SPBE  pada  penyelenggaraan administrasi  pemerintahan, tantangan  pemerintah  Kabupaten  Pakpak  Bharat  adalah melakukan integrasi layanan perencanaan, layanan penganggaran, layanan pengadaan, dan layanan  manajemen  kinerja  yang  berbasis  elektronik,  baik  integrasi  internal  maupun integrasi  antar  Organisasi  Perangkat  Daerah  (OPD)
+Sedangkan  untuk  mengatasi permasalahan  pada  pelayanan  publik,  diperlukan  integrasi  secara  nasional  terkait  layanan pengaduan publik, layanan perizinan, dan pelayanan publik lainnya yang menjadi tantangan bersama bagi Pemerintah Pusat dan Pemerintah Daerah
+Permasalahan  ketiga  adalah  jangkauan  infrastruktur  TIK  ke  seluruh  Desa    dan  ke semua  lapisan  masyarakat  di  Kabupaten  Pakpak  Bharat  yang  belum  optimal
+Infrastruktur TIK  khususnya jaringan telekomunikasi  merupakan fondasi  konektivitas  antara penyelenggara SPBE dengan pengguna
+Tingkat efektivitas SPBE sangat bergantung pada tingkat aksesibilitas pengguna terhadap Layanan SPBE melalui jaringan telekomunikasi
+Dari 52  (lima puluh dua) desa yang ada di Kabupaten Pakpak Bharat, masih ada sekitar 10 % yang tidak dapat dijangkau oleh jaringan telekomunikasi
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 8 jdih
+pakpakbharatkab
+id Meskipun  sebagian  besar  wilayah  Kabupaten  Pakpak  Bharat  sudah  terhubung dengan  jaringan  telekomunikasi,  optimalisasi  pemanfaatan  infrastruktur  TIK  masih  menjadi kendala
+Rendahnya  penetrasi  pengguna  internet  di  Kabupaten  Pakpak  Bharat  juga menggambarkan belum optimalnya pemanfaatan Aplikasi SPBE khususnya aplikasi layanan publik seperti Silasos, Silampid, onan, e-sekolah, e-kia, SPPE dan sipelaKNPB berikut :          Gambar 1.1 Tampilan Dashbord E-Goverment Untuk  mendukung implementasi  Sistem  Pemerintahan  Berbasis  Elektronik Kabupaten Pakpak Bharat  telah  membangun berbagai infrastruktur penunjang diantaranya adalah  jaringan  fiber  optical  yang  menghubungkan  seluruh  Organisasi  Perangkat  Daerah kecuali satu kecamatan yaitu Kecamatan Pagindar
+Begitu juga telah dibangun Data Center secara mandiri oleh Kabupaten Pakpak Bharat yang mulai beroperasi pada tahun 2018. Adapun tampilan topologi jaringan Kabupaten Pakpak Bharat sebagai berikut:                   : Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 9 jdih
+pakpakbharatkab
+id Gambar 1.2 Topologi JaringanRencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 10 jdih
+pakpakbharatkab
+id Rendahnya  penetrasi  pengguna  aplikasi  tersebut  disebabkan  oleh  rendahnya kualitas Sumber Daya Manusia dan terbatasnya kapasitas jaringan internet
+Permasalahan keempat  adalah  keterbatasan  jumlah  pegawai  ASN  yang  memiliki  kompetensi  teknis  TIK
+Perkembangan TIK menuntut  perluasan dan pendalaman kompetensi teknis yang memadai
+Pemerintah Kabupaten Pakpak Bharat telah melakukan berbagai pelatihan-pelatihan tentang TIK  seperti  workshop  TI,yang  dilakukan  oleh  Badan  Kepegawaian  Daerah  melalui  Bidang Diklat  sudah  mendata  kebutuhan-kebutuhan  diklat  tentang  Teknologi  Informasi,  dengan tujuan  meningkatkan  kapasitas  ASN  di  bidang  TIK  
+Saat  ini  terjadi  kesenjangan  antara standar  kompetensi  jabatan fungsional ASN  terkait dengan  TIK  seperti  Jabatan  Fungsional Pranata  Komputer  dengan  standar  kompetensi  yang  ditetapkan  dalam  Daftar  Unit Kompetensi  Okupasi  TIK
+Hal  ini  mengakibatkan  pegawai  ASN  pada  jabatan  fungsional tersebut belum dapat melaksanakan tugas secara optimal
+1.5  Kondisi yang Diinginkan SPBE  merupakan  upaya  berkesinambungan  dalam  pembangunan  aparatur  negara untuk  mewujudkan  Kabupaten  Pakpak  Bharat  yang  nduma
+Pada  akhir  tahun  2024 diharapkan  Pemerintah  Kabupaten  Pakpak  Bharat  sudah  berhasil  mencapai  keterpaduan SPBE antar Organisasi Perangkat Daerah, dan keterhubungan SPBE antara OPD yang satu dengan  yang  lainnya
+Dengan  SPBE  yang  terpadu,  diharapkan  akan  menciptakan  proses bisnis  pemerintahan  yang  terintegrasi  antara  Organisasi  Perangkat  Daerah  sehingga  akan membentuk  satu  kesatuan  pemerintahan  yang  utuh  dan  menyeluruh  serta  menghasilkan birokrasi pemerintahan dan pelayanan publik yang berkinerja tinggi
+Untuk  mencapai  hal  tersebut,  Pemerintah  Kabupaten  Pakpak  Bharat  perlu  melakukan transformasi  paradigma  dan  proses  dalam  konteks  penyelenggaraan  pemerintahan, pelayanan publik berbasis elektronik, dukungan TIK, dan SDM sebagai berikut  : a
+Hendaknya  Organisasi  Perangkat  Daerah  di  Kabupaten  Pakpak  Bharat tidak mengedepankan penerapan birokrasi yang kaku dan lambat, tetapi harus menghasilkan birokrasi yang berkinerja tinggi dengan karakteristik integratif, dinamis, transparan, dan inovatif
+1.  Birokrasi  yang  integratif  mengutamakan  kolaborasi  strategis  antar  OPD  dan  para pemangku  kepentingan  lainnya  untuk  berbagi  sumber  daya  dan  membangun kekuatan dalam melaksanakan urusan dan tugas pemerintahan
+2.  Birokrasi  yang  dinamis  mampu  merespon  dengan  cepat  perubahan  kondisi lingkungan  strategis  dengan  membangun  proses  bisnis  pemerintahan  secara dinamis di dalam maupun antar instansi pemerintah
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 11 jdih
+pakpakbharatkab
+id 3.  Birokrasi  yang transparan  merupakan  suatu  keharusan  untuk  membangun kepercayaan  dan  legitimasi  di  mata  publik
+Dengan  birokrasi  yang  transparan pemerintah  menunjukkan  keseriusannya  dalam  bekerja  untuk  kepentingan masyarakat,  memahami  kebutuhan  masyarakat  untuk  pelayanan  publik,  serta melakukan pemantauan dan evaluasi kinerja pemerintah
+4.  Birokrasi  yang  inovatif  mampu  memberikan  ruang  gerak  untuk  mengembangkan pelayanan yang lebih cepat, mudah, dan murah sehingga membawa dampak yang besar bagi pertumbuhan ekonomi, pelestarian lingkungan, dan sosial budaya
+5.  Birokrasi  yang  berkinerja  tinggi  pada  akhirnya  akan  mewujudkan  satu  kesatuan penyelenggaraan  pemerintahan  yang  terpadu  dan  menyeluruh
+Hal  ini  akan mempermudah  dalam  penyusunan  kebijakan  dan  program  pembangunan  yang terintegrasi  dengan  memperhatikan  keterkaitan  dimensi  ekonomi,  sosial,  dan lingkungan serta target-target sektor dan subsektor pembangunan
+Organisasi  Perangkat  Daerah  diharapkan  dapat  membangun  pelayanan  publik  yang terpadu,  efektif,  responsif,  adaptif,  dan  mudah  diakses  oleh  masyarakat  serta memberikan  ruang  partisipasi  masyarakat  agar    turut  serta  dalam  penyusunan kebijakan  dan  program  pembangunan
+Masyarakat  menginginkan  kemudahan  dalam memperoleh  pelayanan  dari  pemerintah  dan  tidak  disulitkan  oleh  hubungan  birokrasi antar instansi pemerintah
+Dengan demikian, harus membangun integrasi, konsolidasi, dan inovasi Layanan SPBE  agar mampu memberikan akses layanan mandiri, layanan bergerak, dan layanan cerdas bagi masyarakat
+Perkembangan  TIK  yang  sangat  pesat  memberi  peluang inovasi  TIK  dalam penyelenggaraan pemerintahan
+Diharapkan pemanfaatan  TIK  yang  efektif dan efisien dapat  dicapai  melalui  integrasi  infrastruktur,  sistem  aplikasi,  keamanan  informasi,  dan layanan TIK
+Tren TIK di masa depan dapat diadopsi secara selektif yang disesuaikan dengan  kondisi  lingkungan  internal  dan  eksternal  Instansi  Pemerintah  Daerah  untuk mendukung SPBE
+Diantara teknologi masa depan yang mendorong perubahan SPBE adalah: 1.  Mobile  internet  merupakan  akses  internet  yang  menggunakan  gawai  personal
+Dengan  semakin  meningkatnya  pengaksesan  internet  melalui  gawai  personal, layanan  SPBE  harus  dapat  diakses  oleh  para  pengguna  dalam  bentuk  layanan bergerak tanpa batas waktu dan lokasi
+2.  Cloud computing merupakan teknologi layanan berbagi pakai yang dapat diakses melalui internet untuk memberikan layanan data, aplikasi, dan infrastruktur kepada pengguna
+Teknologi  ini  memberikan  efektifitas  dan  efisiensi  yang  tinggi  untuk melakukan integrasi TIK
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 12 jdih
+pakpakbharatkab
+id 3.  Internet  of  Things  (IoT)  merupakan  perangkat  elektronik  yang  dilengkapi  dengan perangkat  lunak,  sensor,  aktuator,  dan  konektivitas  internet  sehingga  mampu melakukan  pengiriman  atau  pertukaran  data  melalui  akses  internet
+Dengan semakin  meningkatnya  pemanfaatan  IoT  dalam  kehidupan  sehari-hari,  layanan SPBE  diharapkan  bersifat  adaptif  dan  responsif  terhadap  kebutuhan  kustomisasi layanan  yang  diinginkan  oleh  pengguna dengan memperluas  ketersediaan  kanal-kanal Layanan SPBE yang dapat diakses oleh perangkat-perangkat IoT
+4.  Big  Data  Analitics  merupakan  teknologi  analisis  terhadap  data  yang  berukuran sangat  besar,  tidak  terstruktur,  dan  tidak  diketahui  pola,  korelasi  ataupun  relasi antar data
+Dengan memanfaatkan teknologi ini, layanan SPBE diharapkan mampu memberi  dukungan  pengambilan  keputusan  dan  penyusunan  kebijakan  bagi pemerintah, pelaku usaha, dan masyarakat
+5.  Artificial  Intelligence  (AI)  merupakan  teknologi  kecerdasan  buatan  pada  mesin yang  memiliki  fungsi  kognitif  untuk  melakukan  pembelajaran  dan  pemecahan masalah  sebagaimana  halnya  dilakukan  oleh  manusia
+Pemanfaatan  AI  dalam SPBE  berpotensi  membantu  pemerintah  dalam  mengurangi  beban  administrasi seperti  menjawab  pertanyaan,  mengisi  dokumen,  mencari  dokumen, menerjemahkan suara/tulisan, dan membuat draf dokumen
+Dalam hal pelayanan publik,  AI  dapat  membantu  memecahkan  permasalahan  yang  kompleks  seperti permasalahan sosial, kesehatan, dan transaksi keuangan
+SDM  di  bidang  SPBE  yang  mencakup  pegawai  ASN  dan  masyarakat  memegang peranan paling penting untuk mewujudkan SPBE yang terpadu dan berkesinambungan
+Diharapkan  pegawai  ASN  di instansi  pemerintah  memiliki  kepemimpinan  dan kompetensi teknis SPBE dan masyarakat memiliki tingkat literasi SPBE yang memadai sehingga  layanan  SPBE  dapat  diselenggarakan  dan  dimanfaatkan  dengan  optimal
+Kepemimpinan SPBE diharapkan memiliki karakteristik sebagai berikut : 1.  Kolaboratif  yaitu  kepemimpinan  yang  meninggalkan  ego  sektoral  dan  mendorong penggunaan sumber daya secara bersama di dalam instansi pemerintah dan antar instansi pemerintah untuk mencapai tujuan bersama; dan 2.  Inovatif  yaitu  kepemimpinan  yang  mampu  mendorong  pelaksanaan  SPBE berorientasi pada efisiensi, efektivitas, dan manfaat yang bernilai tinggi
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 13 jdih
+pakpakbharatkab
+id Kompetensi  teknis  SPBE  diharapkan  dimiliki  oleh  pegawai  ASN  yang  terlibat  dalam pelaksanaan  SPBE  antara  lain  dalam  bidang  perencanaan  SPBE,  rekayasa  proses  bisnis pemerintahan,  pengelolaan  TIK  yang  terintegrasi,  aman,  dan  andal,  dan  pengelolaan layanan yang inovatif, adaptif dan responsif
+Budaya SDM dikembangkan untuk mewujudkan SDM aparatur yang mampu berfikir kreatif, sistemik, berwawasan global, memiliki etos kerja yang tinggi, mampu mengelola perubahan lingkungan strategis, dan memberikan pelayanan proaktif yang sesuai dengan kebutuhan masyarakat
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 14 jdih
+pakpakbharatkab
+id BAB II VISI, MISI, TUJUAN, DAN SASARAN SPBE 2.1  Visi  Visi  SPBE  menggambarkan  keinginan  masa  datang  yang  memiliki  pemikiran  jauh kedepan mengenai apa yang akan dicapai dari/tentang teknologi informasi bagi pemerintah daerah  Pakpak  Bharat
+Definisi  tidak  bisa  lepas  dari  visi  dan  misi  Pemerintah  Kabupaten Pakpak Bharat  secara  umum
+Dari  hasil  analisa  dan  pembahasan  mengenai  visi  dan  misi serta    masukkan  dari  berbagai  eksekutif  pemangku  kepentingan,  maka  visi  SPBE Pemerintah Kabupaten Pakpak Bharat adalah : “Menuju  Kemandirian  Dan  Berdaya  Saing  Untuk  Meningkatkan Kesejahteraan  Masyarakat  Dengan  Dukungan  Sistem  Pemerintahan Berbasis Elektronik “
+2.2  Misi  Misi  SPBE  merupakan  penjabaran dari  visi  SPBE  dalam  bentuk  kalimat  tertulis
+Dalam penyusunannya,  misi  harus  singkat,  ringkas  tapi  jelas  pengertiannya
+Berdasarkan  hasil analisa, maka definisi misi SPBE Pemerintah Kabupaten Pakpak Bharat adalah : 1.  Memperkuat tata kelola TIK
+2.  Mengembangkan  infrastruktur  TIK  terpadu  untuk  meningkatkan  kinerja  pemerintah kabupaten Pakpak Bharat
+3.  Mengembangkan  sistem  informasi  terintegrasi  yang  sejalan  dengan  visi  pembangunan kabupaten Pakpak Bharat
+2.3  Tujuan dan Sasaran Misi  adalah  sesuatu  yang  harus  dilaksanakan  oleh  organisasi  agar  tujuan  organisasi dapat  terlaksana  dan  berhasil  dengan  baik
+Dengan  pernyataan  misi  tersebut,  diharapkan seluruh  pegawai  dan  pihak  yang  berkepentingan  dapat  mengenal  organisasi  dan mengetahui  peran  dan  program-programnya  serta  hasil  yang  akan  diperoleh  dimasa mendatang
+Agar misi yang telah ditetapkan diatas dapat terlaksana sesuai yang diinginkan, maka  perlu  ditetapkan  tujuan  dan  sasarannya
+Adapun  tujuan  dan  sasarannya  adalah sebagai berikut : Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 15 jdih
+pakpakbharatkab
+id 1.  Misi :  Memperkuat tatakelola TIK a)  Tujuan  : Terimplementasinya SPBE menuju good governance
+Sasaran : Melengkapi regulasi sinergi implementasi SPBE
+Indikator Sasaran : -   Jumlah regulasi dan SOP   -   Persentase OPD yang memanfaatkan TIK b)  Tujuan  : Optimasi pengorganisasian TIK Kabupaten Pakpak Bharat
+Sasaran : Meningkatnya pengelolaan TIK Kabupaten Pakpak Bharat
+Indikator Sasaran :  -    Presentasi -  Perubahan -  Pengembangan -  Kelembagaan TIK c)  Tujuan  : Terbangunnya jejaring pengembangan TIK Sasaran : Jejaring internal dan eksternal Indikator Sasaran :  -    Jumlah jejaring pengembangan TIK
+d)  Tujuan  :  Meningkatnya  kualitas  dan  kuantitas  SDM  pengembangan,                                     pengelolaan dan pemanfaatan TIK Sasaran : Meningkatkan SDM TIK Indikator Sasaran :  -    Jumlah SDM - Jumlah produk TIK e)  Tujuan  :Meningkatnya  budaya  birokrasi  berbasis  elektronik  yang                                       dilaksanakan oleh seluruh pimpinan dan pegawai pemerintah                                   kabupaten untuk membangun smart e-goverment
+Sasaran : Berubahnya proses birokrasi manual ke elektronik
+Indikator sasaran :  -    Jumlah aplikasi termanfaatkan f)  Tujuan  : Peningkatan efisiensi disemua anggaran rutin pemeliharaan    Dan pengadaan TIK
+Sasaran : Meningkatnya efisiensi anggaran pembangunan
+Indikator Sasaran :  -    Presentase anggaran
+g)  Tujuan  : Meningkatnya kecepatan pelayanan pada masyarakat
+-  Penurunan anggaran rutin terait otomatisasi perkantoran
+Sasaran : semua pelayanan publik pemerintah
+Indikator Sasaran :  -    Waktu pelayanan
+2.  Misi :  Mengembangkan infrastruktur TIK terpadu a)  Tujuan : Meningkatkan kualitas TIK
+Sasaran : Kestabilan koneksi jaringan internet
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 16 jdih
+pakpakbharatkab
+id Indikator Sasaran  : - Jumlah downtime per tahun
+-  Kecepatan download dan upload
+-  Kuantitas netlink
+b)  Tujuan :Meningkatnya pemanfaatan internet/intranet untuk                                        pemerintahan
+Sasaran : Meningkatnya jenis pemanfaatan internet/intranet
+
+Indikator Sasaran  : -  Jumlah jenis pemanfaatan intranet/internet
+c)  Tujuan : Meningkatkan keamanan informasi
+Sasaran : -  Pengamanan asset informasi pemerintah daerah
+-  Kepedulian pegawai pemkab terhadap isu keamanan       informasi
+Indikator Sasaran  : -  Penurunan laporan malware
+-  Penurunan jumlah kehilangan data
+d)  Tujuan : Meningkatkan fasilitasi pemanfaatan internet di masyarakat
+Sasaran : Meningkatnya pengetahuan masyarakat untuk pemanfaatan       Internet
+Indikator Sasaran  : - Jumlah Hotspot Pemkab di lokasi umum
+- Jumlah komunitas TIK
+-     Jumlah  aktifitas  kelompok  masyarakat  pemanfaat  TIK         berbasis wilayah
+3.  Misi : Mengembangkan sistem informasi terintegrasi yang sejalan dengan visi      pembangunan pemerintah kabupaten Pakpak Bharat
+a)  Tujuan : Meningkatkan pemanfaatan sistem informasi/aplikasi           dalam pemerintahan dan pelayan publik
+Sasaran : -  Meningkatkan pemanfaatan aplikasi
+-  Meningkatkan jumlah layanan  pemerintah  berbasis               elektronis
+Indikator Sasaran  : -    Jenis layanan pemerintah kabupaten menggunakan                                         sistem informasi
+b)  Tujuan : Meningkatkan pemanfaatan dan pengelolaan data elektronik       pemerintah yang terintegrasi
+Sasaran :  Meningkatkan  pemanfaatan  pusat  data  untuk  pemanfaatan                jenis data yang dipakai bersama
+Indikator Sasaran  : -  Kecepatan pengelolaan data
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 17   -    Jumlah pendokumentasian data secara elektronik
+jdih
+pakpakbharatkab
+id c)  Tujuan :  Meningkatkan  pemanfaatan  sistem  informasi  bagi  usaha                                       kecil  dan  menengah  yang terintegrasi  dengan layanan                                     pemerintah kabupaten
+Sasaran :  Meningkatkan transaksi elektronik untuk UMKM Indikator Sasaran  : -     Jumlah aplikasi layanan usaha
+- Jumlah transaksi elektronis
+Untuk mencapai visi SPBE, misi SPBE adalah: 1.  Melakukan  penataan  dan  penguatan  organisasi  dan  tata  kelola  sistem  pemerintahan berbasis elektronik yang terpadu; 2.  Mengembangkan pelayanan publik berbasis elektronik yang terpadu, menyeluruh, dan menjangkau masyarakat luas; 3.  Membangun fondasi teknologi informasi dan komunikasi yang terintegrasi, aman, dan andal; dan 4.  Membangun  SDM  yang  kompeten  dan  inovatif  berbasis  teknologi  informasi  dan komunikasi
+2.3.1  Tujuan SPBE Berdasarkan visi dan misi SPBE, tujuan SPBE adalah: 1.  Mewujudkan  tata  kelola  pemerintahan  yang  bersih,  efektif,  efisien,  transparan,  dan akuntabel
+2.  Mewujudkan pelayanan publik yang berkualitas dan terpercaya; dan 3.  Mewujudkan sistem pemerintahan berbasis elektronik yang terpadu
+2.3.4  Sasaran SPBE Berdasarkan visi, misi, dan tujuan SPBE, sasaran SPBE adalah: 1.  Terwujudnya tata kelola dan manajemen SPBE yang efektif dan efisien; 2.  Terwujudnya layanan SPBE yang terpadu dan berorientasi kepada pengguna; 3.  Terselenggaranya infrastruktur SPBE yang terintegrasi; dan 4.  Meningkatnya kapasitas SDM dalam pengelolaan SPBE
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 18 jdih
+pakpakbharatkab
+id BAB III ARAH KEBIJAKAN DAN STRATEGI 3.1  Arah Kebijakan  Arah  kebijakan  SPBE  disusun  dengan  memperhatikan  keselarasan  pembangunan yang  berdasarkan  pada  dua  kebijakan  strategis    yaitu  Rencana  Pembangunan  Jangka Panjang  Daerah  (RPJPD)  Kabupaten  Pakpak  Bharat  Tahun  2005  –  2025  dan  (RPJMD) Rencana Pembangunan Jangka Menengah Daerah 2016 - 2021.  Visi dan Misi Kabupaten Pakpak Bharat pada Peraturan Daerah Kabupaten Pakpak Bharat Nomor  23  Tahun  2007  tentang  Rencana  Pembangunan  Jangka  Panjang  Daerah  (RPJPD) Kabupaten Pakpak Bharat Tahun 2005 – 2025 pada Pasal 3 yaitu : 1.  Visi  Kabupaten  Pakpak  Bharat  dalam  jangka  panjang  untuk  kurun  waktu  20  (dua puluh)  tahun  kedepan  adalah  “Terwujudnya  Masyarakat  Pakpak  Bharat  Yang  Maju, Mandiri, Adil dan Sejahtera”
+2.  Misi  Kabupaten  Pakpak  Bharat  dalam  jangka  panjang  untuk  kurun  waktu  20  (dua puluh) tahun kedepan adalah : a
+Mewujudkan daerah yang memiliki keunggulan kompetitif; b
+Mewujudkan masyarakat beriman, bertaqwa dan berbudaya; c
+Mewujudkan masyarakat demokrasi dan berbudaya hukum; d
+Mewujudkan kondisi yang aman, tentram dan tertib; e
+Mewujudkan pembangunan yang merata dan berkeadilan; f
+Mewujudkan pembangunan yang berkelanjutan
+3.1.1  Arah  Kebijakan  dan  Strategi  Rencana  Pembangunan  Jangka  Menengah  Daerah           Tahun 2016 - 2021  Arah kebijakan pembangunan  Kabupaten Pakpak Bharat pada RPJMD Tahun 2016 – 2021 pada point “a” dalam penerapan SPBE adalah:  a
+Mewujudkan  daerah  yang  memiliki  keunggulan  kompetitif  dengan  memperkuat perekonomian daerah berbasis keunggulan komperatif masing-masing wilayah menuju keunggulan  kompetitif  degan  membangun  keterkaitan  sistem  produksi,  distribusi  dan pelayanan  serta  memperkuat  ekonomi  kerakyatan  yang  berbasis  agribisnis, mengedepankan  pembangunan  SDM  berkualitas  dan  berdaya  saing,  meningkatkan penguasaan dan pemanfaatan iptek, pembangunan infrastruktur yang maju serta mampu  mendukung  kegiatan  perekonomian  dan  pengembangan  wilayah  secara terpadu; Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 19 jdih
+pakpakbharatkab
+id 3.2   Arah Kebijakan dan Strategi SPBE Mengingat visi, misi, tujuan, dan sasaran SPBE maka arah kebijakan dan strategi SPBE melingkupi tata kelola SPBE, layanan SPBE, teknologi informasi dan komunikasi, dan SDM sebagai pengelola SPBE
+A
+Tata Kelola SPBE   1.  Penguatan kapasitas pengelolaan dan sistem koordinasi pelaksanaan SPBE untuk membangun SPBE yang terpadu di dalam dan antar OPD
+Untuk  mewujudkan  SPBE  yang  terpadu,  OPD  perlu  melakukan  upaya transformasi  yang  mendasar  dan  berkelanjutan  di  dalam  pengelolaan  dan sistem  koordinasi  pelaksanaan  SPBE
+Keterpaduan  SPBE  ditujukan  untuk memanfaatkan  sumber  daya SPBE  secara optimal  dan  mencegah timbulnya duplikasi inisiatif dan anggaran dalam pelaksanaan SPBE
+Strategi  untuk  mencapai  penguatan  kapasitas  pengelolaan  dan  sistem koordinasi pelaksanaan untuk membangun SPBE yang terpadu adalah: 1.  Melakukan pembentukan dan penguatan tim koordinasi SPBE; 2.  Membangun Arsitektur SPBE; dan 3.  Melakukan penyederhanaan proses bisnis yang terintegrasi
+2.  Penguatan kebijakan SPBE yang menyeluruh dan terpadu a
+Kebijakan  SPBE  yang  menyeluruh  diarahkan  untuk  melibatkan  semua pemangku  kepentingan  di  dalam  perumusan  dan  pelaksanaan  kebijakan SPBE  yang  mencakup  kebijakan  makro  dan  kebijakan  mikro  SPBE
+Dalam melakukan  perumusan  dan  pelaksanaan  kebijakan  SPBE  hendaknya berkoordinasi dengan Tim Koordinasi SPBE
+Strategi untuk mencapai penguatan kebijakan SPBE adalah: 1.  Meningkatkan  koordinasi  antar  OPD  dan  masyarakat  di  dalam perumusan dan pelaksanaan kebijakan SPBE; 2.  Melakukan harmonisasi kebijakan antara Tim Koordinasi SPBE;  3.  Melakukan evaluasi penerapan kebijakan SPBE
+B
+Layanan SPBE 1.  Pengembangan  layanan  SPBE  yang  berorientasi  kepada  pengguna  SPBE  dan membuka ruang partisipasi masyarakat a
+Layanan  SPBE  yang  berorientasi  kepada  pengguna  SPBE  dan  membuka ruang  partisipasi  masyarakat  dilakukan  untuk  mendorong  pemerintah  dapat hadir  dalam  melayani  masyarakat  termasuk  masyarakat  yang  terpencil, terluar, dan berkebutuhan khusus, serta untuk melibatkan masyarakat dalam Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 20 jdih
+pakpakbharatkab
+id penyusunan kebijakan publik yang akan memberi manfaat sebesar-besarnya bagi masyarakat
+Strategi  untuk  mencapai  pengembangan  layanan  SPBE  yang  berorientasi kepada Pengguna SPBE dan membuka ruang partisipasi masyarakat adalah: 1.  Memastikan  kebutuhan  pengguna  SPBE terhadap layanan  SPBE terpenuhi; dan 2.  Membangun portal pelayanan publik dan administrasi pemerintahan
+2.  Peningkatan kualitas layanan SPBE yang berkesinambungan a
+Peningkatan  kualitas layanan  SPBE  dilakukan  secara  sistematis  dan berkesinambungan  untuk  meningkatkan  efisiensi pengelolaan  layanan  SPBE dan memberikan kepuasan kepada pengguna SPBE
+Strategi  untuk  mencapai  peningkatan  kualitas layanan  SPBE  yang berkesinambungan adalah: 1.  Melakukan integrasi layanan; dan 2.  Menerapkan  manajemen  dan  teknologi  layanan  SPBE  yang  tepat  guna dan tepat sasaran
+C
+Teknologi Informasi dan Komunikasi 1.  Penyelenggaraan  infrastruktur  SPBE  secara  mandiri,  terintegrasi,  terstandarisasi, dan menjangkau OPD dan Desa
+Penyelenggaraan infrastruktur SPBE mencakup Pusat Data Center, Jaringan Intra pemerintah, dan Sistem Penghubung Layanan pemerintah
+Agar efektivitas, efisiensi, kesinambungan, aksesibilitas, dan keamanan dapat ditingkatkan maka penyelenggaraan infrastruktur SPBE dilakukan secara: 1.  Mandiri,  yaitu  pengelolaan  infrastruktur  SPBE  yang  meminimalkan ketergantungan kepada pihak-pihak non-pemerintah; 2.  Terintegrasi, yaitu keterhubungan  dan  pemanfaatan  bersama infrastruktur SPBE antar OPD dan Desa; 3.  Terstandarisasi,  yaitu  keseragaman  aspek  teknis  dan  pengoperasian infrastruktur SPBE; dan 4.  Menjangkau semua OPD dan Desa
+2.  Optimalisasi penggunaan Aplikasi Umum SPBE yang terintegrasi dan berbagi pakai Optimalisasi penggunaan Aplikasi Umum SPBE yang terintegrasi dan berbagi-pakai dilakukan  untuk  meningkatkan  efisiensi  belanja  TIK  khususnya  pembangunan Aplikasi  SPBE  dan  memudahkan  integrasi  proses  bisnis  pemerintahan
+Strategi untuk  mencapai  optimalisasi  penggunaan  Aplikasi  Umum  SPBE  yang  terintegrasi Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 21 jdih
+pakpakbharatkab
+id dan  berbagi  pakai  adalah  dengan  menggunakan  teknologi  layanan  yang  mampu melakukan bagi pakai aplikasi umum SPBE seperti teknologi komputasi awan
+3.  Penyediaan data dan informasi yang terintegrasi dan berkualitas Penyediaan  data  dan  informasi  yang  terintegrasi  dan  berkualitas  dilakukan  untuk memenuhi  kebutuhan  pemerintah,  pelaku  usaha,  dan  masyarakat  dalam pengambilan  keputusan,  penyusunan  kebijakan,  dan  penyusunan  program kegiatan
+Penyediaan  data  dan  informasi  diarahkan  menjaga  keamanan  data  dan  informasi yang bersifat strategis dan rahasia dalam rangka mewujudkan kedaulatan informasi pemerintah
+Strategi  untuk  mencapai  penyediaan  data  dan  informasi  yang  terintegrasi  dan berkualitas adalah: 1.  Menerapkan manajemen data yang terpadu; 2.  Menerapkan manajemen keamanan informasi yang terpadu; dan 3.  Menggunakan teknologi analitik data dan kecerdasan buatan
+D
+Sumber Daya Manusia SPBE 1.  Pengembangan kepemimpinan SPBE  a
+Kepemimpinan  yang  kuat,  kolaboratif,  dan  inovatif  sangat  menentukan keberhasilan  SPBE  di  Pemerintah  Kabupaten  Pakpak  Bharat  melalui komitmen, keteladanan, dan arahan dari pimpinannya
+Kepemimpinan SPBE tersebut juga diharapkan mampu mendorong terciptanya lingkungan kerja dan budaya kerja yang dapat mendukung kemajuan SPBE
+Strategi untuk mencapai pengembangan kepemimpinan SPBE adalah: 1.  Meningkatkan  pengetahuan  dan  penerapan  praktik  terbaik  SPBE  bagi pimpinan; dan 2.  Membangun budaya kerja berbasis SPBE bagi seluruh pegawai ASN
+2.  Peningkatan kapasitas Sumber Daya Manusia SPBE a
+Peningkatan  kapasitas  SDM  SPBE  mencakup  upaya  untuk  menetapkan standar  kompetensi  teknis  SPBE,  mengembangkan  kompetensi  teknis  SDM SPBE,  mengembangkan  pola  karir  dan  remunerasi  SDM  SPBE  agar pembangunan,  pengembangan,  pengoperasian,  dan  pemberian  layanan SPBE  dapat  berjalan  dengan  baik,  berkesinambungan,  dan  memenuhi harapan/kebutuhan pengguna
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 22 jdih
+pakpakbharatkab
+id b
+Strategi untuk mencapai peningkatan kapasitas SDM SPBE adalah: 1.  Mengembangkan  jabatan  fungsional  Pegawai  Negeri  Sipil  (PNS)  yang terkait dengan SPBE; dan 2.  Membangun kemitraan dengan pihak non pemerintah dalam peningkatan kompetensi teknis  ASN,  penyediaan tenaga  ahli, riset,  serta pembangunan dan pengembangan SPBE
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 23 jdih
+pakpakbharatkab
+id BAB IV PETA RENCANA STRATEGIS Peta  rencana  strategis  SPBE  berisi  berbagai  inisiatif  yang  digunakan  sebagai pedoman untuk melakukan pembangunan, pengembangan, dan penerapan SPBE diuraikan dalam tahapan rencana strategis, deskripsi inisiatif strategis, dan rencana strategis
+4.1   Tahapan Rencana Strategis Rencana strategis dilaksanakan dalam dua tahapan, yaitu 1.  Tahap pembangunan fondasi SPBE
+Tahapan ini dilaksanakan tahun 20l9 - 2024 dan difokuskan pada penguatan tata kelola SPBE,  infrastruktur  SPBE,  dan  percepatan  SPBE  sebagai fondasi pelaksanaan SPBE yang terpadu dan menyeluruh
+Capaian pada tahapan ini adalah tersedianya: a
+Sistem informasi Arsitektur SPBE, Arsitektur SPBE,; b
+Tim Koordinasi SPBE; c
+Kebijakan makro dan mikro; d
+Evaluasi SPBE oleh Tim; e
+Survey kebutuhan dan kepuasan pengguna; f
+Portal layanan public dan portal administrasi pemerintahan; g
+Penguatan implementasi aplikasi berbagi pakai
+Manajemen Layanan SPBE; i
+Infrastruktur SPBE; j
+Sistem keamanan informasi; dan k
+Standar kompetensi teknis SPBE
+2.  Tahap pengembangan SPBE Tahapan pengembangan SPBE dilaksanakan tahun 2019 - 2024 dan difokuskan pada peningkatan  kualitas  SPBE  yang  responsif  dan  adaptif  terhadap  kebutuhan  pengguna Layanan SPBE
+Capaian kualitas SPBE pada tahapan ini adalah: a
+Peningkatan kualitas jaringan Intra pemerintah; b
+Peningkatan jumlah Layanan SPBE sesuai dengan kebutuhan pengguna; c
+Peningkatan kualitas keamanan informasi; dan  d
+Peningkatan kapasitas SDM SPBE
+4.2   Inisiatif Strategis Inisiatif  strategis  dideskripsikan  pada  area  Tata  Kelola  SPBE,  Layanan  SPBE,  TIK, dan SDM SPBE
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 24 jdih
+pakpakbharatkab
+id 4.2.1  Tata Kelola SPBE  1.  Pembangunan Arsitektur SPBE a
+Arsitektur  SPBE  merupakan  kerangka  dasar  yang  mendeskripsikan  integrasi Proses  Bisnis, infrastruktur,  aplikasi,  dan  Keamanan  SPBE  untuk menghasilkan layanan yang terintegrasi
+Jenis Arsitektur SPBE terdiri atas: 1.  Arsitektur  SPBE  yang  disusun  sebagai  pedoman  untuk  mewujudkan keterpaduan SPBE secara menyeluruh; 2.  Arsitektur  SPBE  yang  disusun  Pemerintah  Kabupaten  Pakpak  Bharat dan  digunakan  sebagai  pedoman  untuk  keterpaduan  pelaksanaan SPBE
+Untuk  memudahkan  pengelolaan  Arsitektur  SPBE  diperlukan  pembangunan sistem Arsitektur  SPBE  yang berfungsi  mengelola  informasi  terkait Arsitektur SPBE Kabupaten Pakpak Bharat
+2.  Pembentukan dan Penguatan Kapasitas Tim Koordinasi SPBE a
+Tim koordinasi SPBE perlu dibentuk diketuai oleh sekretaris daerah
+Tim  koordinasi  SPBE  diberi  tugas  untuk  mengarahkan,  memantau,  dan mengevaluasi  pelaksanaan  SPBE  yang terpadu  masing-masing,  serta melakukan koordinasi dengan Tim Koordinasi SPBE yang melibatkan OPD
+Kapasitas tim koordinasi perlu  diperkuat/ditingkatkan dalam hal kepemimpinan,  pengetahuan,  dan  praktik  terbaik  SPBE  antara  lain  melalui sosialisasi, diskusi, pelatihan, dan studi banding
+3.  Penguatan Kebijakan SPBE a
+Paket  penguatan  kebijakan  SPBE  yang  terdiri  atas  kebijakan  makro,  dan kebijakan mikro diperlukan Peraturan; b
+Kebijakan  makro  SPBE  merupakan  kebijakan  umum  berupa  Peraturana Daerah yang mengatur lebih luas kepentingan masyarakat, pelaku usaha, dan pihak-pihak lain yang memanfaatkan layanan SPBE
+Kebijakan  meso  SPBE  merupakan  kebijakan  terkait  pedoman  penyusunan Arsitektur SPBE, pedoman penyusunan Proses Bisnis, pengelolaan data dan informasi,  standar  keamanan,  pengembangan  dan  pengelolaan  Infrastruktur SPBE,  standar  pengembangan  aplikasi,  standar  dan  manajemen  Layanan SPBE,  manajemen  risiko  SPBE,  manajemen  aset  TIK,  manajemen  SDM SPBE,  manajemen  keamanan informasi,  manajemen  pengetahuan, manajemen perubahan, dan Audit TIK
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 25 jdih
+pakpakbharatkab
+id d
+Kebijakan  mikro  SPBE  merupakan  kebijakan  internal  terkait  pelaksanaan SPBE
+4.  Evaluasi Penerapan Kebijakan SPBE a
+Evaluasi  penerapan  kebijakan  SPBE  bertujuan  untuk  mengetahui  capaian kemajuan pelaksanaan  SPBE  di  Lingkungan  Pemerintah  Kabupaten  Pakpak Bharat, memberikan saran perbaikan untuk peningkatan kualitas pelaksanaan SPBE, dan menjamin kualitas pelaksanaan evaluasi SPBE
+Evaluasi  SPBE  dilakukan  secara  menyeluruh  yang  mencakup  sedikitnya domain kebijakan, tata kelola, dan Layanan SPBE
+Pelaksanaan  evaluasi  SPBE  dikoordinasikan  oleh  Ketua  Tim  Koordinasi SPBE
+melakukan evaluasi SPBE secara periodik dan mandiri
+Evaluasi SPBE juga dapat dilakukan melalui kegiatan Audit TIK
+4.2.2 Layanan SPBE 1.  Survei Pengguna SPBE a
+Survei  Pengguna  SPBE  merupakan  upaya  untuk  mengetahui  kebutuhan Pengguna SPBE dan kepuasan Pengguna SPBE terhadap Layanan SPBE
+Survei  Pengguna  SPBE  ditujukan  untuk  memastikan  Layanan  SPBE  yang diberikan kepada masyarakat sesuai dengan harapan
+Melakukan Survei Pengguna SPBE
+2.  Portal Pelayanan Publik yang Terintegrasi a
+Portal  pelayanan  publik  dibangun  untuk  mengintegrasikan  layanan  publik berbasis  elektronik  agar  memudahkan  pengguna  mengakses layanan pemerintah
+Jenis portal pelayanan publik terdiri atas portal pelayanan publik  yang terdiri atas pelayanan publik semua OPD
+Portal  pelayanan  publik  berisi  layanan  publik  berbasis  elektronik  dari  sektor strategis  atau  kebutuhan  pengguna  yang  mendesak
+Sektor  strategis mencakup  sektor  pendidikan,  pengajaran,  pekerjaan  dan  usaha,  tempat tinggal,  komunikasi  dan  informasi,  lingkungan  hidup,  kesehatan,  jaminan sosial,  energi,  perbankan,  perhubungan,  sumber  daya  alam,  pariwisata,  dan sektor strategis lainnya
+Portal pelayanan  publik  dapat  terdiri  satu  rumpun  pelayanan  publik,  sebagai contoh portal perizinan terpadu dan portal pelayanan kependudukan terpadu
+Selain itu, portal pelayanan publik dapat terdiri dari rumpun pelayanan publik Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 26 jdih
+pakpakbharatkab
+id yang  berbeda,  sebagai  contoh  semua  layanan  publik  perangkat  daerah  di suatu  Pemerintah  Daerah  diintegrasikan  ke  dalam  satu  portal  Pemerintah Daerah tersebut
+Portal  pelayanan  publik  yang terintegrasi  mensyaratkan  dibangunnya pengintegrasian  Proses  Bisnis,  pengintegrasian  data,  pengintegrasian Layanan SPBE, dan penerapan Keamanan SPBE
+Agar  portal pelayanan publik dapat  diakses  oleh semua  lapisan  masyarakat, diperlukan  penyediaan  kanal-kanal  yang  terintegrasi  seperti  kanal  telepon, kanal faksimili, kanal email, kanal web, kanal mobile, kanal media sosial, dan kanal yang mendukung IoT
+Percepatan  penerapan  portal  pelayanan  publik  dapat  dilakukan  dengan pendekatan penerapan Aplikasi Umum berbagi pakai
+3.  Portal Pelayanan Administrasi Pemerintahan yang Terintegrasi a
+Portal pelayanan administrasi pemerintahan dibangun untuk mengintegrasikan layanan administrasi pemerintahan berbasis elektronik agar memudahkan ASN mengakses pelayanan administrasi pemerintahan
+Layanan  administrasi  pemerintahan  mencakup  bidang  perencanaan, penganggaran,  keuangan,  pengadaan  barang  dan jasa,  kepegawaian, kearsipan,  pengelolaan  barang  milik  negara,  pengawasan,  akuntabilitas kinerja,  dan layanan lain  sesuai  dengan  kebutuhan internal  birokrasi pemerintahan
+Portal  pelayanan  administrasi  pemerintahan  mensyaratkan  dibangunnya pengintegrasian  Proses  Bisnis,  pengintegrasian  data,  pengintegrasian Layanan SPBE, dan penerapan Keamanan SPBE termasuk akses portal yang diamankan  melalui  Jaringan  Intra  pemerintah  atau  jaringan  lain  yang  telah diamankan
+Agar portal pelayanan administrasi pemerintahan dapat diakses oleh pegawai ASN,  diperlukan  penyediaan  kanal-  kanal  yang  terintegrasi  seperti  kanal telepon,  kanal  faksimili,  kanal  email,  kanal  web,  kanal  mobile,  kanal  media sosial, dan kanal yang mendukung IoT
+Percepatan  penerapan  portal  pelayanan  administrasi  pemerintahan  dapat dilakukan  dengan  menggunakan  pendekatan  penerapan  Aplikasi  Umum berbagi pakai
+4.  Penyelenggaraan Manajemen Layanan a
+Penyelenggaraan  manajemen  Layanan  SPBE  ditujukan  untuk  memberikan dukungan terhadap layanan  publik  berbasis  elektronik  dan layanan Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 27 jdih
+pakpakbharatkab
+id administrasi  pemerintahan  berbasis  elektronik  agar  Layanan  SPBE  tersebut dapat berjalan secara berkesinambungan, berkualitas, responsif, dan adaptif
+Manajemen  layanan  merupakan  serangkaian  proses  pelayanan  kepada pengguna,  pengoperasian  layanan,  dan  pengelolaan  Aplikasi  SPBE  agar Layanan SPBE dapat berjalan berkesinambungan dan berkualitas
+Penyelenggaraan manajemen layanan dapat diwujudkan dengan membangun portal  pusat layanan  untuk  menjalankan  proses:pengelolaan  keluhan, gangguan,  masalah,  permintaan,  dan  perubahan  Layanan  SPBE  dari pengguna; d
+pendayagunaan  dan  pemeliharaan  Infrastruktur  SPBE  dan  Aplikasi  SPBE; dan e
+pembangunan  dan  pengembangan  aplikasi  yang  berpedoman  pada metodologi pembangunan dan pengembangan aplikasi
+5.  Agar portal pusat pelayanan dapat diakses oleh pengguna, diperlukan penyediaan kanal-kanal  yang  terintegrasi  seperti  kanal  telepon,  kanal  faksimili,  kanal  email, kanal web, kanal mobile, kanal media sosial, dan kanal yang mendukung IoT
+4.2.3  Teknologi Informasi dan Komunikasi 1.  Penyediaan  Data Center a
+Data  center  merupakan  fasilitas  yang  digunakan  untuk  penempatan  sistem elektronik  dan  komponen  terkait  lainnya  untuk  keperluan  penempatan, penyimpanan,  pengolahan,  dan  pemulihan  data  bagi  Pemerintah  Kabupaten Pakpak Bharat yang dipusatkan pada Dinas Komunikasi dan Informatika; b
+Penyediaan  data  center  ditujukan  untuk  memberikan  kemudahan  bagi  OPD untuk  mendapatkan  layanan  Pusat  Data  dan  meningkatkan  efisiensi  biaya melalui pemanfaatan bersama data center
+Penyediaan  data  center  dapat  dilakukan  dengan  memprioritaskan pemanfaatan  data  center  yang  telah  tersedia  di  Kabupaten  Pakpak  Bharat yang memenuhi standar data center
+Data center diarahkan menggunakan teknologi komputasi awan sehingga bagi pakai data, aplikasi, dan infrastruktur dapat dilakukan
+2.  Penyediaan Jaringan lokal deangan sebutan JIS (jaringan intra sindeka) a
+Jaringan lokal (JIS) merupakan jaringan tertutup yang menghubungkan antar simpul jaringan dalam pemerintah
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 28 jdih
+pakpakbharatkab
+id b
+Penggunaan  Jaringan  lokal  ditujukan  untuk  menjaga  keamanan  dalam melakukan  koordinasi  dan  komunikasi  pemerintahan  antar  simpul  jaringan dalam bentuk digital seperti suara, file, teks, dan format data lainnya
+Jenis Jaringan lokal (JIS) terdiri atas: 1.  Jaringan lokal (JIS) pemerintah  Kabupaten  Pakpak  Bharat menghubungkan jaringan  di  dalam  pemerintah  daerah  Kabupaten Pakpak Bharat
+2.  Penyediaan  Jaringan  lokal  dapat  dilakukan  dengan  memanfaatkan Jaringan Intra  yang telah tersedia  dan jaringan  pita lebar  yang diamankan
+3.  Penyediaan Sistem Penghubung Layanan Pemerintah a
+Sistem  Penghubung Layanan pemerintah  merupakan perangkat integrasi/penghubung  untuk  melakukan  pertukaran  Layanan  SPBE  dalam bentuk antarmuka pemrograman aplikasi
+Penyediaan  Sistem  Penghubung  Layanan  pemerintah  ditujukan  untuk meningkatkan  efisiensi  dalam  pembangunan  dan  pengembangan  Layanan SPBE dan melakukan integrasi Layanan SPBE
+Sistem Penghubung Layanan pemerintah dapat menghubungkan data, sistem aplikasi, layanan, dan kanal-kanal perangkat IoT
+Penyediaan  Sistem Penghubung  Layanan pemerintah  mensyaratkan adanya standar interoperabilitas, standar keamanan, dan akses melalui Jaringan Intra pemerintah
+4.  Penyediaan  Akses  Berkualitas  Terhadap  Layanan  SPBE  di  Kabupaten  Pakpak Bharat a
+Penyediaan  akses  terhadap  layanan  SPBE  ditujukan  untuk  meningkatkan aksesibilitas dan pemanfaatan layanan SPBE
+Penyediaan  akses  tersebut  dapat  dilakukan  dengan  memanfaatkan  jaringan pita lebar (fiber optic) yang dibangun oleh pemerintah dan/atau penyedia jasa telekomunikasi swasta
+Penyediaan  akses  jaringan  pita  lebar  (fiber  optic)  harus  memperhatikan kualitas layanan seperti tingkat reliabilitas, tingkat ketersediaan, dan besarnya bandwidth yang memadai
+5.  Pengembangan Layanan Berbasis Teknologi Layanan Berbagi Pakai a
+Teknologi  layanan  berbagi  pakai  merupakan  teknologi  pemberian  layanan yang dapat dibagipakaikan kepada para pengguna antara lain berupa layanan Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 29 jdih
+pakpakbharatkab
+id aplikasi,  layanan  platform,  layanan  infrastruktur,  layanan  analisis  data,  dan layanan kanal komunikasi
+Pengembangan teknologi layanan  berbagi  pakai  ditujukan  untuk meningkatkan  efisiensi  belanja  TIK,  memudahkan  pengelolaan  Layanan SPBE di Kabupaten Pakpak Bharat dan memudahkan pengguna berinteraksi dengan Layanan SPBE melalui pilihan kanal yang tersedia
+Teknologi  layanan  berbagi  pakai  berupa  antara  lain  teknologi  komputasi awan,  teknologi  media  sosial,  teknologi  integrasi  kanal-kanal  komunikasi, teknologi /of teknologi otomasi dan integrasi, dan teknologi analitik data
+Pengembangan layanan berbasis teknologi layanan berbagi pakai mencakup kegiatan: 1.  kajian  teknologi  layanan  berbagi  pakai  untuk  memilih  teknologi  yang tepat guna dan tepat sasaran; dan 2.  pembangunan  dan  pengembangan  Layanan  SPBE  dengan  dukungan teknologi layanan berbagi pakai
+6.  Pembangunan Portal Data Pemerintah Kabupaten Pakpak Bharat a
+Portal  data  merupakan  pintu  gerbang  transparansi  pemerintah  melalui keterbukaan  dan  pertukaran  data  antar  instansi  pemerintah,  pelaku  usaha, dan masyarakat
+Portal  data  ditujukan  untuk  mendukung  kebijakan  Satu  Data  Kabupaten Pakpak Bharat
+Pembangunan  portal  data  Kabupaten  Pakpak  Bharat  mensyaratkan terbangunnya  antara  lain  manajemen  portal  data,  repositori  data,  standar interoperabilitas,  sistem  keamanan,  dan  sistem  penghubung layanan sehingga dapat dilakukan pertukaran data dari mesin ke mesin
+7.  Pembangunan Sistem Keamanan Informasi Kabupaten Pakpak Bharat a
+Pembangunan sistem keamanan informasi aplikasi ditujukan untuk melindungi aset data dan informasi dari pihak-pihak yang tidak bertanggung jawab
+Pembangunan sistem keamanan informasi nasional mencakup: 1.  penerapan  manajemen keamanan informasi yang  merupakan serangkaian  proses  yang  meliputi  penetapan  ruang  lingkup,  penetapan penanggung  jawab,  perencanaan,  dukungan  pengoperasian,  evaluasi kinerja, dan perbaikan berkelanjutan terhadap keamanan informasi; 2.  penerapan  teknologi  keamanan  informasi  untuk  menjamin  kerahasiaan, keutuhan,  ketersediaan,  keaslian,  dan  kenirsangkalan  (nonrepudiation) Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 30 jdih
+pakpakbharatkab
+id sumber daya terkait data dan informasi, Infrastruktur SPBE, dan aplikasi; dan 3.  pembangunan  budaya  keamanan informasi  untuk  meningkatkan kesadaran keamanan dan kepatuhan prosedur keamanan bagi ASN dan masyarakat
+8.  Pengembangan  Teknologi  Kecerdasan  Buatan  untuk  Pengambilan  Keputusan yang Cepat dan Akurat a
+Teknologi  kecerdasan  buatan  merupakan  kemampuan  mesin  yang  memiliki fungsi  kognitif  untuk  melakukan  pembelajaran  dan  pemecahan  masalah sebagaimana halnya dilakukan manusia
+Teknologi ini dapat diterapkan pada layanan administrasi pemerintahan untuk mengurangi  beban  kerja  administrasi  dan  pada  layanan  publik  untuk memecahkan permasalahan yang kompleks
+Kecerdasan  buatan  didukung  oleh  teknologi  big  data  analgtics  untuk menghasilkan  informasi  analisis  dari  data  yang  besar,  tidak  terstruktur,  dan kompleks
+Hasil analisis big data dimanfaatkan oleh mesin kecerdasan buatan untuk pembelajaran kondisi yang kompleks
+Pengembangan  teknologi  kecerdasan  buatan  dan  big  data  diarahkan  untuk menghasilkan layanan berbasis teknologi berbagi pakai
+4.2.4  Sumber Daya Manusia SPBE 1.  Promosi literasi SPBE a
+Promosi  literasi  SPBE  merupakan  cara  untuk  menyampaikan  informasi  dan pengetahuan terkait SPBE kepada para Pengguna SPBE, baik pegawai ASN, pelaku usaha, maupun masyarakat
+Promosi  literasi  SPBE  ditujukan  untuk  meningkatkan  kepemimpinan  SPBE, kompetensi  teknis SPBE bagi  pegawai ASN,  dan  pengetahuan umum SPBE bagi masyarakat sehingga pemanfaatan SPBE menjadi optimal
+Promosi  literasi  SPBE  dapat  dilakukan  melalui  antara  lain:  sosialisasi, pelatihan, diskusi, e-learning, dan berbagai forum lainnya
+2.  Peningkatan Kapasitas ASN Penyelenggara SPBE a
+Kualitas Layanan SPBE ditentukan oleh kapasitas ASN
+Peningkatan  kapasitas  ASN  pelaksana  SPBE  dapat  dilakukan  antara  lain            melalui: 1.  Pengembangan pola rekrutmen ASN dan Tenaga Ahli; 2.  Pengembangan standar kompetensi teknis SPBE; Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 31 jdih
+pakpakbharatkab
+id 3.  Pengembangan  pola  karir  pegawai  ASN  melalui  pengembangan  jabatan                fungsional yang terkait dengan SPBE; 4.  Pengembangan pola remunerasi untuk pegawai ASN di bidang SPBE; dan 5.  Pengembangan  kompetensi teknis  melalui  pelatihan  dan  sertifikasi                kompetensi
+3.  Pembangunan  Forum  Kolaborasi  SPBE  antara  Pemerintah  dengan  Non Pemerintah a
+Forum  kolaborasi  SPBE  merupakan  wadah  informal  untuk  pertukaran informasi  dan  peningkatan  kapasitas  pelaksanaan  SPBE  bagi  OPD, perguruan tinggi, lembaga penelitian, pelaku usaha, dan masyarakat
+Forum kolaborasi SPBE dapat dimanfaatkan untuk antara lain: 1.  Penyampaian ide/gagasan SPBE; 2.  Pengembangan  infrastruktur  dan  Aplikasi  SPBE  dari  kontribusi  komunitas TIK; 3.  Peningkatan kompetensi teknis; 4.  Perbaikan kualitas Layanan SPBE; 5.  Penelitian dan kajian pengembangan SPBE; dan 6) penyelesaian masalah untuk kepentingan bersama
+Forum  kolaborasi  SPBE  dapat  dilakukan  dalam  bentuk  pertemuan  informal dan pertemuan virtual
+4.3   Rencana Strategis Rencana  strategis  berisi  pedoman  umum  terhadap  pelaksanaan  pembangunan SPBE yang selanjutnya perlu diuraikan lebih rinci ke dalam Peta Rencana SPBE  Kabupaten Pakpak Bharat  yang digunakan  sebagai  pedoman  untuk  penyusunan Peta  Rencana SPBE Kabupaten Pakpak Bharat
+Rencana  strategis  diuraikan  menurut  area  Tata  Kelola  SPBE,  Layanan  SPBE,  TIK, dan SDM SPBE sebagaimana tertuang dalam Tabel berikut : Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 32 jdih
+pakpakbharatkab
+id Tabel 4.1. Rencana Strategis SPBE  No Inisiatif Strategis Keluaran Target Waktu Penanggung Jawab A
+Tata Kelola SPBE 1 Pembangunan Sistem Informasi 2019 - 2020 Dinas Kominfo Arsitektur SPBE Arsitektur SPBE Arsitektur  SPBE 2019 - 2020 Bagian Kabupaten Pakpak Bharat Organisasi Setda Kabupaten Pakpak Bharat 2 Pembentukan Tim Koordinasi 2019 Bagian dan  Penguatan SPBE  Kapasitas Tim Koordinasi SPBE Organisasi Setda 3 Penguatan Kebijakan Makro 2019 - 2020 Bagian Kebijakan SPBE Organisasi Kebijakan Mikro 2019 - 2024 Setda  B
+Layanan SPBE 5 Survey Survey 2019 - 2024 Bagian Pengguna SPBE Kebutuhan dan Kepuasan Pengguna Organisasi Setda dan Dinas Kominfo 6 Portal  Pelayanan Integrasi  Proses 2019 - 2024 Dinas Kominfo  Publik yang Bisnis  Pelayanan Terintegrasi Publik  Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 33 jdih
+pakpakbharatkab
+id No Inisiatif Strategis Keluaran Target Waktu Penanggung Jawab 8 Penyelenggaraan Manajemen 2019 - 2024 Dinas Kominfo Manajemen Layanan SPBE Layanan Portal Pusat Layanan C
+Teknologi Informasi dan Komunikasi 9 Penyediaan Pusat Data 2019 - 2020 Dinas Kominfo Pusat  Data  (data Pemerintah center) Kabupaten Pakpak Bharat 10 Penyediaan Pusat 2019  Dinas Kominfo Jaringan Intra Pengendalian dan Pemerintah Jaringan Intra (lokal)Pemerintah Kabupaten Pakpak Bharat  11 Penyediaan Jaringan 2019 - 2024 Dinas Kominfo KomunikasiYang Berkualitas Akses Berkualitas Terhadap Layanan SPBE di Seluruh  Wilayah Kabupaten Pakpak Bharat 12 Pengembangan Cloud Service 2019 - 2024 Dinas Kominfo Layanan Berbasis Teknologi Integrasi Kanal 2019 - 2024 Dinas Kominfo Layanan Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 34 jdih
+pakpakbharatkab
+id No Inisiatif Strategis Keluaran Target Waktu Penanggung Jawab Layanan  Berbagi Pakai 13 Pembangunan Dukungan TIK 2019 - 2024 Dinas Kominfo Portal Data Portal Data Pemerintah Kabupaten Pakpak Bharat Kabupaten Pakpak Bharat Integrasi Data 2019 - 2024 Dinas Kominfo dan Pengelolaan 14 Pembangunan Manajemen 2019– 2024 Dinas Kominfo  Sistem Keamanan Informasi Kabupaten Keamanan Informasi Teknologi 2019 - 2024 Dinas Kominfo Pakpak Bharat Keamanan Informasi Budaya Keamanan Informasi D
+Sumber Daya Manusia SPBE 2019 - 2024 Dinas Kominfo 16 Promosi  Literasi Pelatihan dan 2019 - 2024 Tim  Koordinasi SPBE Sosialisasi SPBE  17 Peningkatan Standar 2019 - 2024 BKD dan Diklat Kapasitas  ASN Kompetensi Penyelenggara Teknis SPBE SPBE Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 35 jdih
+pakpakbharatkab
+id No Inisiatif Strategis Keluaran Target Waktu Penanggung Jawab Jabatan 2019 - 2024 BKD dan Diklat Fungsional  yang Terkait SPBE Pola  Remunerasi 2019 - 2024 BKD dan Diklat Bidang SPBE Pelatihan dan Sertifikasi Kompetensi 17 Pembangunan Forum  Kolaborasi 2019 - 2024 Bagian Forum SPBE Kolaborasi  SPBE antara Pemerintah dengan Non Pemerintah Organisasi Setda Kabupaten Pakpak  Bharat dan Dinas Kominfo Kabupaten Pakpak Bharat Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 36 jdih
+pakpakbharatkab
+id BAB V PENUTUP Rencana  Induk  SPBE  Pemerintah  Kabupaten  Pakpak  Bharat  disusun  dengan mengacu  pada  arah  kebijakan  RPJP  Kabupaten  Pakpak  Bharat  2005  -  2025,  dan  RPJMD Kabupaten  Pakpak  Bharat  2016  -  2021.  Pencapaian  visi  SPBE  yang  terpadu  dan menyeluruh  memiliki  peran  yang  sangat  penting  di  dalam  penyelenggaraan  pemerintahan untuk mewujudkan birokrasi pemerintahan yang terpadu dan berkinerja tinggi, meningkatkan kualitas pelayanan publik, mewujudkan tata kelola pemerintahan yang bersih, efektif, efisien, transparan,  dan  akuntabel,  dan  pada  akhirnya  mampu  mewujudkan  bangsa  yang  berdaya saing
+Sinergi  yang  kuat  antara  Organisasi  Perangkat  Daerah  (OPD)  menjadi  prasyarat untuk  mencapai  SPBE  yang  terpadu  dan  menyeluruh
+Arah  kebijakan,  strategi,  dan  peta rencana strategis SPBE dijabarkan ke dalam 4 (empat) area, yaitu: a
+Tata Kelola SPBE  Tata  Kelola  SPBE  diarahkan  untuk  perbaikan  Tata  Kelola  SPBE  dengan  melakukan penguatan  kapasitas  pengelolaan  dan  sistem  koordinasi  pelaksanaan  SPBE  dan kebijakan SPBE untuk mewujudkan SPBE yang terpadu dan menyeluruh
+Perbaikan tata kelola  dapat  dicapai  melalui  pembentukan  tim  koordinasi  SPBE  di  tingkat  Kabupaten Pakpak  Bharat,  pembangunan  Arsitektur  SPBE,  penyederhanaan  dan  pengintegrasian proses  bisnis  pemerintahan,  dan  penyusunan  kebijakan  SPBE  yang  terpadu  baik kebijakan makro, kebijakan meso, maupun kebijakan mikro SPBE
+Layanan SPBE Layanan SPBE diarahkan untuk peningkatan kualitas Layanan SPBE dengan melakukan pengembangan  Layanan  SPBE  yang  berorientasi  kepada  pengguna,  terintegrasi,  dan berkesinambungan
+Peningkatan  kualitas  Layanan  SPBE  dapat  dicapai  melalui pembangunan  portal  layanan  publik  dan  portal  layanan  administrasi  pemerintahan, integrasi Layanan SPBE, dan penerapan manajemen layanan dan teknologi layanan yang tepat guna dan tepat sasaran
+Teknologi Informasi dan Komunikasi Penyelenggaraan  TIK  diarahkan  untuk  pengintegrasian  TIK  dengan  melakukan pengintegrasian  data  dan  informasi,  Infrastruktur  SPBE,  dan  Aplikasi  SPBE
+TIK  yang terintegrasi dapat  dicapai  melalui  pemanfaatan  Pusat  Data  dan  jaringan pita  lebar  (fiber optik) yang telah tersedia, penerapan teknologi berbagi pakai, dan penerapan manajemen data dan teknologi analitik data
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 37 jdih
+pakpakbharatkab
+id d
+Sumber Daya Manusia SPBE SDM  sebagai  pengelola  SPBE  diarahkan  dengan  melakukan  pengembangan kepemimpinan  SPBE  serta  peningkatan  kapasitas  SDM  SPBE
+Pengembangan  SDM sebagai pengelola SPBE dapat dicapai melalui peningkatan pengetahuan dan penerapan praktik  terbaik  SPBE,  pembangunan  budaya  kerja  berbasis  SPBE,  pengembangan jabatan fungsional PNS, dan pelaksanaan kemitraan dengan berbagai pihak
+Sumber  Daya  Manusia  pengelola  SPBE  diarahkan  dengan  melakukan pengembangan  kepemimpinan  SPBE  serta  peningkatan  kapasitas  SDM  SPBE
+Pengembangan SDM SPBE dapat dicapai melalui peningkatan pengetahuan dan penerapan praktik  terbaik  SPBE, pembangunan budaya  kerja  berbasis SPBE, pengembangan  jabatan fungsional PNS, dan pelaksanaan kemitraan dengan berbagai pihak
+Rencana Induk SPBE Kabupaten  Pakpak Bharat  yang  disusun telah  mencakup  visi,  misi,  tujuan,  sasaran  melalui arah kebijakan, strategi, dan peta rencana strategis yang ingin dicapai dalam pembangunan SPBE sampai tahun 2024. Rencana Induk SPBE Kabupaten Pakpak Bharat akan diperbarui setelah ditetapkannya RPJPD Kabupaten Pakpak Bharat untuk periode berikutnya
+Rencana Induk Sistem Pemerintahan Berbasis Elektronik 2019-2024 Page 38 jdih
+pakpakbharatkab
+id 
