@@ -5,6 +5,7 @@
 import re
 import text_finding.preprocess_dokbaru as dokbaru
 import text_finding.preprocess_doklama as doklama
+import text_finding.preprocess_notulen as notulen
 import text_finding.indikator01 as indikator01
 import text_finding.indikator02 as indikator02
 import text_finding.indikator03 as indikator03
@@ -13,6 +14,7 @@ import text_finding.indikator05 as indikator05
 import text_finding.indikator06 as indikator06
 import text_finding.indikator07 as indikator07
 import text_finding.indikator08 as indikator08
+import text_finding.indikator09 as indikator09
 import text_finding.indikator10 as indikator10
 import text_finding.highlight_pdf as highlight_pdf
 import text_similarity.preprocess as ts_preprocess
@@ -22,15 +24,38 @@ import pandas as pd
 
 import nsq, ast, toml, logging, requests, threading
 
-# TODO model 2 and 10 are still missing
-model_dt_1 = pickle.load(open('./decision_tree_model/model_dtc_1.pckl', 'rb'))
-model_dt_3 = pickle.load(open('./decision_tree_model/model_dtc_3.pckl', 'rb'))
-model_dt_4 = pickle.load(open('./decision_tree_model/model_dtc_4.pckl', 'rb'))
-model_dt_5 = pickle.load(open('./decision_tree_model/model_dtc_5.pckl', 'rb'))
-model_dt_6 = pickle.load(open('./decision_tree_model/model_dtc_6.pckl', 'rb'))
-model_dt_7 = pickle.load(open('./decision_tree_model/model_dtc_7.pckl', 'rb'))
-model_dt_8 = pickle.load(open('./decision_tree_model/model_dtc_8.pckl', 'rb'))
-model_dt_9 = pickle.load(open('./decision_tree_model/model_dtc_9.pckl', 'rb'))
+model_lsa_svm_1 = pickle.load(open('./lsa_svm_model/lsa_model_svm_1.pkl', 'rb'))
+model_lsa_svm_2 = pickle.load(open('./lsa_svm_model/lsa_model_svm_2.pkl', 'rb'))
+model_lsa_svm_3 = pickle.load(open('./lsa_svm_model/lsa_model_svm_3.pkl', 'rb'))
+model_lsa_svm_4 = pickle.load(open('./lsa_svm_model/lsa_model_svm_4.pkl', 'rb'))
+model_lsa_svm_5 = pickle.load(open('./lsa_svm_model/lsa_model_svm_5.pkl', 'rb'))
+model_lsa_svm_6 = pickle.load(open('./lsa_svm_model/lsa_model_svm_6.pkl', 'rb'))
+model_lsa_svm_7 = pickle.load(open('./lsa_svm_model/lsa_model_svm_7.pkl', 'rb'))
+model_lsa_svm_8 = pickle.load(open('./lsa_svm_model/lsa_model_svm_8.pkl', 'rb'))
+model_lsa_svm_9 = pickle.load(open('./lsa_svm_model/lsa_model_svm_9.pkl', 'rb'))
+model_lsa_svm_10 = pickle.load(open('./lsa_svm_model/lsa_model_svm_10.pkl', 'rb'))
+
+model_svm_1 = pickle.load(open('./lsa_svm_model/model_svm_1.pkl', 'rb'))
+model_svm_2 = pickle.load(open('./lsa_svm_model/model_svm_2.pkl', 'rb'))
+model_svm_3 = pickle.load(open('./lsa_svm_model/model_svm_3.pkl', 'rb'))
+model_svm_4 = pickle.load(open('./lsa_svm_model/model_svm_4.pkl', 'rb'))
+model_svm_5 = pickle.load(open('./lsa_svm_model/model_svm_5.pkl', 'rb'))
+model_svm_6 = pickle.load(open('./lsa_svm_model/model_svm_6.pkl', 'rb'))
+model_svm_7 = pickle.load(open('./lsa_svm_model/model_svm_7.pkl', 'rb'))
+model_svm_8 = pickle.load(open('./lsa_svm_model/model_svm_8.pkl', 'rb'))
+model_svm_9 = pickle.load(open('./lsa_svm_model/model_svm_9.pkl', 'rb'))
+model_svm_10 = pickle.load(open('./lsa_svm_model/model_svm_10.pkl', 'rb'))
+
+model_vectorizer_svm_1 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_1.pkl', 'rb'))
+model_vectorizer_svm_2 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_2.pkl', 'rb'))
+model_vectorizer_svm_3 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_3.pkl', 'rb'))
+model_vectorizer_svm_4 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_4.pkl', 'rb'))
+model_vectorizer_svm_5 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_5.pkl', 'rb'))
+model_vectorizer_svm_6 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_6.pkl', 'rb'))
+model_vectorizer_svm_7 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_7.pkl', 'rb'))
+model_vectorizer_svm_8 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_8.pkl', 'rb'))
+model_vectorizer_svm_9 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_9.pkl', 'rb'))
+model_vectorizer_svm_10 = pickle.load(open('./lsa_svm_model/vectorizer_model_svm_10.pkl', 'rb'))
 
 
 def send_result(message_data, config):
@@ -52,10 +77,6 @@ def send_result(message_data, config):
 
         (instansibaru, judulbaru) = dokbaru.pdfparser(filename)
         new_document_title_list.append(judulbaru)
-
-    # indicator_number = int(message_data['IndicatorNumber'])
-    # indicator_detail = (message_data['IndicatorDetail'])
-    # institution_name = (message_data['InstitutionName'])
 
     proof_list = []
     for indicator_asssessment in message_data['indicator_assessment_list']:
@@ -83,8 +104,7 @@ def send_result(message_data, config):
             elif indicator_number == 8:
                 text_proof = indikator08.ceklvl(filename)
             elif indicator_number == 9:
-                # TODO not yet implemented
-                text_proof = ""
+                text_proof = indikator09.ceklvl(filename)
             elif indicator_number == 10:
                 text_proof = indikator10.ceklvl(filename)
             
@@ -119,18 +139,7 @@ def send_result(message_data, config):
         level = 0 # init value
         for document_proof in proof['document_proof']:
             text_document_proof = document_proof['text']
-            # TODO integrate with model; loop all of the old and meeting minutes documents
-            # level = random.randint(2,4)
-            # document_proof_list.append(
-            #     {
-            #         'name': document_proof['name'],
-            #         'original_name': document_proof['original_name'],
-            #         'text': document_proof['text'],
-            #         "picture_file_list": document_proof['picture_file_list'],
-            #         "specific_page_document_url": document_proof['specific_page_document_url'],
-            #         "document_page_list": document_proof['document_page_list']
-            #     }
-            # )
+            
             for idx, page in enumerate(document_proof['document_page_list']):
                 if idx == 0:
                     page_text += str(page)
@@ -148,48 +157,98 @@ def send_result(message_data, config):
             indicator_number = proof['indicator_assessment']['number']
 
 
-            # TODO placeholder value
-            judul_notulensi_undangan = '[]'
-            isi_notulensi_undangan = '[]'
-            JudulDokumenLama = '[]'
-            TeksDokumenLama = '[]'
+            old_document_text_list = []
+            old_document_title_list = []
+            meeting_minutes_text_list = []
+            meeting_minutes_title_list = []
+
+            for old_document in old_document_list:
+                    filename = "./src/static/" + old_document['name']
+                    original_filename = old_document['original_name']
+                    (instansilama, judullama) = dokbaru.pdfparser(filename)
+                    old_document_title_list.append(f'"{judullama}"')
+
+            for idx, document in enumerate(old_document_list):
+                
+                filename = "./src/static/" + document['name']
+                text_proof = ""
+
+                if indicator_number == 1:
+                    text_proof = indikator01.ceklvl(filename)
+                elif indicator_number == 2:
+                    text_proof = indikator02.ceklvl(filename)
+                elif indicator_number == 3:
+                    text_proof = indikator03.ceklvl(filename)
+                elif indicator_number == 4:
+                    text_proof = indikator04.ceklvl(filename)
+                elif indicator_number == 5:
+                    text_proof = indikator05.ceklvl(filename)
+                elif indicator_number == 6:
+                    text_proof = indikator06.ceklvl(filename)
+                elif indicator_number == 7:
+                    text_proof = indikator07.ceklvl(filename)
+                elif indicator_number == 8:
+                    text_proof = indikator08.ceklvl(filename)
+                elif indicator_number == 9:
+                    text_proof = indikator09.ceklvl(filename)
+                elif indicator_number == 10:
+                    text_proof = indikator10.ceklvl(filename)
+                if text_proof != "":
+                    old_document_text_list.append(f'"{text_proof}"')
+            
+            for meeting_minutes in meeting_minutes_list:
+                    filename = "./src/static/" + meeting_minutes['name']
+                    original_filename = meeting_minutes['original_name']
+
+                    #TODO notulen parser still needs to be improved to return both title and content
+                    meeting_minutes_title = notulen.pdfparser(filename)
+                    meeting_minutes_title_list.append(f'"{meeting_minutes_title}"')
+                    meeting_minutes_text_list.append(f'"{meeting_minutes_title}"')
+
+            logging.warning("DATA PREDICTION")
             data_prediction = {
+                'indikator': [indicator_number],
                 'Judul': [judulbaru],
                 'teks': [text_document_proof],
-                'JudulDokumenLama': [JudulDokumenLama],
-                'TeksDokumenLama': [TeksDokumenLama],
-                'JudulNotulensiUndangan': [judul_notulensi_undangan],
-                'IsiNotulensiUndangan': [isi_notulensi_undangan]
+                'JudulDokumenLama': [f'[{",".join(old_document_title_list)}]'],
+                'TeksDokumenLama': [f'[{",".join(old_document_text_list)}]'],
+                'JudulNotulensiUndangan': [f'[{",".join(meeting_minutes_title_list)}]'],
+                'IsiNotulensiUndangan': [f'[{",".join(meeting_minutes_text_list)}]']
             }
+            logging.warning(data_prediction)
             df_predict = pd.DataFrame(data_prediction)
-            if indicator_number == 1:
-                logging.warning("prediksi indikator 1")
-                level = ts_preprocess.predict_model(model_dt_1, df_predict)[0]
-            elif indicator_number == 2:
-                logging.warning("prediksi indikator 2")
-            elif indicator_number == 3:
-                logging.warning("prediksi indikator 3")
-                level = ts_preprocess.predict_model(model_dt_3, df_predict)[0]
-            elif indicator_number == 4:
-                logging.warning("prediksi indikator 4")
-                level = ts_preprocess.predict_model(model_dt_4, df_predict)[0]
-            elif indicator_number == 5:
-                logging.warning("prediksi indikator 5")
-                level = ts_preprocess.predict_model(model_dt_5, df_predict)[0]
-            elif indicator_number == 6:
-                logging.warning("prediksi indikator 6")
-                level = ts_preprocess.predict_model(model_dt_6, df_predict)[0]
-            elif indicator_number == 7:
-                logging.warning("prediksi indikator 7")
-                level = ts_preprocess.predict_model(model_dt_7, df_predict)[0]
-            elif indicator_number == 8:
-                logging.warning("prediksi indikator 8")
-                level = ts_preprocess.predict_model(model_dt_8, df_predict)[0]
-            elif indicator_number == 9:
-                logging.warning("prediksi indikator 9")
-                level = ts_preprocess.predict_model(model_dt_9, df_predict)[0]
-            elif indicator_number == 10:
-                logging.warning("prediksi indikator 10")
+            for index, row in df_predict.iterrows():
+                df_per_row = row.to_frame().transpose()
+                if indicator_number == 1:
+                    logging.warning("prediksi indikator 1")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_1 ,model_lsa_svm_1, model_svm_1)[0]
+                elif indicator_number == 2:
+                    logging.warning("prediksi indikator 2")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_2 ,model_lsa_svm_2, model_svm_2)[0]
+                elif indicator_number == 3:
+                    logging.warning("prediksi indikator 3")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_3 ,model_lsa_svm_3, model_svm_3)[0]
+                elif indicator_number == 4:
+                    logging.warning("prediksi indikator 4")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_4 ,model_lsa_svm_4, model_svm_4)[0]
+                elif indicator_number == 5:
+                    logging.warning("prediksi indikator 5")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_5 ,model_lsa_svm_5, model_svm_5)[0]
+                elif indicator_number == 6:
+                    logging.warning("prediksi indikator 6")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_6 ,model_lsa_svm_6, model_svm_6)[0]
+                elif indicator_number == 7:
+                    logging.warning("prediksi indikator 7")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_7 ,model_lsa_svm_7, model_svm_7)[0]
+                elif indicator_number == 8:
+                    logging.warning("prediksi indikator 8")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_8 ,model_lsa_svm_8, model_svm_8)[0]
+                elif indicator_number == 9:
+                    logging.warning("prediksi indikator 9")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_9 ,model_lsa_svm_9, model_svm_9)[0]
+                elif indicator_number == 10:
+                    logging.warning("prediksi indikator 10")
+                    level = ts_preprocess.predict_model(df_per_row, model_vectorizer_svm_10 ,model_lsa_svm_10, model_svm_10)[0]
 
             explanation_text = f"Verifikasi dan validasi telah dilakukan terhadap penjelasan dan data dukung pada Indikator {indicator_number} {indicator_detail} pada {institution_name}, dimana tercantum dalam {judulbaru}, yaitu pada halaman {page_text} sesuai data dukung  {original_filename}"
         result_list.append({
@@ -224,6 +283,7 @@ def message_handler(message: nsq.Message):
     logging.warning(message_data['indicator_assessment_list'])
 
     #send result
+    # similarity_payload = send_result(message_data, config)
     send_result(message_data, config)
 
     message.finish()

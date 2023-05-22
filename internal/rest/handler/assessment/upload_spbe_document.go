@@ -71,6 +71,7 @@ func (req *UploadSpbeDocumentRequest) validate(r *http.Request) *apierror.FieldE
 
 	if err := r.ParseMultipartForm(MAX_UPLOAD_SIZE); err != nil {
 		fieldErr = fieldErr.WithField("supporting_document", "the uploaded file is too big! The maximum allowed size is 1MB")
+		return &fieldErr
 	}
 
 	fhs := r.MultipartForm.File["supporting_document[]"]
