@@ -99,6 +99,7 @@ def process_similarity(message_data):
             elif indicator_number == 10:
                 text_proof = indikator10.ceklvl(filename)
             
+            #HIGHLIGHT FOUND PROOF
             if text_proof != "":
                 proof_pic_files, proof_pages, page_with_matches = highlight_pdf.highlight(filename, text_proof, 'Highlight')
                 document_proof_list.append(

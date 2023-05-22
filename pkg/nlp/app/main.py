@@ -11,8 +11,8 @@ def message_handler(message: nsq.Message):
     dict_str_body = byte_str_body.decode('UTF-8')
     message_data = ast.literal_eval(dict_str_body)
 
-    logging.warning(message_data['indicator_assessment_list'])
-
+    logging.warning("MESSAGE DATA")
+    logging.warning(message_data)
     #send result
     similarity_result_payload = similarity.process_similarity(message_data)
     callback_endpoint = 'http://' + config['server']['host'] + '/assessments/result/callback'
