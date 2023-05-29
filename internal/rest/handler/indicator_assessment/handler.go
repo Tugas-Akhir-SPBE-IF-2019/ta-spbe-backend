@@ -14,6 +14,7 @@ type IndicatorAssessmentHandler interface {
 	GetIndicatorAssessmentIndexList(w http.ResponseWriter, r *http.Request)
 	GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList(w http.ResponseWriter, r *http.Request)
 	ValidateIndicatorAssessmentResult(w http.ResponseWriter, r *http.Request)
+	GetIndicatorAssessmentResultValidation(w http.ResponseWriter, r *http.Request)
 }
 
 type indicatorAssessmentHandler struct {

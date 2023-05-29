@@ -81,6 +81,7 @@ func New(
 		r.Use(middleware.JWTAuth(jwt, cfg.DevSettings))
 		r.Get("/", assessmentHandler.GetSPBEAssessmentList)
 		r.Get("/{id}", indicatorAssessmentHandler.GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList)
+		r.Get("/{id}/validation", indicatorAssessmentHandler.GetIndicatorAssessmentResultValidation)
 		r.Get("/{id}/histories", assessmentHandler.GetSPBEAssessmentStatusHistory)
 		r.Get("/{id}/documents", assessmentHandler.GetSPBEAssessmentDocumentList)
 		r.Get("/{id}/download", assessmentHandler.DownloadSupportDocuments)

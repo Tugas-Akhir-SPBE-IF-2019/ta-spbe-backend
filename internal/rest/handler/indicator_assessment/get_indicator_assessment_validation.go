@@ -2,7 +2,6 @@ package indicatorassessment
 
 import (
 	"net/http"
-	"time"
 
 	apierror "github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/error"
 	"github.com/Tugas-Akhir-SPBE-IF-2019/ta-spbe-backend/internal/rest/response"
@@ -10,33 +9,14 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-type SupportDocumentProofInfo struct {
-	Name                 string `json:"name"`
-	URL                  string `json:"document_url"`
-	Type                 string `json:"type"`
-	Proof                string `json:"proof"`
-	ImageURL             string `json:"proof_image_url"`
-	ProofPageDocumentURL string `json:"proof_page_document_url"`
+type IndicatorAssessmentResultValidationResponse struct {
+	IndicatorNumber int    `json:"indicator_number"`
+	ResultCorrect   bool   `json:"result_correct"`
+	CorrectLevel    int    `json:"correct_level"`
+	Explanation     string `json:"explanation"`
 }
 
-type IndicatorAssessmentResultItem struct {
-	Domain                   string                     `json:"domain"`
-	Aspect                   string                     `json:"aspect"`
-	IndicatorNumber          int                        `json:"indicator_number"`
-	Level                    int                        `json:"level"`
-	Explanation              string                     `json:"explanation"`
-	SupportDocumentProofList []SupportDocumentProofInfo `json:"support_document_proof"`
-}
-
-type IndicatorAssessmentResultResponse struct {
-	InstitutionName  string                          `json:"institution_name"`
-	InstitutionImage string                          `json:"institution_image"`
-	SubmittedDate    time.Time                       `json:"submitted_date"`
-	AssessmentStatus int                             `json:"assessment_status"`
-	Result           []IndicatorAssessmentResultItem `json:"result"`
-}
-
-func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentResultGetIndicatorAssessmentIndexList(w http.ResponseWriter, r *http.Request) {
+func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentResultValidation(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	indicatorAssessmentId := chi.URLParam(r, "id")
 	indicatorAssessmentList, err := handler.indicatorAssessmentStore.FindIndicatorAssessmentResultByAssessmentId(ctx, indicatorAssessmentId)
@@ -71,12 +51,14 @@ func (handler *indicatorAssessmentHandler) GetIndicatorAssessmentResultGetIndica
 		resultItem.SupportDocumentProofList = supportDocumentProofList
 		result[idx] = resultItem
 	}
-	resp := IndicatorAssessmentResultResponse{
-		InstitutionName:  indicatorAssessmentList[0].InstitutionName,
-		InstitutionImage: "http://localhost/static/logo-spbe.png", //hardcoded
-		SubmittedDate:    indicatorAssessmentList[0].SubmittedDate,
-		AssessmentStatus: indicatorAssessmentList[0].AssessmentStatus,
-		Result:           result,
+	resp := []IndicatorAssessmentResultValidationResponse{}
+	for _, item := range result {
+		resp = append(resp, IndicatorAssessmentResultValidationResponse{
+			IndicatorNumber: item.IndicatorNumber,
+			ResultCorrect:   false,
+			CorrectLevel:    item.Level,
+			Explanation:     "hardcoded",
+		})
 	}
 
 	response.Respond(w, http.StatusOK, resp)
